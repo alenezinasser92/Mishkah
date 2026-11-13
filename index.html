@@ -355,8 +355,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.5";
+const VERSION="1.5.1";
 const CHANGELOG=[
+ {v:"1.5.1",d:"2026-11-13",items:["النسخة الاحتياطية صارت ملف: «احفظ نسخة كملف» و«استرجع من ملف» في الإعدادات"]},
  {v:"1.5",d:"2026-11-13",items:["صار تطبيق مستقل تثبته على الشاشة الرئيسية ويشتغل بدون إنترنت","إذا نزل تحديث يطلع لك زر «نسخة جديدة متوفرة» تحت","سحب شريط النافذة لتحت يسكرها، والخلفية ما تتحرك وهي مفتوحة"]},
  {v:"1.4",d:"2026-11-13",items:["تبويب المتشابهات: قائمة جاهزة بكل سور محفوظك ومواضعها المتشابهة مع السور الثانية، مع نص الآيات","من أي موضع جاهز تقدر تضيفه لمتشابهاتك وتكتب ضابطه","إذا ضغطت نفس التقييم مرة ثانية ترجع الصفحة بدون تقييم"]},
  {v:"1.3",d:"2026-11-13",items:["تراجع عن أي تقييم بالغلط: زر «تراجع» يطلع فوق بعد كل تقييم لصفحة أو سورة أو إتمام حفظ","اضغط على الصفحة واختر نفس التقييم مرة ثانية فينشال وترجع الصفحة كما كانت","زر تسجيل الخطأ صار ⚠️ فوق على اليسار"]},
@@ -610,7 +611,10 @@ function settingsSheet(){const s=S.settings;openSheet(`<h3>الإعدادات</h
   <span class="hint muted small">تتطبق التغييرات على ورد بكرة. ورد اليوم يبقى كما هو.</span>
   <button class="btn block" data-act="setsave">حفظ الإعدادات</button>
   <hr style="border:none;border-top:1px solid var(--line);width:100%">
-  <div class="field"><label>نسخة احتياطية</label><div class="two"><button class="btn ghost" data-act="backup">انسخ البيانات</button><button class="btn ghost" data-act="restore">استرجع من نص</button></div>
+  <div class="field"><label>نسخة احتياطية</label>
+  <div class="two"><button class="btn gold" data-act="filesave">احفظ نسخة كملف</button><label class="btn gold" for="st-file" style="cursor:pointer">استرجع من ملف</label></div>
+  <input type="file" id="st-file" accept=".json,application/json,text/plain" style="display:none">
+  <div class="two" style="margin-top:6px"><button class="btn ghost" data-act="backup">انسخ البيانات</button><button class="btn ghost" data-act="restore">استرجع من نص</button></div>
   <textarea id="st-json" placeholder="الصق النسخة الاحتياطية هنا ثم اضغط استرجع" style="margin-top:6px"></textarea></div>
   <button class="btn ghost block" style="color:var(--rose)" data-act="reset" id="resetbtn">مسح كل البيانات</button></div>`)}
 
@@ -686,6 +690,9 @@ const A={
   setsave(){const f=+$("#st-from").value,t=+$("#st-to").value;if(!(f>=1&&t<=604&&f<=t)){toast("تأكد من أرقام الصفحات");return}
     Object.assign(S.settings,{from:f,to:t,perDay:Math.min(5,Math.max(1,+$("#st-per").value||1)),dir:$("#st-dir").value,near:Math.min(40,Math.max(3,+$("#st-near").value||10)),far:Math.min(60,Math.max(2,+$("#st-far").value||10))});
     seed();save();closeSheet();renderAll();toast("انحفظت الإعدادات")},
+  async filesave(){const name="hifz-backup-"+today()+".json";const blob=new Blob([JSON.stringify(S)],{type:"application/json"});
+    try{const file=new File([blob],name,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"نسخة احتياطية"});return}}catch(e){if(e&&e.name==="AbortError")return}
+    try{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();toast("انحفظ الملف")}catch(e){toast("ما قدرت أحفظ الملف. استخدم «انسخ البيانات»")}},
   async backup(){try{await navigator.clipboard.writeText(JSON.stringify(S));toast("انسخت. الصقها في الملاحظات عندك")}catch(e){$("#st-json").value=JSON.stringify(S);toast("انسخ النص من المربع")}},
   restore(){try{const o=JSON.parse($("#st-json").value);if(!o.settings)throw 0;S=Object.assign(DEF(),o);save();closeSheet();renderAll();toast("تم الاسترجاع")}catch(e){toast("النص غير صالح")}},
   reset(el){if(el.dataset.armed){S=DEF();save();closeSheet();renderAll();toast("انمسحت البيانات")}else{el.dataset.armed=1;el.textContent="اضغط مرة ثانية للتأكيد";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="مسح كل البيانات"}},3500)}}
@@ -697,6 +704,9 @@ document.addEventListener("input",e=>{if(e.target.id==="su-from"||e.target.id===
   sh.addEventListener("pointermove",e=>{if(gy==null)return;gd=Math.max(0,e.clientY-gy);sh.style.transform="translateY("+gd+"px)"});
   const end=c=>{if(gy==null)return;gy=null;sh.style.transition="";sh.style.transform="";if(!c&&(gd>80||gd<6))closeSheet()};
   sh.addEventListener("pointerup",()=>end(false));sh.addEventListener("pointercancel",()=>end(true))}
+document.addEventListener("change",async e=>{if(e.target.id!=="st-file"||!e.target.files[0])return;
+  try{const o=JSON.parse(await e.target.files[0].text());if(!o||!o.settings||!o.pages)throw 0;S=Object.assign(DEF(),o);save();closeSheet();renderAll();confetti();toast("رجعت بياناتك كاملة، الحمد لله")}
+  catch(x){toast("الملف غير صالح. تأكد إنه ملف النسخة الاحتياطية")}e.target.value=""});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
 
 renderAll();
