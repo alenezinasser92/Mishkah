@@ -227,6 +227,7 @@ nav.tabs button.on{color:var(--accent);font-weight:600}
 
 .fab{position:fixed;top:calc(14px + env(safe-area-inset-top));left:max(12px, calc(50% - 348px));z-index:21;background:var(--gold);border:none;border-radius:50%;width:46px;height:46px;padding:0;font-size:1.35rem;line-height:1;box-shadow:0 6px 18px rgba(196,146,42,.45);display:grid;place-items:center;transition:transform .15s}
 .topline{padding-inline-end:52px;align-items:flex-start}
+.topline>div:last-child{gap:6px !important}
 .topline .iconbtn{width:38px;height:38px;margin-top:4px}
 .fab:active{transform:scale(.94)}
 
@@ -446,6 +447,43 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .vauto i{display:block;height:100%;width:100%;background:var(--gold);transform-origin:right;animation:vauto 4s linear forwards}
 @keyframes vauto{to{transform:scaleX(0)}}
 .ay.mkd{color:#a3122b;background:rgba(163,18,43,.1);border-radius:6px}
+.sheet.tall{height:92%;max-height:92%}
+.ixhead{position:sticky;top:-10px;background:var(--surface);z-index:2;padding:4px 0 10px;display:flex;flex-direction:column;gap:10px}
+.ixsearch{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--line);border-radius:16px;padding:0 12px;transition:border-color .2s, box-shadow .2s}
+.ixsearch:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.ixsearch svg{width:18px;height:18px;color:var(--muted);flex:none}
+.ixsearch input{flex:1;border:none;background:transparent;padding:12px 0;font-size:1rem;outline:none;min-width:0}
+.ixsec{font-size:.75rem;font-weight:700;color:var(--muted);padding:12px 4px 4px}
+.ixrow{display:flex;align-items:center;gap:12px;width:100%;border:none;background:transparent;text-align:start;padding:10px 6px;border-radius:14px;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);transition:background .15s, transform .15s}
+.ixrow:active{background:var(--surface2);transform:scale(.985)}
+.ixrow.cur{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.ixn{position:relative;width:34px;height:34px;flex:none;display:grid;place-items:center;font-size:.78rem;font-weight:700;color:var(--accent)}
+.ixn::before,.ixn::after{content:"";position:absolute;inset:3px;border:1.5px solid var(--gold);border-radius:6px}
+.ixn::after{transform:rotate(45deg)}
+.ixrow.cur .ixn::before{animation:spin 8s linear infinite}.ixrow.cur .ixn::after{animation:spinb2 8s linear infinite}
+.ixt{flex:1;min-width:0}
+.ixt b{display:block;font-family:var(--display);font-size:1.25rem;line-height:1.35}
+.ixt small{color:var(--muted);font-size:.74rem}
+.ixt .q{font-family:var(--quran);font-size:1.05rem;line-height:1.9;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ixp{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.ixbar{width:34px;height:4px;border-radius:9px;background:var(--surface2);overflow:hidden;display:flex;margin-top:4px}
+#ix-list{animation:rise .3s both}
+.rscrub{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:2px 4px 0}
+.rscrub input{flex:1;accent-color:var(--accent);height:26px;min-width:0}
+.rscrub span{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.rbub{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) scale(.9);z-index:5;background:rgba(14,40,35,.88);color:#f6e7bf;border-radius:22px;padding:14px 26px;text-align:center;pointer-events:none;opacity:0;transition:opacity .18s, transform .18s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.rbub.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.rbub b{display:block;font-family:var(--display);font-size:2.4rem;line-height:1.1}
+.rbub span{font-size:.9rem;color:#d8e6e0;white-space:nowrap}
+.rhead,.rfoot{transition:margin .32s cubic-bezier(.25,.8,.3,1),opacity .25s}
+.reader.zen .rhead{margin-top:calc(-1 * var(--rh,80px));opacity:0;pointer-events:none}
+.reader.zen .rfoot{margin-bottom:calc(-1 * var(--rf,120px));opacity:0;pointer-events:none}
+.reader.zen .rbody{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.rtrack.jfade{animation:jfade .35s ease-out}
+@keyframes jfade{from{opacity:0;transform:translateX(-33.3333%) scale(.985)}to{opacity:1;transform:translateX(-33.3333%)}}
+.ay.flash{animation:ayflash 2.6s ease-out}
+@keyframes ayflash{0%,35%{background:rgba(196,146,42,.55)}100%{background:transparent}}
+.rhead .t{border:none;background:transparent;color:inherit;font:inherit;padding:0;cursor:pointer}
 .tundo{margin-inline-start:10px;border:none;background:var(--gold);color:#241a05;border-radius:8px;padding:3px 12px;font-weight:700}
 .rate.cur{outline:3px solid var(--ink);outline-offset:2px}
 .toast:not(.show){transform:translate(-50%,calc(-100% - 60px));visibility:hidden;transition:transform .35s, visibility 0s .35s}
@@ -476,6 +514,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <button class="iconbtn newsdot" id="newsbtn" data-act="news" aria-label="ما الجديد"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/></svg></button>
+        <button class="iconbtn" data-act="mushaf" aria-label="المصحف"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 6c-2-1.5-4.5-2-8-2v14c3.500 0 6 .5 8 2 2-1.500 4.500-2 8-2V4c-3.500 0-6 .5-8 2zM12 6v14"/></svg></button>
         <button class="iconbtn" data-act="settings" aria-label="الإعدادات">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
         </button>
@@ -518,14 +557,16 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
 <div class="reader" id="reader" role="dialog" aria-modal="true" aria-label="المصحف">
   <div class="rhead">
     <button class="rbtn" data-act="rclose" aria-label="إغلاق">✕</button>
-    <div class="t"><b id="r-title">—</b><span id="r-sub"></span></div>
+    <button class="t" data-act="ridx" aria-label="الفهرس والبحث"><b id="r-title">—</b><span id="r-sub"></span></button>
+    <button class="rbtn" data-act="ridx" aria-label="بحث وفهرس"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
     <button class="rbtn" data-act="rhide" id="r-hide" aria-label="إخفاء للتسميع" title="إخفاء للتسميع">👁</button>
     <button class="rbtn" data-act="rfit" id="r-fit" aria-label="الصفحة كاملة في الشاشة" title="الصفحة كاملة في الشاشة">⤢</button>
     <button class="rbtn" data-act="rsize" data-d="-1" aria-label="تصغير الخط">ـأ</button>
     <button class="rbtn" data-act="rsize" data-d="1" aria-label="تكبير الخط">أ+</button>
   </div>
-  <div class="rbody" id="r-body"><div class="rtrack" id="r-track"><div class="rpage"></div><div class="rpage"></div><div class="rpage"></div></div></div>
+  <div class="rbody" id="r-body"><div class="rbub" id="r-bub"><b class="num"></b><span></span></div><div class="rtrack" id="r-track"><div class="rpage"></div><div class="rpage"></div><div class="rpage"></div></div></div>
   <div class="rfoot">
+    <div class="rscrub"><span>١</span><input type="range" id="r-range" min="1" max="604" step="1" value="1" dir="rtl" aria-label="انتقل لصفحة"><span>٦٠٤</span></div>
     <button class="rnav" data-act="rgo" data-d="-1" id="r-prev">→ السابقة<small></small></button>
     <div class="rmid"><b class="num" id="r-num">—</b><button class="sbtn" data-act="rrate">قيّم الصفحة</button></div>
     <button class="rnav" data-act="rgo" data-d="1" id="r-next">التالية ←<small></small></button>
@@ -545,8 +586,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.1";
+const VERSION="2.2";
 const CHANGELOG=[
+ {v:"2.2",d:"2026-11-13",items:["فهرس وبحث داخل المصحف: اضغط اسم السورة فوق أو زر 🔍. قائمة كل السور والأجزاء وأخطائك بتمرير ناعم","بحث فوري: اسم سورة، «النور ٣٥»، رقم صفحة، أو كلمات من أي آية، والآية تتميز بالذهبي لما توصلها","شريط سحب تحت للتنقل السريع بين الـ٦٠٤ صفحة مع عرض الصفحة والسورة وأنت تسحب","اضغط على الصفحة فتختفي الأزرار وتصير القراءة على كامل الشاشة، واضغط مرة ثانية ترجع","زر المصحف في الصفحة الرئيسية يفتح آخر صفحة وقفت عليها"]},
  {v:"2.1",d:"2026-11-13",items:["المساعد الصوتي 🎙: زر المايك الأخضر تحت. قل وين أخطأت بكلامك العادي أو اقرأ جزء من الآية، وهو يحدد السورة والآية والصفحة ونوع الخطأ ويسجلها","إذا كان متأكد من الآية يسجلها تلقائياً بعد ٤ ثواني، مناسب إذا كنت مستعجل","الآيات اللي فيها أخطاء نشطة تتلون بالأحمر داخل المصحف","بيج المصحف صار أخف شوي"]},
  {v:"2.0.2",d:"2026-11-13",items:["المصحف والآيات في الإمامة والمتشابهات صارت بيج أغمق بكثير، مثل الورق القديم، أريح للعين"]},
  {v:"2.0.1",d:"2026-11-13",items:["خلفية صفحة المصحف صارت بيج أدفى وأريح للعين"]},
@@ -709,7 +751,7 @@ applyUI();
 let toastT,undoFn=null;
 function toastUndo(m,fn){const t=$("#toast");t.innerHTML=esc(m)+'<button class="tundo" data-act="undo">تراجع</button>';undoFn=fn;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove("show");undoFn=null},6500)}
 function toast(m){const t=$("#toast");undoFn=null;t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200)}
-function openSheet(h){const s=$("#sheet");s.innerHTML='<div class="grab" role="button" aria-label="إغلاق"><i></i></div>'+h;s.classList.add("open");$("#backdrop").classList.add("open");document.documentElement.classList.add("locked");s.scrollTop=0}
+function openSheet(h){const s=$("#sheet");s.classList.remove("tall");s.innerHTML='<div class="grab" role="button" aria-label="إغلاق"><i></i></div>'+h;s.classList.add("open");$("#backdrop").classList.add("open");document.documentElement.classList.add("locked");s.scrollTop=0}
 function closeSheet(){clearTimeout(voAutoT);clearTimeout(voDeb);if(voRec){try{voRec.abort()}catch(e){}voRec=null}$("#sheet").classList.remove("open");$("#backdrop").classList.remove("open");if(!$("#reader").classList.contains("open"))document.documentElement.classList.remove("locked")}
 
 function renderHero(){const n=S.setup?memCount():0;const pct=n/604;
@@ -946,7 +988,8 @@ function drawGlyph(p,pg){pg.style.removeProperty("--rs");const L=MLAY[p-1];const
     :l[0]==="b"?`<div class="ql"><span class="qi" style="font-family:qpc2bsml">${l[1]}</span></div>`
     :`<div class="ql"><span class="qi">${l[1].map(sg=>`<span class="ay${mkset.has(sg[0])?" mkd":""}" data-act="ayah" data-k="${sg[0]}">${sg[1]}</span>`).join("")}</span></div>`).join("");
   pg.innerHTML=`<div class="mq"><div class="mqtop"><span>الجزء ${JUZN[juzOf(p)-1]}</span><span>سورة ${sname}</span></div><div class="mqlines" style="font-family:qpc2p${p}">${lines}</div><div class="mqnum num">${ar(p)}</div></div>`;
-  pg.scrollTop=0;fitGlyph(pg);syncGlyphClass()}
+  pg.scrollTop=0;fitGlyph(pg);syncGlyphClass();
+  if(rFlash&&pg===rSlots()[1]){pg.querySelectorAll('.ay[data-k="'+rFlash+'"]').forEach(x=>x.classList.add("flash"));rFlash=null}}
 function syncGlyphClass(){const c=rSlots()[1];$("#reader").classList.toggle("glyph",!!c.querySelector(".mqlines")||!c.querySelector(".mpage"))}
 function fitGlyph(pg){const box=pg.querySelector(".mqlines");if(!box)return;const body=$("#r-body");
   box.style.fontSize="40px";let mw=1;box.querySelectorAll(".qi").forEach(q=>{const w=q.getBoundingClientRect().width;if(w>mw)mw=w});
@@ -960,7 +1003,7 @@ async function drawPage(p,pg){pg.dataset.p=p;if(p<1||p>604){pg.innerHTML="";retu
   if(pg.dataset.p!=p)return;
   if(ok){drawGlyph(p,pg);return}
   try{await loadQuran();if(pg.dataset.p==p)drawText(p,pg)}catch(e){if(pg.dataset.p==p)pg.innerHTML='<div class="empty">ما قدرت أحمّل المصحف. افتح التطبيق مرة وأنت متصل بالإنترنت.</div>'}}
-function rHeader(){const p=rPage;$("#r-title").textContent=pageLabel(p);
+function rHeader(){const p=rPage;const rg=$("#r-range");if(rg)rg.value=p;try{localStorage.setItem("mishkah-last",p)}catch(e){}$("#r-title").textContent=pageLabel(p);
   const st=strength(p);const stl={s3:"متقنة",s2:"جيدة",s1:"متعثرة",s0:"نسيت",su:"ما قُيّمت",snm:"غير محفوظة"}[st];
   $("#r-sub").textContent="الجزء "+ar(juzOf(p))+" · "+stl;$("#r-num").textContent=ar(p);
   const pv=$("#r-prev"),nx=$("#r-next");pv.disabled=p<=1;nx.disabled=p>=604;
@@ -968,10 +1011,44 @@ function rHeader(){const p=rPage;$("#r-title").textContent=pageLabel(p);
 function renderReader(){rHeader()}
 function drawAll(){const[n,c,pv]=rSlots();drawPage(rPage,c);drawPage(rPage+1,n);drawPage(rPage-1,pv)}
 function openReader(p){rPage=Math.min(604,Math.max(1,+p||1));applyRS();const r=$("#reader");r.classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);
-  r.classList.add("open");document.documentElement.classList.add("locked");
-  const tr=$("#r-track");tr.classList.remove("anim");tr.style.transform="";rBusy=false;rSlots().forEach(x=>{x.innerHTML="";delete x.dataset.p});rHeader();drawAll()}
-function closeReader(){$("#reader").classList.remove("open");if(!$("#sheet").classList.contains("open"))document.documentElement.classList.remove("locked")}
-let rBusy=false;
+  r.classList.remove("zen");r.classList.add("open");document.documentElement.classList.add("locked");
+  const tr=$("#r-track");tr.classList.remove("jfade");tr.classList.remove("anim");tr.style.transform="";rBusy=false;rSlots().forEach(x=>{x.innerHTML="";delete x.dataset.p});rHeader();drawAll()}
+function closeReader(){$("#reader").classList.remove("open","zen");if(!$("#sheet").classList.contains("open"))document.documentElement.classList.remove("locked")}
+let rBusy=false,rFlash=null,ixMode="surah",ixDeb=null;
+function readerJump(p,k){p=Math.min(604,Math.max(1,+p||1));rFlash=k||null;if(!$("#reader").classList.contains("open")){openReader(p);return}
+  rPage=p;const tr=$("#r-track");tr.classList.remove("anim","jfade");tr.style.transform="";rBusy=false;void tr.offsetWidth;if(S.ui.motion)tr.classList.add("jfade");rHeader();drawAll()}
+function setZen(on){const r=$("#reader");r.style.setProperty("--rh",r.querySelector(".rhead").offsetHeight+"px");r.style.setProperty("--rf",r.querySelector(".rfoot").offsetHeight+"px");r.classList.toggle("zen",on)}
+function ixRow(p,k,num,title,sub,right,cur,extra){return `<button class="ixrow ${cur?"cur":""}" data-act="ixgo" data-p="${p}" data-k="${k||""}"><span class="ixn num">${num}</span><span class="ixt"><b>${title}</b>${sub?`<small>${sub}</small>`:""}${extra||""}</span><span class="ixp num">${right}</span></button>`}
+function ixRender(){const box=$("#ix-list");if(!box)return;const C=window.QACNT||(typeof ACNT!=="undefined"?ACNT:null);const q=VN($("#ix-q").value);let h="";
+  const surRow=i=>{let bar="";if(S.setup){const cnt={s3:0,s2:0,s1:0,s0:0,su:0};let n=0;for(let p=SSTART[i];p<=SEND[i];p++){const st=strength(p);if(st!=="snm"){cnt[st]++;n++}}if(n)bar=`<span class="ixbar">${Object.keys(cnt).map(k=>cnt[k]?`<i style="width:${cnt[k]/n*100}%;background:var(--${k})"></i>`:"").join("")}</span>`}
+    return ixRow(SSTART[i],(i+1)*1000+1,ar(i+1),SURAH[i],(window.QTYPE?(QTYPE[i]?"مدنية":"مكية")+" · ":"")+(C?ar(C[i])+" آية":""),"ص "+ar(SSTART[i]),rPage>=SSTART[i]&&rPage<=SEND[i]&&surahsOn(rPage)[0]===i,bar)};
+  if(!q){$("#ix-seg").style.display="";
+    if(ixMode==="surah")for(let i=0;i<114;i++)h+=surRow(i);
+    else if(ixMode==="juz")for(let j=1;j<=30;j++)h+=ixRow(JSTART[j-1],"",ar(j),"الجزء "+JUZN[j-1],esc(pageLabel(JSTART[j-1])),"ص "+ar(JSTART[j-1]),juzOf(rPage)===j);
+    else{const ms=S.mistakes.filter(m=>!m.done);if(!ms.length)h='<div class="empty">ما عندك أخطاء نشطة، ما شاء الله</div>';ms.sort((a,b)=>a.page-b.page).forEach(m=>{h+=ixRow(m.page,m.ayah?(m.surah+1)*1000+m.ayah:"","!",SURAH[m.surah]+(m.ayah?" · آية "+ar(m.ayah):""),esc(m.type)+(m.note?" · "+esc(m.note.slice(0,40)):""),"ص "+ar(m.page))})}
+    box.innerHTML=h;const c=box.querySelector(".ixrow.cur");if(c)c.scrollIntoView({block:"center"});return}
+  $("#ix-seg").style.display="none";const toks=q.split(" ");const nums=toks.filter(t=>/^\d+$/.test(t)).map(Number);const kw=new Set(["سوره","ايه","الايه","صفحه","الصفحه","ص","جزء","الجزء","رقم"]);const words=toks.filter(t=>!/^\d+$/.test(t)&&!kw.has(t));
+  const idOf=(si,ay)=>{let id=ay;for(let i=0;i<si;i++)id+=C[i];return id};const pOf=(si,ay)=>window.QPAGE&&C?pageOfAyah(idOf(si,ay)):SSTART[si];
+  if(!words.length&&nums.length){const n=nums[0];h+='<div class="ixsec">انتقال سريع</div>';
+    if(nums.length>=2&&n>=1&&n<=114&&C&&nums[1]>=1&&nums[1]<=C[n-1])h+=ixRow(pOf(n-1,nums[1]),n*1000+nums[1],ar(n),SURAH[n-1]+" · آية "+ar(nums[1]),"","ص "+ar(pOf(n-1,nums[1])));
+    if(n>=1&&n<=604)h+=ixRow(n,"","ص","صفحة "+ar(n),esc(pageLabel(n))+" · الجزء "+ar(juzOf(n)),"");
+    if(n>=1&&n<=114)h+=surRow(n-1);
+    if(n>=1&&n<=30)h+=ixRow(JSTART[n-1],"",ar(n),"الجزء "+JUZN[n-1],esc(pageLabel(JSTART[n-1])),"ص "+ar(JSTART[n-1]))}
+  if(words.length){const w=words.join(" ").replace(/(^| )ال/g,"$1");const ms=[];SURAH.forEach((nm,i)=>{const v=VN(nm).replace(/(^| )ال/g,"$1");if(v.startsWith(w))ms.unshift(i);else if(v.includes(w))ms.push(i)});
+    if(ms.length){h+='<div class="ixsec">السور</div>';if(nums.length&&C)ms.slice(0,3).forEach(i=>{if(nums[0]>=1&&nums[0]<=C[i])h+=ixRow(pOf(i,nums[0]),(i+1)*1000+nums[0],ar(i+1),SURAH[i]+" · آية "+ar(nums[0]),"","ص "+ar(pOf(i,nums[0])))});ms.slice(0,8).forEach(i=>h+=surRow(i))}
+    const sk=SK(words.join(" "));
+    if(sk.length>=4){if(!window.QTEXT){h+='<div class="ixsec">جاري تحميل نص المصحف للبحث في الآيات…</div>';loadQuran().then(ixRender).catch(()=>{})}
+      else{if(!QSK)QSK=QTEXT.map(SK);const r=[];for(let id=0;id<6236&&r.length<60;id++)if(QSK[id].includes(sk))r.push(id);
+        if(r.length){h+=`<div class="ixsec">الآيات ${r.length>=60?"(أول ٦٠ نتيجة)":"("+ar(r.length)+")"}</div>`;r.forEach(id=>{const[si,ay]=qloc(id+1);const p=pageOfAyah(id+1);h+=ixRow(p,(si+1)*1000+ay,ar(ay),SURAH[si]+" · آية "+ar(ay),"","ص "+ar(p),false,`<span class="q">${esc(QTEXT[id])}</span>`)})}}}}
+  box.innerHTML=h||'<div class="empty">ما لقيت شي. جرب اسم سورة، أو «النور ٣٥»، أو رقم صفحة، أو كلمات من آية.</div>'}
+function idxSheet(){openSheet(`<div class="ixhead"><h3>الفهرس والبحث</h3><label class="ixsearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="ix-q" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" placeholder="سورة، النور ٣٥، رقم صفحة، أو كلمات من آية"></label>
+  <div class="seg" id="ix-seg" style="align-self:flex-start"><button class="${ixMode==="surah"?"on":""}" data-act="ixmode" data-v="surah">السور</button><button class="${ixMode==="juz"?"on":""}" data-act="ixmode" data-v="juz">الأجزاء</button><button class="${ixMode==="mk"?"on":""}" data-act="ixmode" data-v="mk">أخطائي</button></div></div><div id="ix-list"></div>`);
+  $("#sheet").classList.add("tall");$("#ix-q").addEventListener("input",()=>{clearTimeout(ixDeb);ixDeb=setTimeout(ixRender,140)});ixRender();loadQuran().then(()=>{if($("#ix-list")&&!$("#ix-q").value)ixRender()}).catch(()=>{})}
+{const rg=document.getElementById("r-range"),bub=document.getElementById("r-bub");let bt;
+  rg.addEventListener("input",()=>{const p=+rg.value;bub.querySelector("b").textContent=ar(p);bub.querySelector("span").textContent=pageLabel(p)+" · الجزء "+ar(juzOf(p));bub.classList.add("on");clearTimeout(bt)});
+  const done=()=>{bt=setTimeout(()=>bub.classList.remove("on"),350);const p=+rg.value;if(p!==rPage)readerJump(p)};rg.addEventListener("change",done);
+  const rb=document.getElementById("r-body");let raf;if(window.ResizeObserver)new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(fitPage)}).observe(rb);
+  rb.addEventListener("click",e=>{if(rHide||e.target.closest("button,a,input"))return;setZen(!document.getElementById("reader").classList.contains("zen"))})}
 function readerGo(d){const n=rPage+d;if(rBusy||n<1||n>604)return;rBusy=true;const tr=$("#r-track");
   const finish=()=>{tr.classList.remove("anim");
     if(d>0)tr.prepend(tr.lastElementChild);else tr.append(tr.firstElementChild);
@@ -1050,7 +1127,7 @@ function segi(k,opts,cur){return `<div class="seg">${opts.map(([v,l])=>`<button 
 
 /* ---------- voice assistant (on-device) ---------- */
 const VN=t=>String(t||"").replace(/[ً-ٰٟۖ-ۭـؐ-ؚ]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[^ء-ي0-9\s]/g," ").replace(/\s+/g," ").trim();
-const SK=t=>String(t||"").replace(/[ً-ٰٟۖ-ۭـؐ-ؚ࣓-ࣿ]/g,"").replace(/[أإآٱاء]/g,"").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/ؤ/g,"و").replace(/ئ/g,"ي").replace(/[^ء-ي]/g,"").replace(/(.)\1+/g,"$1").replace(/صلوه/g,"صله").replace(/زكوه/g,"زكه").replace(/حيوه/g,"حيه");
+const SK=t=>String(t||"").replace(/\u0648\u0670/g,"").replace(/[ً-ٰٟۖ-ۭـؐ-ؚ࣓-ࣿ]/g,"").replace(/[أإآٱاء]/g,"").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/ؤ/g,"و").replace(/ئ/g,"ي").replace(/[^ء-ي]/g,"").replace(/(.)\1+/g,"$1").replace(/صلوه/g,"صله").replace(/زكوه/g,"زكه").replace(/حيوه/g,"حيه");
 const NUMW={"واحد":1,"واحده":1,"اولي":1,"الاولي":1,"احد":1,"احدي":1,"اثنين":2,"اثنان":2,"ثنتين":2,"اثنتين":2,"اثنا":2,"اثني":2,"الثانيه":2,"ثلاث":3,"ثلاثه":3,"اربع":4,"اربعه":4,"خمس":5,"خمسه":5,"ست":6,"سته":6,"سبع":7,"سبعه":7,"ثمان":8,"ثماني":8,"ثمانيه":8,"تسع":9,"تسعه":9,"عشر":10,"عشره":10,"عشرين":20,"عشرون":20,"ثلاثين":30,"ثلاثون":30,"اربعين":40,"اربعون":40,"خمسين":50,"خمسون":50,"ستين":60,"ستون":60,"سبعين":70,"سبعون":70,"ثمانين":80,"ثمانون":80,"تسعين":90,"تسعون":90,"مئه":100,"مايه":100,"ميه":100,"مائه":100,"مئتين":200,"ميتين":200,"مائتين":200,"مئتان":200};
 function numAfter(norm,re){const m=norm.match(re);if(!m)return null;const toks=norm.slice(m.index+m[0].length).trim().split(" ").slice(0,5);let sum=0,got=false;
   for(let t of toks){if(t==="رقم"&&!got)continue;if(/^\d+$/.test(t)){if(got)break;return +t}const w=t.replace(/^و(?=.{2,})/,"");const v=NUMW[t]??NUMW[w];if(v==null){if(got)break;else if(t==="و")continue;else break}sum+=v;got=true}
@@ -1129,6 +1206,10 @@ function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce
 const A={
   tab(el){el.classList.remove("tap");void el.offsetWidth;el.classList.add("tap");setTimeout(()=>el.classList.remove("tap"),520);if(navigator.vibrate&&S.ui.haptic)try{navigator.vibrate(10)}catch(x){}view=el.dataset.v;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===view));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));if(view==="imam")renderImam();scrollTo({top:0,behavior:"smooth"})},
   close:closeSheet,
+  ridx(){idxSheet()},
+  ixmode(el){ixMode=el.dataset.v;el.parentElement.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===el));const l=$("#ix-list");l.style.animation="none";void l.offsetWidth;l.style.animation="";ixRender()},
+  ixgo(el){const p=+el.dataset.p,k=el.dataset.k;closeSheet();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();readerJump(p,k)},
+  mushaf(){let p=0;try{p=+localStorage.getItem("mishkah-last")}catch(e){}if(!(p>=1&&p<=604))p=S.setup?(nextNew()[0]||S.settings.from):1;openReader(p)},
   voice(){voSheet();if(window.SpeechRecognition||window.webkitSpeechRecognition)setTimeout(voListen,350)},
   vomic(){clearTimeout(voAutoT);const b=$("#vo-res");if(b&&!voRec){b.innerHTML="";$("#vo-text").value=""}voListen()},
   voanalyze(){voAnalyze()},
