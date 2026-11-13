@@ -1,5 +1,5 @@
 // Bump CACHE on every release.
-const CACHE = "hifz-1.7.8";
+const CACHE = "hifz-1.7.9";
 const CORE = ["./", "./index.html", "./mut.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); });
 self.addEventListener("activate", e => {
