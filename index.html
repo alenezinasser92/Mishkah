@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>مِشكاة</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
@@ -24,7 +24,7 @@
   --s3:#16946b; --s2:#7dbb4f; --s1:#e2a336; --s0:#d65151; --su:#cdd9d4; --snm:#eef2f0;
   --csat:62%; --clit:84%; --ctxt:#17302b;
   --quran:"Amiri","Geeza Pro","Noto Naskh Arabic","Traditional Arabic",serif; --display:"Amiri", "Traditional Arabic", serif; --body:"IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
-  --r:18px; --shadow:0 1px 2px rgba(10,40,35,.06), 0 8px 24px rgba(10,40,35,.06);
+  --sab:max(env(safe-area-inset-bottom),0px); --navlift:0px; --r:18px; --shadow:0 1px 2px rgba(10,40,35,.06), 0 8px 24px rgba(10,40,35,.06);
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
@@ -52,7 +52,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .num{font-variant-numeric:tabular-nums}
 
 /* top band */
-.band{position:relative;background:linear-gradient(160deg,var(--band),var(--band2));color:#f3efe2;padding:18px 16px 70px;overflow:hidden}
+.band{position:relative;background:linear-gradient(160deg,var(--band),var(--band2));color:#f3efe2;padding:calc(18px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 70px max(16px, env(safe-area-inset-left));overflow:hidden}
 .band .pattern{position:absolute;inset:0;background:var(--pat);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Cpath d='M0 0L8 8M56 0L48 8M0 56L8 48M56 56L48 48'/%3E%3C/g%3E%3C/svg%3E") repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Cpath d='M0 0L8 8M56 0L48 8M0 56L8 48M56 56L48 48'/%3E%3C/g%3E%3C/svg%3E") repeat;
@@ -83,7 +83,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .flame{display:inline-block;transform-origin:bottom center;animation:flick 1.6s ease-in-out infinite}
 @keyframes flick{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.12) rotate(3deg)}}
 
-main{max-width:720px;margin:-52px auto 0;padding:0 16px 120px;position:relative;display:flex;flex-direction:column;gap:16px}
+main{max-width:720px;margin:-52px auto 0;padding:0 16px calc(130px + var(--sab) + var(--navlift));position:relative;display:flex;flex-direction:column;gap:16px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;animation:rise .45s both}
 @keyframes rise{from{transform:translateY(10px)}to{transform:none}}
 .card h2{font-family:var(--display);font-size:1.45rem;font-weight:700;line-height:1.3}
@@ -208,13 +208,13 @@ main{max-width:720px;margin:-52px auto 0;padding:0 16px 120px;position:relative;
 @keyframes spin{to{transform:rotate(405deg)}}
 
 /* nav + fab */
-nav.tabs{position:fixed;bottom:0;inset-inline:0;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs{position:fixed;bottom:0;inset-inline:0;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:20;padding-bottom:calc(var(--sab) + var(--navlift))}
 nav.tabs .in{display:grid;grid-template-columns:repeat(4,1fr);max-width:720px;width:100%}
 nav.tabs button{border:none;background:transparent;padding:9px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;color:var(--muted)}
 nav.tabs button svg{width:22px;height:22px;transition:transform .2s}
 nav.tabs button.on{color:var(--accent);font-weight:600}
 nav.tabs button.on svg{transform:translateY(-2px)}
-.fab{position:fixed;top:14px;left:max(12px, calc(50% - 348px));z-index:21;background:var(--gold);border:none;border-radius:50%;width:46px;height:46px;padding:0;font-size:1.35rem;line-height:1;box-shadow:0 6px 18px rgba(196,146,42,.45);display:grid;place-items:center;transition:transform .15s}
+.fab{position:fixed;top:calc(14px + env(safe-area-inset-top));left:max(12px, calc(50% - 348px));z-index:21;background:var(--gold);border:none;border-radius:50%;width:46px;height:46px;padding:0;font-size:1.35rem;line-height:1;box-shadow:0 6px 18px rgba(196,146,42,.45);display:grid;place-items:center;transition:transform .15s}
 .topline{padding-inline-end:52px;align-items:flex-start}
 .topline .iconbtn{width:38px;height:38px;margin-top:4px}
 .fab:active{transform:scale(.94)}
@@ -222,7 +222,7 @@ nav.tabs button.on svg{transform:translateY(-2px)}
 /* sheet */
 .backdrop{position:fixed;inset:0;background:rgba(5,20,17,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
 .backdrop.open{opacity:1;pointer-events:auto}
-.sheet{position:fixed;inset-inline:0;bottom:0;z-index:41;max-height:88%;overflow:auto;background:var(--surface);border-radius:24px 24px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.9,.25,1);max-width:720px;margin:0 auto}
+.sheet{position:fixed;inset-inline:0;bottom:0;z-index:41;max-height:88%;overflow:auto;background:var(--surface);border-radius:24px 24px 0 0;padding:10px 18px calc(22px + var(--sab) + var(--navlift));transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.9,.25,1);max-width:720px;margin:0 auto}
 .sheet.open{transform:none}
 .sheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .backdrop{touch-action:none;overscroll-behavior:contain}
@@ -268,7 +268,7 @@ html.locked,html.locked body{overflow:hidden}
 .newsdot.has::after{content:"";position:absolute;top:5px;inset-inline-end:5px;width:10px;height:10px;border-radius:50%;background:#f6dc8a;box-shadow:0 0 0 2px var(--band)}
 .news ul{margin:6px 0 0;padding-inline-start:20px;font-size:.9rem}
 .sync span{white-space:nowrap}
-.toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-140%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:60;font-size:.9rem;font-weight:600;transition:transform .35s cubic-bezier(.2,.9,.25,1);max-width:90%;text-align:center}
+.toast{position:fixed;top:calc(16px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-140%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:60;font-size:.9rem;font-weight:600;transition:transform .35s cubic-bezier(.2,.9,.25,1);max-width:90%;text-align:center}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:11px 2px;border:none;border-top:1px solid var(--line);background:transparent;text-align:start}
 .srow b{font-family:var(--display);font-size:1.15rem}
 .srow.on b{color:var(--accent)}
@@ -277,7 +277,7 @@ html.locked,html.locked body{overflow:hidden}
 .aybox{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px;display:flex;flex-direction:column;gap:6px}
 .aybox .loc{font-size:.8rem;font-weight:700;color:var(--accent)}
 .aytxt{font-family:var(--quran);font-size:var(--qs,1.2rem);line-height:2.1}
-.upd{position:fixed;bottom:calc(74px + env(safe-area-inset-bottom));inset-inline:0;margin:0 auto;width:max-content;max-width:calc(100% - 32px);z-index:55;background:var(--accent);color:var(--accent-ink);border:none;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:var(--shadow);display:none;white-space:nowrap}
+.upd{position:fixed;bottom:calc(80px + var(--sab) + var(--navlift));inset-inline:0;margin:0 auto;width:max-content;max-width:calc(100% - 32px);z-index:55;background:var(--accent);color:var(--accent-ink);border:none;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:var(--shadow);display:none;white-space:nowrap}
 .upd.show{display:block;animation:rise .4s both}
 details.sec{border:1px solid var(--line);border-radius:14px;padding:0 12px;background:var(--surface)}
 details.sec summary{cursor:pointer;padding:12px 0;font-weight:700;display:flex;justify-content:space-between;align-items:center;list-style:none}
@@ -311,6 +311,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
 .lineitem{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.88rem}
 @media (max-width:420px){ .brand{font-size:1.2rem;white-space:nowrap} .dateline{font-size:.78rem} .ring{width:104px;height:104px} .ring svg{width:104px;height:104px} .pair .halves{grid-template-columns:1fr} .pair .h + .h{border-inline-start:none;border-top:1px dashed var(--line)} }
 @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none !important;transition:none !important} }
+@media (display-mode: standalone) and (max-width:820px){ :root{--navlift:10px} nav.tabs button{padding:11px 4px 8px} }
 </style>
 </head>
 <body>
@@ -377,8 +378,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.7";
+const VERSION="1.7.1";
 const CHANGELOG=[
+ {v:"1.7.1",d:"2026-11-13",items:["شريط التبويبات تحت ارتفع شوي على الجوال وصار بعيد عن شريط الآيفون السفلي","الهيدر وزر ⚠️ والإشعارات صارت تحترم حواف الشاشة على الآيفون"]},
  {v:"1.7",d:"2026-11-13",items:["إعدادات كاملة مقسّمة: المظهر، الخطة، اليوم والتقويم، الخريطة والمتشابهات، البيانات","٦ ألوان للتطبيق، وضع فاتح/داكن/تلقائي، ٤ خطوط للواجهة و٣ للآيات، وأحجام للخط","أرقام عربية أو إنجليزية، وإيقاف الحركات والاحتفال","بداية اليوم: المراجعة بعد منتصف الليل تنحسب على اليوم السابق لو تبي","أيام راحة ما تكسر سلسلة الأيام وتدخل في حساب الختم","سرعة تباعد المراجعة: بطيئة أو عادية أو سريعة","تعديل التاريخ الهجري بيوم، وإخفاء المتشابهات الجاهزة، والاهتزاز على أندرويد","إحصاءات بياناتك في الإعدادات"]},
  {v:"1.6",d:"2026-11-13",items:["اسم التطبيق صار «مِشكاة»، من سورة النور: ﴿كَمِشْكَاةٍ فِيهَا مِصْبَاحٌ﴾","أيقونة جديدة: مشكاة فيها مصباح"]},
  {v:"1.5.1",d:"2026-11-13",items:["النسخة الاحتياطية صارت ملف: «احفظ نسخة كملف» و«استرجع من ملف» في الإعدادات"]},
