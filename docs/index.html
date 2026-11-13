@@ -586,8 +586,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.2";
+const VERSION="2.3";
 const CHANGELOG=[
+ {v:"2.3",d:"2026-11-14",items:["المساعد الصوتي صار يسوي أشياء كثيرة مو بس الأخطاء","قيّم بالكلام: «حط سورة فصلت كلها متقنة»، والصفحات اللي عليها أخطاء نشطة تنزل درجتها تلقائياً حسب عدد الأخطاء","افتح أي سورة أو صفحة أو جزء أو آية بالكلام","اسأله: كم باقي من ورد اليوم، وين أضعف صفحاتي، متى أختم، كم صفحة حافظ","ثبّت خطأ، سجّل حفظ صفحة اليوم، اطلب اقتراح للإمامة أو اختبار، وغيّر الوضع الداكن","زر «كل الأوامر» يعرض كل اللي يفهمه"]},
  {v:"2.2",d:"2026-11-13",items:["فهرس وبحث داخل المصحف: اضغط اسم السورة فوق أو زر 🔍. قائمة كل السور والأجزاء وأخطائك بتمرير ناعم","بحث فوري: اسم سورة، «النور ٣٥»، رقم صفحة، أو كلمات من أي آية، والآية تتميز بالذهبي لما توصلها","شريط سحب تحت للتنقل السريع بين الـ٦٠٤ صفحة مع عرض الصفحة والسورة وأنت تسحب","اضغط على الصفحة فتختفي الأزرار وتصير القراءة على كامل الشاشة، واضغط مرة ثانية ترجع","زر المصحف في الصفحة الرئيسية يفتح آخر صفحة وقفت عليها"]},
  {v:"2.1",d:"2026-11-13",items:["المساعد الصوتي 🎙: زر المايك الأخضر تحت. قل وين أخطأت بكلامك العادي أو اقرأ جزء من الآية، وهو يحدد السورة والآية والصفحة ونوع الخطأ ويسجلها","إذا كان متأكد من الآية يسجلها تلقائياً بعد ٤ ثواني، مناسب إذا كنت مستعجل","الآيات اللي فيها أخطاء نشطة تتلون بالأحمر داخل المصحف","بيج المصحف صار أخف شوي"]},
  {v:"2.0.2",d:"2026-11-13",items:["المصحف والآيات في الإمامة والمتشابهات صارت بيج أغمق بكثير، مثل الورق القديم، أريح للعين"]},
@@ -1158,15 +1159,73 @@ function addMistake(p,su,ay,type,note){const t=today();const ex=S.mistakes.find(
   if(isMem(p)){const rec=S.pages[p]||{n:0};rec.r=Math.min(rec.r??2,1);rec.iv=1;rec.due=addDays(t,1);S.pages[p]=rec}
   day().mk=(day().mk||0)+1;save();renderAll();return ex}
 let voRec=null,voRes=null,voAutoT=null,voDeb=null;
+const RLV=[[3,/متقن|ممتاز|قوي|مضبوط/],[2,/جيد|زين|كويس|تمام/],[1,/متعثر|ضعيف|مهزوز|وسط|يبي لها/],[0,/ناسي|منسي|نسيتها|رايحه/]];
+function voSurah(norm,loose){let best=-1,bl=0;const pad=" "+norm+" ";SURAH.forEach((n,i)=>{const a=VN(n),b=a.replace(/^ال/,"");for(const v of[a,b]){if(v.length<=bl)continue;if(pad.includes(" سوره "+v+" ")||(loose&&v.length>=3&&pad.includes(" "+v+" "))){best=i;bl=v.length}}});return best<0?null:best}
+function voScope(norm){let m;const mem=a=>a.filter(isMem);
+  if(m=norm.match(/من (?:صفحه |ص )?(\d+) (?:الي|ل|لين|حتي|لصفحه|الي صفحه) ?(?:صفحه )?(\d+)/)){const a=Math.min(+m[1],+m[2]),b=Math.max(+m[1],+m[2]);const r=[];for(let p=a;p<=b&&p<=604;p++)r.push(p);return{label:"الصفحات "+ar(a)+"–"+ar(b),pages:mem(r),all:r.length}}
+  const pg=numAfter(norm,/(?:^| )(?:الصفحه|صفحه)(?: |$)/);if(pg>=1&&pg<=604)return{label:"صفحة "+ar(pg),pages:mem([pg]),all:1};
+  let j=/جزء عم/.test(norm)?30:/جزء تبارك/.test(norm)?29:numAfter(norm,/(?:^| )(?:الجزء|جزء)(?: |$)/);
+  if(j>=1&&j<=30){const[a,b]=juzRange(j);const r=[];for(let p=a;p<=b;p++)r.push(p);return{label:"الجزء "+JUZN[j-1],pages:mem(r),all:r.length}}
+  if(S.setup){const L=day();if(/ورد اليوم|مراجعه اليوم/.test(norm))return{label:"مراجعة اليوم",pages:[...L.near,...L.far],all:L.near.length+L.far.length};
+    if(/القريب/.test(norm))return{label:"القريب",pages:[...L.near],all:L.near.length};if(/البعيد/.test(norm))return{label:"البعيد",pages:[...L.far],all:L.far.length};
+    if(/كل (المحفوظ|محفوظي|حفظي)/.test(norm)){const r=[];for(let p=S.settings.from;p<=S.settings.to;p++)r.push(p);return{label:"كل محفوظك",pages:r,all:r.length}}}
+  const si=voSurah(norm,true);if(si!=null){const r=[];for(let p=SSTART[si];p<=SEND[si];p++)r.push(p);return{label:"سورة "+SURAH[si],pages:mem(r),all:r.length,si}}
+  return null}
+const mkWeight=p=>S.mistakes.filter(m=>!m.done&&m.page===p).reduce((a,m)=>a+m.count,0);
+const lvlFor=(L,w)=>w===0?L:w===1?Math.min(L,2):w<=3?Math.min(L,1):0;
+function voCard(title,body){return `<div class="row" style="border:none;padding:0"><b>${title}</b></div><div style="line-height:1.9">${body}</div>`}
+function voRoute(text){const norm=VN(text);const has=re=>re.test(norm);const tab=v=>{closeSheet();const b=document.querySelector('nav.tabs [data-v="'+v+'"]');if(b)b.click()};
+  if(/^(تراجع|الغ|الغاء|رجع)/.test(norm)&&norm.split(" ").length<=3){if(undoFn){const f=undoFn;undoFn=null;f();return{kind:"answer",stat:"تم",html:voCard("تراجعت عن آخر شي","")}}return{kind:"answer",stat:"ما في شي أتراجع عنه",html:voCard("ما في شي أتراجع عنه","زر التراجع يشتغل لثواني بعد كل تسجيل.")}}
+  if(has(/الوضع (الداكن|الليلي|المظلم)|دارك مود/)||has(/الوضع (الفاتح|النهاري)/)){S.ui.theme=has(/الفاتح|النهاري/)?"light":"dark";applyUI();save();renderAll();return{kind:"answer",stat:"تم",html:voCard("غيّرت الوضع",S.ui.theme==="dark"?"صار داكن":"صار فاتح")}}
+  if(has(/^(اختبرني|اختبار|سمع لي|امتحني)/)){closeSheet();A.test();return{kind:"exec"}}
+  if(has(/اقترح|وش اقرا|ايش اقرا|شنو اقرا|شقرا|للامامه/)){const pm=[["fajr",/فجر|صبح/],["dhuhr",/ظهر/],["asr",/عصر/],["maghrib",/مغرب/],["isha",/عشا/]].find(x=>x[1].test(norm));if(pm)imPrayer=pm[0];imPick=null;tab("imam");return{kind:"exec"}}
+  if(!S.setup&&!has(/^(افتح|ودني|روح|انتقل|ورني|اعرض)/))return null;
+  if(has(/(حفظت|خلصت|اتممت|تميت|انهيت).*(صفحه اليوم|الجديد|صفحتي|ورد الحفظ)/)){const L=day();const todo=L.newT.filter(p=>!L.newDone.includes(p));if(!todo.length)return{kind:"answer",stat:"مسجّلة من قبل",html:voCard("صفحة اليوم مسجّلة","حفظك الجديد اليوم مكتمل، ما شاء الله.")};closeSheet();todo.forEach(p=>A.donenew({dataset:{p}}));return{kind:"exec"}}
+  if(has(/ثبتت|ثبت |صححت|شيل (الخطا|العلامه)|امسح (الخطا|العلامه)|احذف (الخطا|العلامه)/)){const r=voParse(text);const c=r.cands[0];if(!c)return{kind:"answer",stat:"ما حددت الآية",html:voCard("أي خطأ تقصد؟","قل مثلاً: ثبتت سورة غافر آية ٤٠، أو ثبتت صفحة ٤٧١.")};
+    const ms=S.mistakes.filter(m=>!m.done&&(c.ay?(m.surah===c.si&&m.ayah===c.ay):m.page===c.page));if(!ms.length)return{kind:"answer",stat:"ما لقيت خطأ نشط",html:voCard("ما في خطأ نشط هناك","سورة "+SURAH[c.si]+(c.ay?" آية "+ar(c.ay):"")+" · ص "+ar(c.page))};
+    ms.forEach(m=>m.done=true);save();renderAll();const und=()=>{ms.forEach(m=>m.done=false);save();renderAll();toast("تم التراجع")};undoFn=und;return{kind:"answer",stat:"ثبتت إن شاء الله ✓",html:voCard("شلت العلامة عن "+ar(ms.length)+" خطأ","سورة "+SURAH[c.si]+(c.ay?" آية "+ar(c.ay):"")+" · ص "+ar(c.page)+`<div class="acts" style="margin-top:8px"><button class="sbtn" data-act="undo">تراجع</button></div>`)}}
+  const lv=RLV.find(x=>x[1].test(norm));const mkTalk=has(/اخطات|غلطت|لخبطت|خطا في|تشابه|بدلت/);
+  if(lv&&!mkTalk){const sc=voScope(norm);if(sc){if(!sc.pages.length)return{kind:"answer",stat:"مو من محفوظك",html:voCard(sc.label,"هذي الصفحات مو ضمن محفوظك المسجّل، فما أقدر أقيّمها. عدّل حدود المحفوظ من الإعدادات إذا حفظتها.")};return{kind:"rate",L:lv[0],sc}}}
+  if(has(/^(افتح|ودني|روح|انتقل|ورني|اعرض)/)){const tabs=[["map",/الخريطه/],["mistakes",/الاخطا/],["pairs",/المتشابه/],["imam",/الامامه/],["today",/اليوم|الرئيسيه/]].find(x=>x[1].test(norm));
+    const pg=numAfter(norm,/(?:^| )(?:الصفحه|صفحه|ص)(?: |$)/);if(pg>=1&&pg<=604){closeSheet();readerJump(pg);return{kind:"exec"}}
+    const j=/جزء عم/.test(norm)?30:/جزء تبارك/.test(norm)?29:numAfter(norm,/(?:^| )(?:الجزء|جزء)(?: |$)/);if(j>=1&&j<=30){closeSheet();readerJump(JSTART[j-1]);return{kind:"exec"}}
+    const r=voParse(text.replace(/^\s*\S+/,""));const si=voSurah(norm,true);
+    if(r.cands.length&&r.cands[0].ay){const c=r.cands[0];closeSheet();readerJump(c.page,(c.si+1)*1000+c.ay);return{kind:"exec"}}
+    if(si!=null){closeSheet();readerJump(SSTART[si],(si+1)*1000+1);return{kind:"exec"}}
+    if(tabs){tab(tabs[0]);return{kind:"exec"}}
+    if(has(/المصحف|القران/)){closeSheet();A.mushaf();return{kind:"exec"}}
+    return{kind:"answer",stat:"ما عرفت وين أفتح",html:voCard("وين تبي أروح؟","قل: افتح سورة يس، افتح صفحة ٥٠٠، افتح الجزء ٢٩، أو افتح واقرأ كلمات من الآية.")}}
+  if(has(/كم باقي|وش باقي|شنو باقي|ايش باقي|وردي|وش علي|شنو علي/)){const L=day();const n=L.newT.filter(p=>!L.newDone.includes(p)),a=L.near.filter(p=>L.rev[p]==null),b=L.far.filter(p=>L.rev[p]==null);const tot=n.length+a.length+b.length;
+    return{kind:"answer",stat:tot?"باقي لك "+ar(tot)+" صفحة":"خلصت وردك ✓",html:voCard(tot?"الباقي من ورد اليوم":"ما شاء الله، خلصت ورد اليوم",`<div>الجديد: ${n.length?"صفحة "+n.map(ar).join("، ")+" ("+esc(pageLabel(n[0]))+")":"تم ✓"}</div><div>القريب: ${a.length?ar(a.length)+" صفحات":"تم ✓"}</div><div>البعيد: ${b.length?ar(b.length)+" صفحات":"تم ✓"}</div>${tot?`<div class="chips" style="margin-top:8px">${[...n,...a,...b].slice(0,9).map(p=>`<button class="chip" data-act="read" data-p="${p}"><b class="num">${ar(p)}</b><span>${esc(pageLabel(p))}</span></button>`).join("")}</div>`:""}`)}}
+  if(has(/اضعف|الضعيف|ضعيفه|اسوا/)){const r=[];for(let p=S.settings.from;p<=S.settings.to;p++){const st=strength(p),w=mkWeight(p);const sc=(st==="s0"?6:st==="s1"?4:0)+w;if(sc>0)r.push([p,sc,w,st])}r.sort((a,b)=>b[1]-a[1]);
+    return{kind:"answer",stat:r.length?"هذي أضعف صفحاتك":"ما عندك صفحات ضعيفة",html:voCard(r.length?"أضعف "+ar(Math.min(9,r.length))+" صفحات":"ما شاء الله",r.length?`<div class="chips">${r.slice(0,9).map(x=>`<button class="chip rated r${x[3]==="s0"?0:1}" data-act="read" data-p="${x[0]}"><b class="num">${ar(x[0])}</b><span>${x[2]?ar(x[2])+" أخطاء":esc(pageLabel(x[0]))}</span></button>`).join("")}</div><div class="muted small" style="margin-top:6px">اضغط أي صفحة تفتح في المصحف.</div>`:"ما في صفحة مقيّمة ضعيفة ولا عليها أخطاء نشطة.")}}
+  if(has(/متي اختم|الختم|متي اخلص/)){const rem=S.settings.dir==="back"?S.settings.from-1:604-S.settings.to;return{kind:"answer",stat:"بإذن الله",html:voCard("الختم المتوقع: "+esc($("#hsKhatm").textContent),"باقي "+ar(rem)+" صفحة، على "+ar(S.settings.perDay)+" صفحة باليوم.")}}
+  if(has(/كم (صفحه |جزء )?(حافظ|حفظت|محفوظ)|كم حفظي/)){const n=memCount();return{kind:"answer",stat:"ما شاء الله",html:voCard(ar(n)+" صفحة",ar(Math.round(n/20.13*10)/10)+" جزء · "+ar(Math.round(n/604*100))+"٪ من المصحف")}}
+  if(has(/كم خطا|عدد الاخطا|اخطائي/)&&!mkTalk){const ac=S.mistakes.filter(m=>!m.done);const by={};ac.forEach(m=>by[m.type]=(by[m.type]||0)+m.count);return{kind:"answer",stat:ar(ac.length)+" خطأ نشط",html:voCard("أخطاؤك النشطة: "+ar(ac.length),(Object.keys(by).map(k=>k+": "+ar(by[k])).join(" · ")||"ما عندك أخطاء نشطة")+`<div class="acts" style="margin-top:8px"><button class="sbtn" data-act="vogotab" data-v="mistakes">افتح الأخطاء</button></div>`)}}
+  if(has(/كم يوم|السلسله|متتالي/))return{kind:"answer",stat:"🔥",html:voCard(ar(streak())+" أيام متتالية","أطول سلسلة لك: "+ar(S.best||streak())+" يوم.")};
+  return null}
+function voRateCalc(){const R=voRes;R.plan=R.sc.pages.map(p=>{const w=mkWeight(p);return[p,lvlFor(R.L,w),w]})}
+function voRateRender(){const box=$("#vo-res");if(!box)return;clearTimeout(voAutoT);voRateCalc();const R=voRes;const cnt=[0,0,0,0];R.plan.forEach(x=>cnt[x[1]]++);const ex=R.plan.filter(x=>x[1]!==R.L);const skipped=R.sc.all-R.sc.pages.length;
+  voStat("جاهز أقيّم "+R.sc.label);
+  box.innerHTML=`<div class="vauto" id="vo-auto"><i style="animation-duration:6s"></i></div><div class="muted small" style="text-align:center" id="vo-autol">يتطبق تلقائياً بعد ٦ ثواني… <button class="sbtn" data-act="vostop">إيقاف</button></div>
+  <div class="vcand best"><div class="row" style="border:none;padding:0"><b>${R.sc.label}</b><span class="pill num">${ar(R.plan.length)} صفحة</span></div>
+  <div class="rates" style="margin-top:0">${[3,2,1,0].map(r=>`<button class="rate r${r} ${R.L===r?"cur":""}" data-act="volvl" data-r="${r}">${RATE[r].l}<small class="num">${R.L===r?"المطلوب":""}</small></button>`).join("")}</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">${[3,2,1,0].filter(r=>cnt[r]).map(r=>`<span class="pill num" style="background:var(--s${r});color:${r===3||r===0?"#fff":"#1b2a10"}">${ar(cnt[r])} ${RATE[r].l}</span>`).join("")}</div>
+  ${ex.length?`<div class="small"><b>نزّلت ${ar(ex.length)} صفحة بسبب أخطائها النشطة:</b>${ex.slice(0,8).map(x=>`<div class="lineitem"><span>ص ${ar(x[0])} · ${esc(pageLabel(x[0]))}</span><span>${ar(x[2])} أخطاء ← ${RATE[x[1]].l}</span></div>`).join("")}${ex.length>8?`<div class="muted">و${ar(ex.length-8)} غيرها</div>`:""}</div>`:`<div class="muted small">ما في أخطاء نشطة على هذي الصفحات، كلها تاخذ نفس التقييم.</div>`}
+  ${skipped>0?`<div class="muted small">تجاهلت ${ar(skipped)} صفحة لأنها مو ضمن محفوظك.</div>`:""}
+  <div class="acts"><button class="btn" style="flex:1" data-act="vorate">طبّق التقييم ✓</button></div></div><button class="sbtn" data-act="vomic" style="align-self:center">أمر ثاني</button>`;
+  voAutoT=setTimeout(()=>{if($("#vo-auto"))voRateApply()},6000);box.scrollIntoView({behavior:"smooth",block:"nearest"})}
+function voRateApply(){clearTimeout(voAutoT);const R=voRes;if(!R||R.kind!=="rate")return;const u=snap(R.plan.map(x=>x[0]));R.plan.forEach(x=>ratePage(x[0],x[1],true));save();closeSheet();renderAll();if(S.ui.motion&&R.L===3)confetti();
+  toastUndo("تقيّمت "+R.sc.label+" · "+ar(R.plan.length)+" صفحة",u)}
 const MICSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
 function voSheet(){clearTimeout(voAutoT);voRes=null;
-  openSheet(`<h3>المساعد الصوتي</h3><div class="muted small">قل وين أخطأت بكلامك العادي، أو اقرأ جزء من الآية، وأنا أحددها وأسجلها</div>
+  openSheet(`<h3>المساعد الصوتي</h3><div class="muted small">كلّمني بكلامك العادي: سجّل خطأ، قيّم سورة، افتح صفحة، أو اسألني عن وردك</div>
   <div class="vo"><button class="orb" id="vo-orb" data-act="vomic" aria-label="ابدأ الكلام"><i class="ring"></i><i class="ring b"></i><span class="core">${MICSVG}</span></button>
   <div class="eq" id="vo-eq"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="vostat" id="vo-stat">اضغط المايك وتكلم</div>
   <textarea id="vo-text" placeholder="أو اكتب هنا، أو استخدم مايك الكيبورد 🎤"></textarea>
-  <div class="vex" id="vo-ex"><button data-act="voex">سورة غافر آية ٤٠ نسيت</button><button data-act="voex">لخبطت في وقل للمؤمنات يغضضن من أبصارهن</button><button data-act="voex">صفحة ٤٧١ خطأ تشكيل</button></div>
-  <button class="btn block" data-act="voanalyze">حدّد الآية</button><div id="vo-res" style="width:100%;display:flex;flex-direction:column;gap:10px"></div></div>`);
+  <div class="vex" id="vo-ex"><button data-act="voex">حط سورة فصلت كلها متقنة</button><button data-act="voex">لخبطت في وقل للمؤمنات يغضضن من أبصارهن</button><button data-act="voex">كم باقي من ورد اليوم</button><button data-act="voex">افتح سورة يس</button><button data-act="voex">وين أضعف صفحاتي</button><button data-act="voex">اقترح لي لصلاة المغرب</button><button data-act="vohelp">كل الأوامر</button></div>
+  <button class="btn block" data-act="voanalyze">نفّذ</button><div id="vo-res" style="width:100%;display:flex;flex-direction:column;gap:10px"></div></div>`);
   const ta=$("#vo-text");ta.addEventListener("input",()=>{clearTimeout(voDeb);clearTimeout(voAutoT);if(ta.value.trim().length>5)voDeb=setTimeout(voAnalyze,1700)})}
 function voStat(t,cls){const o=$("#vo-orb"),e=$("#vo-eq"),st=$("#vo-stat");if(!o)return;o.classList.toggle("live",cls==="live");o.classList.toggle("think",cls==="think");e.classList.toggle("live",cls==="live");st.textContent=t}
 function voListen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;const ta=$("#vo-text");
@@ -1179,8 +1238,10 @@ function voListen(){const SR=window.SpeechRecognition||window.webkitSpeechRecogn
     r.onend=()=>{const had=voRec===r;voRec=null;if(!$("#vo-text"))return;if($("#vo-text").value.trim().length>3)voAnalyze();else if(had&&$("#vo-orb").classList.contains("live"))voStat("ما سمعت شي. اضغط المايك وجرب مرة ثانية")};
     r.start()}catch(e){voRec=null;voStat("المايك المباشر ما اشتغل. اضغط مربع النص واستخدم مايك الكيبورد 🎤");ta.focus()}}
 async function voAnalyze(){clearTimeout(voDeb);clearTimeout(voAutoT);const ta=$("#vo-text");if(!ta)return;const text=ta.value.trim();if(text.length<3){voStat("قل أو اكتب وين أخطأت");return}
-  voStat("أحدد الآية…","think");try{await loadQuran()}catch(e){voStat("أحتاج الإنترنت أول مرة عشان أحمّل نص المصحف");return}
-  await sleep(S.ui.motion?350:0);if(!$("#vo-res"))return;const res=voParse(text);voRes=res;voRes.text=text;voRender()}
+  voStat("أفهم كلامك…","think");try{await loadQuran()}catch(e){voStat("أحتاج الإنترنت أول مرة عشان أحمّل نص المصحف");return}
+  await sleep(S.ui.motion?350:0);if(!$("#vo-res"))return;
+  const rt=voRoute(text);if(rt){if(rt.kind==="exec")return;voRes=rt;voRes.text=text;$("#vo-ex").style.display="none";if(rt.kind==="rate")voRateRender();else{voStat(rt.stat||"تفضل");$("#vo-res").innerHTML=`<div class="vcand best">${rt.html}</div><button class="sbtn" data-act="vomic" style="align-self:center">أمر ثاني</button>`}return}
+  const res=voParse(text);voRes=res;voRes.text=text;voRender()}
 function voRender(){const box=$("#vo-res");if(!box||!voRes)return;const R=voRes;$("#vo-ex").style.display="none";
   if(!R.cands.length){voStat("ما قدرت أحدد الآية");box.innerHTML=`<div class="vcand"><div>جرب تذكر <b>اسم السورة ورقم الآية</b>، أو تقرأ <b>ثلاث كلمات أو أكثر</b> من الآية نفسها.</div><div class="acts"><button class="sbtn" data-act="vomic">أعد الكلام</button><button class="sbtn" data-act="vomanual">سجّلها يدوياً</button></div></div>`;return}
   const auto=R.cands[0].conf==="high";voStat(auto?"لقيتها ✓":R.cands.length>1?"لقيت أكثر من موضع، اختر الصح":"هذي اللي تقصدها؟");
@@ -1213,6 +1274,10 @@ const A={
   voice(){voSheet();if(window.SpeechRecognition||window.webkitSpeechRecognition)setTimeout(voListen,350)},
   vomic(){clearTimeout(voAutoT);const b=$("#vo-res");if(b&&!voRec){b.innerHTML="";$("#vo-text").value=""}voListen()},
   voanalyze(){voAnalyze()},
+  vorate(){voRateApply()},
+  volvl(el){voRes.L=+el.dataset.r;voRateRender();clearTimeout(voAutoT);const a=$("#vo-auto");if(a){a.remove();$("#vo-autol").remove()}},
+  vogotab(el){closeSheet();const b=document.querySelector('nav.tabs [data-v="'+el.dataset.v+'"]');if(b)b.click()},
+  vohelp(){$("#vo-ex").style.display="none";voStat("هذي الأشياء اللي أفهمها");$("#vo-res").innerHTML=`<div class="vcand">${[["سجّل خطأ","أخطأت في سورة غافر آية ٤٠ · لخبطت في (واقرأ كلمات من الآية) · صفحة ٤٧١ خطأ تشكيل"],["قيّم الحفظ","حط سورة فصلت كلها متقنة · الجزء ٣٠ جيد · من صفحة ٤٠٠ إلى ٤١٠ متعثرة · قيّم القريب متقن. الصفحات اللي عليها أخطاء تنزل درجتها تلقائياً"],["شيل علامة خطأ","ثبتت سورة غافر آية ٤٠ · صححت صفحة ٤٧١"],["الحفظ الجديد","حفظت صفحة اليوم"],["افتح","افتح سورة يس · افتح صفحة ٥٠٠ · افتح الجزء ٢٩ · افتح (كلمات من آية) · افتح الخريطة"],["اسأل","كم باقي من ورد اليوم · وين أضعف صفحاتي · متى أختم · كم صفحة حافظ · كم خطأ عندي · كم يوم متتالي"],["الإمامة والاختبار","اقترح لي لصلاة المغرب · اختبرني"],["غيرها","الوضع الداكن · الوضع الفاتح · تراجع"]].map(x=>`<div><b>${x[0]}</b><div class="muted small">${x[1]}</div></div>`).join("")}</div>`},
   voex(el){$("#vo-text").value=el.textContent;voAnalyze()},
   votype(el){clearTimeout(voAutoT);const a=$("#vo-auto");if(a){a.remove();$("#vo-autol").remove()}voRes.type=el.dataset.t;el.parentElement.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===el))},
   vostop(){clearTimeout(voAutoT);const a=$("#vo-auto");if(a){a.remove();$("#vo-autol").remove()}},
