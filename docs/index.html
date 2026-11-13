@@ -323,7 +323,7 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .rbody{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:8px 6px;background:#d9ccad}
 :root[data-theme="dark"] .rbody{background:#2a251c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .rbody{background:#2a251c}}
-.rpage{max-width:640px;margin:0 auto;transition:transform .28s ease,opacity .28s ease}
+.rpage{max-width:640px;margin:0 auto}
 .rpage.out-next{transform:translateX(-40px);opacity:0}.rpage.out-prev{transform:translateX(40px);opacity:0}
 .mpage{position:relative;background:#fbf5e4;background-image:radial-gradient(ellipse at 50% 40%,#fffaee 0%,#f8efd9 70%,#f1e5c8 100%);color:#151515;border-radius:6px;padding:12px 10px 10px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 10px 30px rgba(60,40,10,.22);border:1px solid #c8b483}
 .mpage::before{content:"";position:absolute;inset:6px;border:3px double #b8954a;border-radius:4px;pointer-events:none}
@@ -358,6 +358,33 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .reader.glyph [data-act=rsize],.reader.glyph #r-fit{display:none}
 .reader.glyph .rbody{padding:6px 4px;overflow:hidden;display:flex;align-items:center}
 .reader.glyph .rpage{width:100%}
+.star8{display:inline-block;position:relative;width:16px;height:16px;border:2px solid var(--gold);border-radius:3px;flex:none;animation:spin 12s linear infinite;vertical-align:middle}
+.star8::after{content:"";position:absolute;inset:-2px;border:2px solid var(--gold);border-radius:3px;transform:rotate(45deg)}
+.star8.fill{background:var(--gold);border-color:var(--gold)}
+.star8.fill::after{background:var(--gold)}
+.star8.fast{animation-duration:2.2s}
+.brand .star8{width:18px;height:18px;border-color:#f6dc8a;align-self:center;margin-inline-start:4px}
+.brand .star8::after{border-color:#f6dc8a}
+.kicker .dot{position:relative;animation:spin 9s linear infinite}
+.kicker .dot::after{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;transform:rotate(45deg)}
+.pagebadge::before{animation:spinb 20s linear infinite}
+@keyframes spinb{from{transform:rotate(45deg) scale(.72)}to{transform:rotate(405deg) scale(.72)}}
+.bdg i{position:relative}
+.bdg.got i{animation:spin 8s linear infinite}
+.bdg.got i::after{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;transform:rotate(45deg)}
+.twk{position:absolute;inset:0;pointer-events:none}
+.twk i{position:absolute;width:9px;height:9px;background:#f6dc8a;border-radius:2px;opacity:0;animation:twinkle 5s ease-in-out infinite}
+.twk i::after{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;transform:rotate(45deg)}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:.75;transform:scale(1) rotate(90deg)}}
+.done-banner .star8{width:14px;height:14px;border-color:currentColor}
+.done-banner .star8::after{border-color:currentColor}
+.dots i.on{animation:dotin .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes dotin{from{transform:rotate(-135deg) scale(.4)}to{transform:rotate(45deg) scale(1.1)}}
+.chip .st{animation:spinb2 14s linear infinite}
+@keyframes spinb2{from{transform:rotate(45deg)}to{transform:rotate(405deg)}}
+.juzhead h3::before,.srow b::before{content:"";display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:2px;margin-inline-end:8px;vertical-align:middle;animation:spinb2 10s linear infinite}
+.rload{display:flex;flex-direction:column;align-items:center;gap:14px;padding:60px 0;color:#6b5420;font-size:.85rem}
+.rload .star8{width:34px;height:34px}
 .tundo{margin-inline-start:10px;border:none;background:var(--gold);color:#241a05;border-radius:8px;padding:3px 12px;font-weight:700}
 .rate.cur{outline:3px solid var(--ink);outline-offset:2px}
 .toast:not(.show){transform:translate(-50%,calc(-100% - 60px));visibility:hidden;transition:transform .35s, visibility 0s .35s}
@@ -377,10 +404,11 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
 
 <header class="band">
   <div class="pattern"></div>
+  <div class="twk" aria-hidden="true"><i style="top:18%;left:9%"></i><i style="top:62%;left:22%;animation-delay:1.3s"></i><i style="top:30%;left:46%;animation-delay:2.6s"></i><i style="top:74%;left:58%;animation-delay:.7s"></i><i style="top:12%;left:71%;animation-delay:3.4s"></i><i style="top:52%;left:90%;animation-delay:1.9s"></i></div>
   <div class="band-in">
     <div class="topline">
       <div>
-        <div class="brand">مِشكاة <span class="brand-sub">دفتر الحفظ والمراجعة</span></div>
+        <div class="brand">مِشكاة<i class="star8" aria-hidden="true"></i> <span class="brand-sub">دفتر الحفظ والمراجعة</span></div>
         <div class="dateline" id="dateline"></div>
         <div class="dateline" style="opacity:.6;font-size:.7rem" id="verline"></div>
         <span class="sync" id="sync"><i></i><span>جاري التحميل…</span></span>
@@ -453,8 +481,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.9.1";
+const VERSION="1.9.2";
 const CHANGELOG=[
+ {v:"1.9.2",d:"2026-11-13",items:["حركات أكثر بنجمة مِشكاة: نجمة تدور جنب الاسم، نجوم تلمع في الهيدر، ونجوم صغيرة تدور عند العناوين والأجزاء والسور والأوسمة","تقليب صفحات المصحف صار فوري بدون تأثير التلاشي"]},
  {v:"1.9.1",d:"2026-11-13",items:["صفحة المصحف صار لها هوامش يمين ويسار وفوق وتحت مثل المصحف، والخط أصغر شوي وأريح للعين"]},
  {v:"1.9",d:"2026-11-13",items:["المصحف صار نفس مصحف المدينة بالضبط: نفس الخط ونفس الأسطر الخمسة عشر ونفس علامات الآيات","الصفحة كاملة في الشاشة دائماً","في وضع التسميع 👁 اضغط أي كلمة فتظهر آيتها كاملة","زر في الإعدادات (البيانات) لتحميل المصحف كامل للقراءة بدون إنترنت"]},
  {v:"1.8.2",d:"2026-11-13",items:["صفحة المصحف كاملة تطلع في الشاشة بدون ما تنزل: حجم الخط يتعدّل تلقائياً لكل صفحة","مسافات أقل بين الأسطر والآيات","زر ⤢ يبدّل بين الصفحة كاملة والخط اليدوي"]},
@@ -648,7 +677,7 @@ function renderToday(){const el=$("#v-today");if(!S.setup){el.innerHTML=setupCar
   if(!newT.length)h+=`<div class="done-banner">ختمت المصحف حفظاً، الحمد لله 🌙</div>`;
   newT.forEach(p=>{const isDone=L.newDone.includes(p);const st=L.steps[p]||[0,0,0,0];const all=STEPS.every((s,i)=>st[i]>=s.n);
     h+=`<div class="newpage"><div class="pagebadge" role="button" tabindex="0" data-act="read" data-p="${p}" aria-label="افتح الصفحة في المصحف"><span>صفحة</span><b class="num">${ar(p)}</b><i class="readhint">اقرأها</i></div><div><div style="font-family:var(--display);font-size:1.3rem;font-weight:700">${esc(pageLabel(p))}</div><div class="muted small">الجزء ${ar(juzOf(p))}</div></div></div>`;
-    if(isDone)h+=`<div class="done-banner"><span>✓</span> حفظت هذه الصفحة اليوم. تدخل القريب من بكرة</div>`;
+    if(isDone)h+=`<div class="done-banner"><i class="star8"></i> حفظت هذه الصفحة اليوم. تدخل القريب من بكرة</div>`;
     else{h+=`<div class="steps">`+STEPS.map((s,i)=>`<div style="display:flex;gap:4px;align-items:center"><button class="step ${st[i]>=s.n?"full":""}" data-act="step" data-p="${p}" data-i="${i}"><div class="lbl"><b>${s.t}</b><span class="num">${ar(Math.min(st[i],s.n))} من ${ar(s.n)}</span></div><div class="dots">${Array.from({length:s.n},(_,k)=>`<i class="${k<st[i]?"on":""}"></i>`).join("")}</div></button><button class="minus" data-act="stepm" data-p="${p}" data-i="${i}" aria-label="إنقاص">−</button></div>`).join("")+`</div>
       <button class="btn ${all?"gold glow":"ghost"} block" style="margin-top:12px" data-act="donenew" data-p="${p}">${all?"أتممت حفظ الصفحة ✓":"أتممت الحفظ (حتى لو ما كملت الخطوات)"}</button>`}});
   h+=`</div>`;
@@ -866,10 +895,10 @@ function renderReader(dir){const pg=$("#r-page");const p=rPage;
   const pv=$("#r-prev"),nx=$("#r-next");pv.disabled=p<=1;nx.disabled=p>=604;
   pv.querySelector("small").textContent=p>1?ar(p-1)+" · "+pageLabel(p-1):"";nx.querySelector("small").textContent=p<604?ar(p+1)+" · "+pageLabel(p+1):"";
   if(dir===0&&pg.querySelector(".mq,.mpage"))return;
-  if(dir&&S.ui.motion){pg.className="rpage "+(dir>0?"out-next":"out-prev");setTimeout(async()=>{await drawPage(p);pg.className="rpage "+(dir>0?"out-prev":"out-next");requestAnimationFrame(()=>requestAnimationFrame(()=>pg.className="rpage"))},170)}else drawPage(p)}
+  pg.className="rpage";drawPage(p)}
 function openReader(p){rPage=Math.min(604,Math.max(1,+p||1));applyRS();const r=$("#reader");r.classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);
   r.classList.add("open");document.documentElement.classList.add("locked");
-  $("#r-page").innerHTML='<div class="loading">جاري تحميل الصفحة…</div>';renderReader(null)}
+  $("#r-page").innerHTML='<div class="rload"><i class="star8 fast"></i>جاري فتح الصفحة…</div>';renderReader(null)}
 function closeReader(){$("#reader").classList.remove("open");if(!$("#sheet").classList.contains("open"))document.documentElement.classList.remove("locked")}
 function readerGo(d){const n=rPage+d;if(n<1||n>604)return;rPage=n;renderReader(d)}
 {const rb=document.getElementById("r-body");let sx=null,sy=0;
