@@ -1,5 +1,5 @@
 // Bump CACHE on every release: a changed sw.js is how the app learns an update exists.
-const CACHE = "hifz-1.5.1";
+const CACHE = "hifz-1.6.0";
 const CORE = ["./", "./index.html", "./mut.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); });
 self.addEventListener("activate", e => {

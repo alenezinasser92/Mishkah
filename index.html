@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>دفتر الحفظ والمراجعة</title>
+<title>مِشكاة</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="دفتر الحفظ">
+<meta name="apple-mobile-web-app-title" content="مِشكاة">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -299,7 +299,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
   <div class="band-in">
     <div class="topline">
       <div>
-        <div class="brand">دفتر الحفظ والمراجعة</div>
+        <div class="brand">مِشكاة <span style="font-family:var(--body);font-size:.8rem;font-weight:500;color:#b9d2ca">دفتر الحفظ والمراجعة</span></div>
         <div class="dateline" id="dateline"></div>
         <span class="sync" id="sync"><i></i><span>جاري التحميل…</span></span>
       </div>
@@ -355,8 +355,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.5.1";
+const VERSION="1.6";
 const CHANGELOG=[
+ {v:"1.6",d:"2026-11-13",items:["اسم التطبيق صار «مِشكاة»، من سورة النور: ﴿كَمِشْكَاةٍ فِيهَا مِصْبَاحٌ﴾","أيقونة جديدة: مشكاة فيها مصباح"]},
  {v:"1.5.1",d:"2026-11-13",items:["النسخة الاحتياطية صارت ملف: «احفظ نسخة كملف» و«استرجع من ملف» في الإعدادات"]},
  {v:"1.5",d:"2026-11-13",items:["صار تطبيق مستقل تثبته على الشاشة الرئيسية ويشتغل بدون إنترنت","إذا نزل تحديث يطلع لك زر «نسخة جديدة متوفرة» تحت","سحب شريط النافذة لتحت يسكرها، والخلفية ما تتحرك وهي مفتوحة"]},
  {v:"1.4",d:"2026-11-13",items:["تبويب المتشابهات: قائمة جاهزة بكل سور محفوظك ومواضعها المتشابهة مع السور الثانية، مع نص الآيات","من أي موضع جاهز تقدر تضيفه لمتشابهاتك وتكتب ضابطه","إذا ضغطت نفس التقييم مرة ثانية ترجع الصفحة بدون تقييم"]},
