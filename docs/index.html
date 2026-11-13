@@ -314,33 +314,33 @@ details.sec>.form{margin:0 0 12px;gap:4px}
 html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !important;transition:none !important}
 .reader{position:fixed;inset:0;z-index:38;background:var(--surface);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.9,.25,1);visibility:hidden}
 .reader.open{transform:none;visibility:visible}
-.rhead{display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;background:linear-gradient(160deg,var(--band),var(--band2));color:#f3efe2}
+.rhead{display:flex;align-items:center;gap:6px;padding:calc(6px + env(safe-area-inset-top)) 10px 6px;background:linear-gradient(160deg,var(--band),var(--band2));color:#f3efe2}
 .rhead .t{flex:1;min-width:0;text-align:center}
 .rhead .t b{display:block;font-family:var(--display);font-size:1.25rem;line-height:1.3;color:#f6e7bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rhead .t span{font-size:.75rem;color:#b9d2ca}
-.rbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#f3efe2;min-width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:.85rem;font-weight:700;padding:0 8px}
+.rbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#f3efe2;min-width:38px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:.85rem;font-weight:700;padding:0 8px}
 .rbtn.on{background:#f6e7bf;color:#241a05}
-.rbody{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:14px 10px 24px;background:#d9ccad}
+.rbody{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:8px 6px;background:#d9ccad}
 :root[data-theme="dark"] .rbody{background:#2a251c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .rbody{background:#2a251c}}
 .rpage{max-width:640px;margin:0 auto;transition:transform .28s ease,opacity .28s ease}
 .rpage.out-next{transform:translateX(-40px);opacity:0}.rpage.out-prev{transform:translateX(40px);opacity:0}
-.mpage{position:relative;background:#fbf5e4;background-image:radial-gradient(ellipse at 50% 40%,#fffaee 0%,#f8efd9 70%,#f1e5c8 100%);color:#151515;border-radius:6px;padding:16px 14px 18px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 10px 30px rgba(60,40,10,.22);border:1px solid #c8b483}
+.mpage{position:relative;background:#fbf5e4;background-image:radial-gradient(ellipse at 50% 40%,#fffaee 0%,#f8efd9 70%,#f1e5c8 100%);color:#151515;border-radius:6px;padding:12px 10px 10px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 10px 30px rgba(60,40,10,.22);border:1px solid #c8b483}
 .mpage::before{content:"";position:absolute;inset:6px;border:3px double #b8954a;border-radius:4px;pointer-events:none}
 .mpage::after{content:"";position:absolute;inset:12px;border:1px solid rgba(31,95,74,.45);border-radius:3px;pointer-events:none}
-.mtop{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 10px 8px;margin-bottom:4px;border-bottom:1px solid rgba(184,149,74,.55);font-family:var(--display);font-size:1rem;color:#6b5420;position:relative;z-index:1}
-.minner{position:relative;z-index:1;padding:0 8px}
-.mnum{display:flex;justify-content:center;margin-top:12px;position:relative;z-index:1}
-.mnum span{min-width:44px;height:44px;padding:0 6px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:1.05rem;color:#3b2f12;background:radial-gradient(circle,#fbf3dc 55%,#ead7a6 100%);border:2px solid #b8954a;box-shadow:inset 0 0 0 3px #fbf5e4,inset 0 0 0 4px rgba(31,95,74,.5)}
-.rtext{font-family:var(--quran);font-size:var(--rs,1.55rem);line-height:2.25;text-align:justify;text-align-last:center;color:#151515}
+.mtop{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 8px 4px;margin-bottom:2px;border-bottom:1px solid rgba(184,149,74,.55);font-family:var(--display);font-size:.85rem;color:#6b5420;position:relative;z-index:1}
+.minner{position:relative;z-index:1;padding:0 6px}
+.mnum{display:flex;justify-content:center;margin-top:4px;position:relative;z-index:1}
+.mnum span{min-width:34px;height:34px;font-size:.9rem !important;padding:0 6px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:1.05rem;color:#3b2f12;background:radial-gradient(circle,#fbf3dc 55%,#ead7a6 100%);border:2px solid #b8954a;box-shadow:inset 0 0 0 3px #fbf5e4,inset 0 0 0 4px rgba(31,95,74,.5)}
+.rtext{font-family:var(--quran);font-size:var(--rs,1.55rem);line-height:1.95;text-align:justify;text-align-last:center;color:#151515}
 .ay{transition:filter .25s, background .25s;border-radius:6px;cursor:pointer}
 .ay .an{color:#8a6a1c;font-size:.85em;white-space:nowrap}
 .reader.hide .ay:not(.shown){filter:blur(7px)}
-.surhead{margin:12px 0 8px;border:2px solid #b8954a;border-radius:12px;padding:5px;text-align:center;background:linear-gradient(90deg,#e9dcb5,#f4ead0 50%,#e9dcb5);position:relative}
-.surhead div{border:1px solid rgba(31,95,74,.5);border-radius:8px;padding:5px;font-family:var(--display);font-size:1.35rem;font-weight:700;color:#1f4f3f}
-.basm{font-family:var(--quran);text-align:center;font-size:var(--rs,1.55rem);margin:2px 0 6px;color:#151515}
-.rfoot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:8px 12px calc(8px + var(--sab));border-top:1px solid var(--line);background:var(--surface)}
-.rnav{border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:10px 8px;font-weight:600;font-size:.85rem;display:flex;flex-direction:column;align-items:center;line-height:1.3;min-height:58px;justify-content:center;touch-action:manipulation}
+.surhead{margin:4px 0 2px;border:2px solid #b8954a;border-radius:10px;padding:3px;text-align:center;background:linear-gradient(90deg,#e9dcb5,#f4ead0 50%,#e9dcb5);position:relative}
+.surhead div{border:1px solid rgba(31,95,74,.5);border-radius:7px;padding:1px 5px;font-family:var(--display);font-size:calc(var(--rs,1.55rem) * .85);font-weight:700;color:#1f4f3f}
+.basm{font-family:var(--quran);text-align:center;font-size:var(--rs,1.55rem);line-height:1.9;margin:0;color:#151515}
+.rfoot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:6px 10px calc(6px + var(--sab));border-top:1px solid var(--line);background:var(--surface)}
+.rnav{border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:6px 8px;font-weight:600;font-size:.85rem;display:flex;flex-direction:column;align-items:center;line-height:1.3;min-height:50px;justify-content:center;touch-action:manipulation}
 .rnav small{font-weight:400;color:var(--muted);font-size:.7rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rnav:disabled{opacity:.35}
 .rmid{display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -418,6 +418,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
     <button class="rbtn" data-act="rclose" aria-label="إغلاق">✕</button>
     <div class="t"><b id="r-title">—</b><span id="r-sub"></span></div>
     <button class="rbtn" data-act="rhide" id="r-hide" aria-label="إخفاء للتسميع" title="إخفاء للتسميع">👁</button>
+    <button class="rbtn" data-act="rfit" id="r-fit" aria-label="الصفحة كاملة في الشاشة" title="الصفحة كاملة في الشاشة">⤢</button>
     <button class="rbtn" data-act="rsize" data-d="-1" aria-label="تصغير الخط">ـأ</button>
     <button class="rbtn" data-act="rsize" data-d="1" aria-label="تكبير الخط">أ+</button>
   </div>
@@ -442,8 +443,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.8.1";
+const VERSION="1.8.2";
 const CHANGELOG=[
+ {v:"1.8.2",d:"2026-11-13",items:["صفحة المصحف كاملة تطلع في الشاشة بدون ما تنزل: حجم الخط يتعدّل تلقائياً لكل صفحة","مسافات أقل بين الأسطر والآيات","زر ⤢ يبدّل بين الصفحة كاملة والخط اليدوي"]},
  {v:"1.8.1",d:"2026-11-13",items:["المصحف صار شكله صفحة مصحف: ورق بيج، خط أسود، إطار مزخرف، اسم السورة والجزء فوق، ورقم الصفحة تحت في دائرة"]},
  {v:"1.8",d:"2026-11-13",items:["المصحف داخل التطبيق: اضغط على صفحة اليوم فتفتح لك الصفحة بالرسم العثماني","تنقّل للصفحة اللي قبلها واللي بعدها بالأزرار أو بالسحب يمين ويسار","زر 👁 يخفي الآيات للتسميع، واضغط على أي آية تظهر","تكبير وتصغير خط المصحف، وزر «اقرأ الصفحة» من أي صفحة في الخريطة","يشتغل بدون إنترنت بعد أول فتح"]},
  {v:"1.7.9",d:"2026-11-13",items:["كلمة «مِشكاة» في الصفحة الرئيسية صارت أكبر"]},
@@ -497,7 +499,7 @@ const isRest=s=>{const r=(S.ui&&S.ui.rest)||[];if(!r.length)return false;const[y
 
 /* ---------- state ---------- */
 const KEY="quran-hifz-v1";
-const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md"},pages:{},mistakes:[],pairs:[],log:{}});
+const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md",rfit:true},pages:{},mistakes:[],pairs:[],log:{}});
 function normalize(){const d=DEF();S.ui=Object.assign(d.ui,S.ui||{});S.settings=Object.assign(d.settings,S.settings||{});if(!Array.isArray(S.ui.rest))S.ui.rest=[]}
 let S=DEF();
 try{const c=localStorage.getItem(KEY);if(c)S=Object.assign(DEF(),JSON.parse(c))}catch(e){}
@@ -804,7 +806,14 @@ function loadQuran(){if(window.QTEXT)return Promise.resolve();if(qLoading)return
   qLoading=new Promise((res,rej)=>{const sc=document.createElement("script");sc.src="quran.js";sc.onload=()=>res();sc.onerror=()=>{qLoading=null;rej()};document.head.appendChild(sc)});return qLoading}
 function qloc(id){let n=id-1,i=0;const C=window.QACNT;while(i<113&&n>=C[i]){n-=C[i];i++}return[i,n+1]}
 const RS={sm:"1.3rem",md:"1.55rem",lg:"1.85rem",xl:"2.2rem"},RSK=["sm","md","lg","xl"];
-function applyRS(){document.documentElement.style.setProperty("--rs",RS[S.ui.rsize]||RS.md)}
+function applyRS(){document.documentElement.style.setProperty("--rs",RS[S.ui.rsize]||RS.md);const fb=document.getElementById("r-fit");if(fb)fb.classList.toggle("on",S.ui.rfit!==false)}
+function fitPage(){const pg=$("#r-page"),body=$("#r-body");if(!pg||!$("#reader").classList.contains("open"))return;
+  if(S.ui.rfit===false){pg.style.removeProperty("--rs");return}
+  const avail=body.clientHeight-16;let lo=11,hi=30,best=11;
+  for(let k=0;k<9;k++){const mid=(lo+hi)/2;pg.style.setProperty("--rs",mid+"px");if(pg.scrollHeight<=avail){best=mid;lo=mid}else hi=mid}
+  pg.style.setProperty("--rs",Math.floor(best*10)/10+"px")}
+let fitT;addEventListener("resize",()=>{clearTimeout(fitT);fitT=setTimeout(fitPage,120)});
+try{document.fonts&&document.fonts.addEventListener&&document.fonts.addEventListener("loadingdone",()=>fitPage())}catch(e){}
 function renderReader(dir){const pg=$("#r-page");const p=rPage;
   const draw=()=>{const a=QPAGE[p],b=QPAGE[p+1]-1;let h="";let txt="";
     const flush=()=>{if(txt){h+=`<div class="rtext">${txt}</div>`;txt=""}};
@@ -812,7 +821,7 @@ function renderReader(dir){const pg=$("#r-page");const p=rPage;
       if(ay===1){flush();h+=`<div class="surhead"><div>سورة ${SURAH[si]}</div></div>`;if(si!==0&&si!==8)h+=`<div class="basm">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>`}
       txt+=`<span class="ay" data-act="ayah">${esc(QTEXT[id-1])} <span class="an">﴿${ar(ay)}﴾</span></span> `}
     flush();const sn=surahsOn(p).map(i=>"سورة "+SURAH[i]);
-    pg.innerHTML=`<div class="mpage"><div class="mtop"><span>${esc(sn.length>2?sn[0]+" …":sn.join(" · "))}</span><span>الجزء ${ar(juzOf(p))}</span></div><div class="minner">${h}</div><div class="mnum"><span class="num">${ar(p)}</span></div></div>`;$("#r-body").scrollTop=0};
+    pg.innerHTML=`<div class="mpage"><div class="mtop"><span>${esc(sn.length>2?sn[0]+" …":sn.join(" · "))}</span><span>الجزء ${ar(juzOf(p))}</span></div><div class="minner">${h}</div><div class="mnum"><span class="num">${ar(p)}</span></div></div>`;$("#r-body").scrollTop=0;fitPage();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitPage)};
   $("#r-title").textContent=pageLabel(p);
   const st=strength(p);const stl={s3:"متقنة",s2:"جيدة",s1:"متعثرة",s0:"نسيت",su:"ما قُيّمت",snm:"غير محفوظة"}[st];
   $("#r-sub").textContent="الجزء "+ar(juzOf(p))+" · "+stl;$("#r-num").textContent=ar(p);
@@ -845,7 +854,8 @@ const A={
   rgo(el){readerGo(+el.dataset.d)},
   rhide(){rHide=!rHide;$("#reader").classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);document.querySelectorAll("#r-page .ay.shown").forEach(x=>x.classList.remove("shown"));toast(rHide?"الآيات مخفية. اضغط على أي آية تظهر":"الآيات ظاهرة")},
   ayah(el){if(rHide)el.classList.toggle("shown")},
-  rsize(el){const i=Math.max(0,Math.min(3,RSK.indexOf(S.ui.rsize||"md")+ +el.dataset.d));S.ui.rsize=RSK[i];applyRS();save()},
+  rsize(el){const wasFit=S.ui.rfit!==false;const i=Math.max(0,Math.min(3,RSK.indexOf(S.ui.rsize||"md")+(wasFit?0:+el.dataset.d)));S.ui.rsize=RSK[i];S.ui.rfit=false;applyRS();fitPage();save();if(wasFit)toast("صار الخط يدوي. زر ⤢ يرجّع الصفحة كاملة")},
+  rfit(){S.ui.rfit=S.ui.rfit===false;applyRS();fitPage();save();toast(S.ui.rfit?"الصفحة كاملة في الشاشة":"الخط يدوي، تقدر تنزل بالصفحة")},
   rrate(){pageSheet(rPage)},
   undo(){if(undoFn){const f=undoFn;undoFn=null;$("#toast").classList.remove("show");f()}},
   settings:settingsSheet,
