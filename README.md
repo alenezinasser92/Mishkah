@@ -10,6 +10,7 @@
 - مواضع المتشابهات: [Quran_Mutashabihat_Data](https://github.com/Waqar144/Quran_Mutashabihat_Data) (CC0)، مبنية على عمل القارئ إدريس العاصم.
 - نص الآيات: الرسم العثماني من موسوعة القرآن الكريم (quranenc.com)، عبر حزمة quran-json.
 - تقسيم صفحات مصحف المدينة (٦٠٤): حزمة quran-meta (MIT).
+- أسطر مصحف المدينة ورموز الخط: بيانات Quran.com عبر github.com/zonetecde/mushaf-layout. خطوط الصفحات (QPC V2) من مجمع الملك فهد لطباعة المصحف الشريف، في `docs/qpc2`.
 
 عند كل تحديث: غيّر رقم `CACHE` في `sw.js` حتى يظهر زر «نسخة جديدة متوفرة» في التطبيق.
 

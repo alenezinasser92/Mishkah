@@ -1,6 +1,6 @@
 // Bump CACHE on every release.
-const CACHE = "hifz-1.8.2";
-const CORE = ["./", "./index.html", "./mut.js", "./quran.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+const CACHE = "hifz-1.9.0";
+const CORE = ["./", "./index.html", "./mut.js", "./quran.js", "./mushaf.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k !== "hifz-fonts").map(k => caches.delete(k)))).then(() => self.clients.claim()));
@@ -17,6 +17,10 @@ self.addEventListener("fetch", e => {
     return;
   }
   if (u.origin !== location.origin) return;
+  if (u.pathname.includes("/qpc2/")) {
+    e.respondWith(caches.open("hifz-fonts").then(c => c.match(e.request).then(hit => hit || fetch(e.request).then(r => { if (r.ok) c.put(e.request, r.clone()); return r; }))));
+    return;
+  }
   // Network first for the app itself, so opening it online always gives the newest version; cache when offline.
   const isApp = e.request.mode === "navigate" || /\/(index\.html)?$/.test(u.pathname) || u.pathname.endsWith(".js") || u.pathname.endsWith(".json");
   if (isApp) {

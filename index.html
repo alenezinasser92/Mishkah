@@ -348,6 +348,16 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .pagebadge{cursor:pointer;transition:transform .15s}
 .pagebadge:active{transform:scale(.94)}
 .pagebadge .readhint{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);background:var(--gold);color:#241a05;font-size:.6rem;font-weight:700;padding:1px 7px;border-radius:99px;white-space:nowrap;opacity:1}
+.mq{background:#f4f1e3;color:#111;border-radius:4px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 8px 24px rgba(60,40,10,.2);padding:6px 0 4px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.mqtop{display:flex;justify-content:space-between;width:100%;padding:2px 16px 0;font-family:"Amiri",serif;font-size:.82rem;color:#333}
+.mqlines{direction:rtl;text-align:center;white-space:nowrap;color:#111;width:100%}
+.ql{display:flex;align-items:center;justify-content:center;white-space:nowrap}
+.ql .surhead{margin:0;width:92%;padding:2px}
+.ql .surhead div{font-family:"Amiri",serif;font-size:.62em;padding:0 4px;line-height:1.5}
+.mqnum{font-family:"Amiri",serif;font-size:.95rem;color:#222;line-height:1.4}
+.reader.glyph [data-act=rsize],.reader.glyph #r-fit{display:none}
+.reader.glyph .rbody{padding:6px 4px;overflow:hidden;display:flex;align-items:center}
+.reader.glyph .rpage{width:100%}
 .tundo{margin-inline-start:10px;border:none;background:var(--gold);color:#241a05;border-radius:8px;padding:3px 12px;font-weight:700}
 .rate.cur{outline:3px solid var(--ink);outline-offset:2px}
 .toast:not(.show){transform:translate(-50%,calc(-100% - 60px));visibility:hidden;transition:transform .35s, visibility 0s .35s}
@@ -443,8 +453,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.8.2";
+const VERSION="1.9";
 const CHANGELOG=[
+ {v:"1.9",d:"2026-11-13",items:["المصحف صار نفس مصحف المدينة بالضبط: نفس الخط ونفس الأسطر الخمسة عشر ونفس علامات الآيات","الصفحة كاملة في الشاشة دائماً","في وضع التسميع 👁 اضغط أي كلمة فتظهر آيتها كاملة","زر في الإعدادات (البيانات) لتحميل المصحف كامل للقراءة بدون إنترنت"]},
  {v:"1.8.2",d:"2026-11-13",items:["صفحة المصحف كاملة تطلع في الشاشة بدون ما تنزل: حجم الخط يتعدّل تلقائياً لكل صفحة","مسافات أقل بين الأسطر والآيات","زر ⤢ يبدّل بين الصفحة كاملة والخط اليدوي"]},
  {v:"1.8.1",d:"2026-11-13",items:["المصحف صار شكله صفحة مصحف: ورق بيج، خط أسود، إطار مزخرف، اسم السورة والجزء فوق، ورقم الصفحة تحت في دائرة"]},
  {v:"1.8",d:"2026-11-13",items:["المصحف داخل التطبيق: اضغط على صفحة اليوم فتفتح لك الصفحة بالرسم العثماني","تنقّل للصفحة اللي قبلها واللي بعدها بالأزرار أو بالسحب يمين ويسار","زر 👁 يخفي الآيات للتسميع، واضغط على أي آية تظهر","تكبير وتصغير خط المصحف، وزر «اقرأ الصفحة» من أي صفحة في الخريطة","يشتغل بدون إنترنت بعد أول فتح"]},
@@ -791,6 +802,7 @@ function settingsSheet(){const s=S.settings,u=S.ui;const DAYS=["الأحد","ا�
     <input type="file" id="st-file" accept=".json,application/json,text/plain" style="display:none">
     <div class="two"><button class="btn ghost" data-act="backup">انسخ البيانات</button><button class="btn ghost" data-act="restore">استرجع من نص</button></div>
     <textarea id="st-json" placeholder="الصق النسخة الاحتياطية هنا ثم اضغط استرجع"></textarea>
+    <button class="btn ghost block" data-act="qdl" id="qdlbtn">حمّل المصحف كامل للقراءة بدون إنترنت (٩٥ م.ب)</button>
     <span class="hint muted small">حجم بياناتك ${ar(kb)} ك.ب. احفظ نسخة كملف بين فترة وفترة.</span>
     <button class="btn ghost block" style="color:var(--rose)" data-act="reset" id="resetbtn">مسح كل البيانات</button>
   </div></details>
@@ -807,32 +819,58 @@ function loadQuran(){if(window.QTEXT)return Promise.resolve();if(qLoading)return
 function qloc(id){let n=id-1,i=0;const C=window.QACNT;while(i<113&&n>=C[i]){n-=C[i];i++}return[i,n+1]}
 const RS={sm:"1.3rem",md:"1.55rem",lg:"1.85rem",xl:"2.2rem"},RSK=["sm","md","lg","xl"];
 function applyRS(){document.documentElement.style.setProperty("--rs",RS[S.ui.rsize]||RS.md);const fb=document.getElementById("r-fit");if(fb)fb.classList.toggle("on",S.ui.rfit!==false)}
-function fitPage(){const pg=$("#r-page"),body=$("#r-body");if(!pg||!$("#reader").classList.contains("open"))return;
+function fitPage(){const pg=$("#r-page"),body=$("#r-body");if(!pg||!$("#reader").classList.contains("open"))return;if($("#reader").classList.contains("glyph")){fitGlyph();return}
   if(S.ui.rfit===false){pg.style.removeProperty("--rs");return}
   const avail=body.clientHeight-16;let lo=11,hi=30,best=11;
   for(let k=0;k<9;k++){const mid=(lo+hi)/2;pg.style.setProperty("--rs",mid+"px");if(pg.scrollHeight<=avail){best=mid;lo=mid}else hi=mid}
   pg.style.setProperty("--rs",Math.floor(best*10)/10+"px")}
 let fitT;addEventListener("resize",()=>{clearTimeout(fitT);fitT=setTimeout(fitPage,120)});
 try{document.fonts&&document.fonts.addEventListener&&document.fonts.addEventListener("loadingdone",()=>fitPage())}catch(e){}
+const JUZN=["الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع","الثامن","التاسع","العاشر","الحادي عشر","الثاني عشر","الثالث عشر","الرابع عشر","الخامس عشر","السادس عشر","السابع عشر","الثامن عشر","التاسع عشر","العشرون","الحادي والعشرون","الثاني والعشرون","الثالث والعشرون","الرابع والعشرون","الخامس والعشرون","السادس والعشرون","السابع والعشرون","الثامن والعشرون","التاسع والعشرون","الثلاثون"];
+let layLoading=null;const qFonts={};
+function loadLayout(){if(window.MLAY)return Promise.resolve();if(layLoading)return layLoading;
+  layLoading=new Promise((res,rej)=>{const sc=document.createElement("script");sc.src="mushaf.js";sc.onload=()=>res();sc.onerror=()=>{layLoading=null;rej()};document.head.appendChild(sc)});return layLoading}
+function loadQFont(name,url){if(qFonts[name])return qFonts[name];if(typeof FontFace==="undefined")return Promise.resolve(false);
+  qFonts[name]=new FontFace(name,"url("+url+")").load().then(ff=>{document.fonts.add(ff);return true}).catch(()=>{delete qFonts[name];return false});return qFonts[name]}
+const pageFont=p=>loadQFont("qpc2p"+p,"qpc2/p"+String(p).padStart(3,"0")+".woff2");
+function drawText(p){const pg=$("#r-page");$("#reader").classList.remove("glyph");const a=QPAGE[p],b=QPAGE[p+1]-1;let h="";let txt="";
+  const flush=()=>{if(txt){h+=`<div class="rtext">${txt}</div>`;txt=""}};
+  for(let id=a;id<=b;id++){const[si,ay]=qloc(id);
+    if(ay===1){flush();h+=`<div class="surhead"><div>سورة ${SURAH[si]}</div></div>`;if(si!==0&&si!==8)h+=`<div class="basm">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>`}
+    txt+=`<span class="ay" data-act="ayah">${esc(QTEXT[id-1])} <span class="an">﴿${ar(ay)}﴾</span></span> `}
+  flush();const sn=surahsOn(p).map(i=>"سورة "+SURAH[i]);
+  pg.innerHTML=`<div class="mpage"><div class="mtop"><span>${esc(sn.length>2?sn[0]+" …":sn.join(" · "))}</span><span>الجزء ${ar(juzOf(p))}</span></div><div class="minner">${h}</div><div class="mnum"><span class="num">${ar(p)}</span></div></div>`;$("#r-body").scrollTop=0;fitPage();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitPage)}
+function drawGlyph(p){const pg=$("#r-page");$("#reader").classList.add("glyph");pg.style.removeProperty("--rs");const L=MLAY[p-1];
+  const so=surahsOn(p);const sname=SURAH[so[so.length>1&&L[0][0]==="h"?0:0]];
+  const lines=L.map(l=>l[0]==="h"?`<div class="ql"><div class="surhead"><div>سورة ${SURAH[l[1]-1]}</div></div></div>`
+    :l[0]==="b"?`<div class="ql"><span class="qi" style="font-family:qpc2bsml">${l[1]}</span></div>`
+    :`<div class="ql"><span class="qi">${l[1].map(sg=>`<span class="ay" data-act="ayah" data-k="${sg[0]}">${sg[1]}</span>`).join("")}</span></div>`).join("");
+  pg.innerHTML=`<div class="mq"><div class="mqtop"><span>الجزء ${JUZN[juzOf(p)-1]}</span><span>سورة ${sname}</span></div><div class="mqlines" id="mqlines" style="font-family:qpc2p${p}">${lines}</div><div class="mqnum num">${ar(p)}</div></div>`;
+  $("#r-body").scrollTop=0;fitGlyph()}
+function fitGlyph(){const box=document.getElementById("mqlines");if(!box)return;const body=$("#r-body");const n=box.children.length;
+  box.style.fontSize="40px";let mw=1;box.querySelectorAll(".qi").forEach(q=>{const w=q.getBoundingClientRect().width;if(w>mw)mw=w});
+  const aw=body.clientWidth-8-14,ah=body.clientHeight-12-56;const lh=ah/15;
+  const fs=Math.min(40*aw/mw,lh/1.62);box.style.fontSize=fs+"px";const h=Math.min(lh,fs*2.3);
+  [...box.children].forEach(c=>{c.style.height=h+"px"})}
+let drawSeq=0;
+async function drawPage(p){const my=++drawSeq;let ok=false;
+  try{await loadLayout();const need=[pageFont(p)];if(MLAY[p-1].some(l=>l[0]==="b"))need.push(loadQFont("qpc2bsml","qpc2/QPC2BSML.ttf"));ok=(await Promise.all(need)).every(Boolean)}catch(e){ok=false}
+  if(my!==drawSeq)return;
+  if(ok){drawGlyph(p);if(p>1)pageFont(p-1);if(p<604)pageFont(p+1);return}
+  try{await loadQuran();if(my===drawSeq)drawText(p)}catch(e){if(my===drawSeq)$("#r-page").innerHTML='<div class="empty">ما قدرت أحمّل المصحف. افتح التطبيق مرة وأنت متصل بالإنترنت.</div>'}}
 function renderReader(dir){const pg=$("#r-page");const p=rPage;
-  const draw=()=>{const a=QPAGE[p],b=QPAGE[p+1]-1;let h="";let txt="";
-    const flush=()=>{if(txt){h+=`<div class="rtext">${txt}</div>`;txt=""}};
-    for(let id=a;id<=b;id++){const[si,ay]=qloc(id);
-      if(ay===1){flush();h+=`<div class="surhead"><div>سورة ${SURAH[si]}</div></div>`;if(si!==0&&si!==8)h+=`<div class="basm">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>`}
-      txt+=`<span class="ay" data-act="ayah">${esc(QTEXT[id-1])} <span class="an">﴿${ar(ay)}﴾</span></span> `}
-    flush();const sn=surahsOn(p).map(i=>"سورة "+SURAH[i]);
-    pg.innerHTML=`<div class="mpage"><div class="mtop"><span>${esc(sn.length>2?sn[0]+" …":sn.join(" · "))}</span><span>الجزء ${ar(juzOf(p))}</span></div><div class="minner">${h}</div><div class="mnum"><span class="num">${ar(p)}</span></div></div>`;$("#r-body").scrollTop=0;fitPage();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitPage)};
   $("#r-title").textContent=pageLabel(p);
   const st=strength(p);const stl={s3:"متقنة",s2:"جيدة",s1:"متعثرة",s0:"نسيت",su:"ما قُيّمت",snm:"غير محفوظة"}[st];
   $("#r-sub").textContent="الجزء "+ar(juzOf(p))+" · "+stl;$("#r-num").textContent=ar(p);
   const pv=$("#r-prev"),nx=$("#r-next");pv.disabled=p<=1;nx.disabled=p>=604;
   pv.querySelector("small").textContent=p>1?ar(p-1)+" · "+pageLabel(p-1):"";nx.querySelector("small").textContent=p<604?ar(p+1)+" · "+pageLabel(p+1):"";
-  if(dir&&S.ui.motion){pg.className="rpage "+(dir>0?"out-next":"out-prev");setTimeout(()=>{draw();pg.className="rpage "+(dir>0?"out-prev":"out-next");requestAnimationFrame(()=>requestAnimationFrame(()=>pg.className="rpage"))},170)}else draw()}
+  if(dir===0&&pg.querySelector(".mq,.mpage"))return;
+  if(dir&&S.ui.motion){pg.className="rpage "+(dir>0?"out-next":"out-prev");setTimeout(async()=>{await drawPage(p);pg.className="rpage "+(dir>0?"out-prev":"out-next");requestAnimationFrame(()=>requestAnimationFrame(()=>pg.className="rpage"))},170)}else drawPage(p)}
 function openReader(p){rPage=Math.min(604,Math.max(1,+p||1));applyRS();const r=$("#reader");r.classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);
   r.classList.add("open");document.documentElement.classList.add("locked");
-  loadQuran().then(()=>renderReader(0)).catch(()=>{$("#r-page").innerHTML='<div class="empty">ما قدرت أحمّل نص المصحف. افتح التطبيق مرة وأنت متصل بالإنترنت عشان ينحفظ للاستخدام بدون نت.</div>'})}
+  $("#r-page").innerHTML='<div class="loading">جاري تحميل الصفحة…</div>';renderReader(null)}
 function closeReader(){$("#reader").classList.remove("open");if(!$("#sheet").classList.contains("open"))document.documentElement.classList.remove("locked")}
-function readerGo(d){const n=rPage+d;if(n<1||n>604||!window.QTEXT)return;rPage=n;renderReader(d)}
+function readerGo(d){const n=rPage+d;if(n<1||n>604)return;rPage=n;renderReader(d)}
 {const rb=document.getElementById("r-body");let sx=null,sy=0;
   rb.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});
   rb.addEventListener("touchend",e=>{if(sx==null)return;const t=e.changedTouches[0];const dx=t.clientX-sx,dy=t.clientY-sy;sx=null;
@@ -851,9 +889,14 @@ const A={
   close:closeSheet,
   read(el){closeSheet();openReader(el.dataset.p)},
   rclose:closeReader,
+  async qdl(el){if(el.dataset.busy)return;el.dataset.busy=1;let ok=0,bad=0;
+    for(let p=1;p<=604;p++){try{const r=await fetch("qpc2/p"+String(p).padStart(3,"0")+".woff2");if(r.ok){await r.arrayBuffer();ok++}else bad++}catch(e){bad++}
+      if(p%8===0||p===604)el.textContent="جاري التحميل… "+ar(p)+" / "+ar(604);if(bad>12)break}
+    try{await fetch("qpc2/QPC2BSML.ttf")}catch(e){}
+    delete el.dataset.busy;el.textContent=bad?"توقف التحميل. تأكد من الإنترنت واضغط مرة ثانية":"تم تحميل المصحف كامل ✓"},
   rgo(el){readerGo(+el.dataset.d)},
   rhide(){rHide=!rHide;$("#reader").classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);document.querySelectorAll("#r-page .ay.shown").forEach(x=>x.classList.remove("shown"));toast(rHide?"الآيات مخفية. اضغط على أي آية تظهر":"الآيات ظاهرة")},
-  ayah(el){if(rHide)el.classList.toggle("shown")},
+  ayah(el){if(!rHide)return;const k=el.dataset.k;if(k){const on=!el.classList.contains("shown");document.querySelectorAll('#r-page .ay[data-k="'+k+'"]').forEach(x=>x.classList.toggle("shown",on))}else el.classList.toggle("shown")},
   rsize(el){const wasFit=S.ui.rfit!==false;const i=Math.max(0,Math.min(3,RSK.indexOf(S.ui.rsize||"md")+(wasFit?0:+el.dataset.d)));S.ui.rsize=RSK[i];S.ui.rfit=false;applyRS();fitPage();save();if(wasFit)toast("صار الخط يدوي. زر ⤢ يرجّع الصفحة كاملة")},
   rfit(){S.ui.rfit=S.ui.rfit===false;applyRS();fitPage();save();toast(S.ui.rfit?"الصفحة كاملة في الشاشة":"الخط يدوي، تقدر تنزل بالصفحة")},
   rrate(){pageSheet(rPage)},
@@ -869,7 +912,7 @@ const A={
     if(S.settings.dir==="back"){if(p<S.settings.from)S.settings.from=p}else{if(p>S.settings.to)S.settings.to=p}
     S.pages[p]={r:2,iv:1,due:addDays(today(),1),last:today(),n:1};save();renderAll();confetti();toastUndo("بارك الله فيك! صفحة "+ar(p)+" صارت محفوظة",()=>{const L=day();S.settings=pS;if(pR)S.pages[p]=pR;else delete S.pages[p];L.newDone=L.newDone.filter(x=>x!==p);save();renderAll();toast("تم التراجع")})},
   page(el){pageSheet(el.dataset.p)},
-  rate(el){setTimeout(()=>{if($("#reader").classList.contains("open")&&window.QTEXT)renderReader(0)},0);const p=+el.dataset.p,r=+el.dataset.r;if(day().rev[p]===r){unrate(p);closeSheet();renderAll();toast("انشال التقييم. صفحة "+ar(p)+" رجعت بدون تقييم");return}
+  rate(el){setTimeout(()=>{if($("#reader").classList.contains("open"))renderReader(0)},0);const p=+el.dataset.p,r=+el.dataset.r;if(day().rev[p]===r){unrate(p);closeSheet();renderAll();toast("انشال التقييم. صفحة "+ar(p)+" رجعت بدون تقييم");return}
     const u=snap([p]);ratePage(p,r);closeSheet();renderAll();toastUndo(r>=2?"ممتاز، ترجع لك بعد "+ar(S.pages[p].iv)+" أيام":r===1?"راح ترجع لك بعد يومين":"ترجع لك بكرة. لا تشيل هم",u);
     const L=day();const all=[...L.near,...L.far];if(all.every(q=>L.rev[q]!=null)&&L.newT.every(q=>L.newDone.includes(q)))confetti()},
   fab(el){mkSheet(el.dataset.p)},
