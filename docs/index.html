@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مِشكاة</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0e3b34">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="مِشكاة">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one-column daily "مصحف" notebook — emerald night band on top, white leaves below, gold for actions and celebration */
+:root{
+  --bg:#edf3f0; --surface:#ffffff; --surface2:#f4f8f6; --ink:#12302c; --muted:#5d7570; --line:#d9e5e0;
+  --accent:#0f7a62; --accent-ink:#ffffff; --gold:#c4922a; --gold-soft:#f6ead0; --rose:#c4475b; --rose-soft:#f9e1e5;
+  --band:#0e3b34; --band2:#0a2b26; --pat:rgba(255,255,255,.07);
+  --s3:#16946b; --s2:#7dbb4f; --s1:#e2a336; --s0:#d65151; --su:#cdd9d4; --snm:#eef2f0;
+  --csat:62%; --clit:84%; --ctxt:#17302b;
+  --quran:"Amiri","Geeza Pro","Noto Naskh Arabic","Traditional Arabic",serif; --display:"Amiri", "Traditional Arabic", serif; --body:"IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --r:18px; --shadow:0 1px 2px rgba(10,40,35,.06), 0 8px 24px rgba(10,40,35,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1513; --surface:#11211e; --surface2:#162925; --ink:#e4efea; --muted:#94aca5; --line:#243a35;
+    --accent:#35c49b; --accent-ink:#06231c; --gold:#e5b850; --gold-soft:#3a3016; --rose:#f0788a; --rose-soft:#3c1d23;
+    --band:#0c2e29; --band2:#071c19; --pat:rgba(255,255,255,.05);
+    --csat:40%; --clit:27%; --ctxt:#e6f1ec; --s3:#2fbf8c; --s2:#8fcb5c; --s1:#e8b04a; --s0:#e56868; --su:#2b403b; --snm:#15241f;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1513; --surface:#11211e; --surface2:#162925; --ink:#e4efea; --muted:#94aca5; --line:#243a35;
+  --accent:#35c49b; --accent-ink:#06231c; --gold:#e5b850; --gold-soft:#3a3016; --rose:#f0788a; --rose-soft:#3c1d23;
+  --band:#0c2e29; --band2:#071c19; --pat:rgba(255,255,255,.05);
+  --csat:40%; --clit:27%; --ctxt:#e6f1ec; --s3:#2fbf8c; --s2:#8fcb5c; --s1:#e8b04a; --s0:#e56868; --su:#2b403b; --snm:#15241f;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:8px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.num{font-variant-numeric:tabular-nums}
+
+/* top band */
+.band{position:relative;background:linear-gradient(160deg,var(--band),var(--band2));color:#f3efe2;padding:18px 16px 70px;overflow:hidden}
+.band .pattern{position:absolute;inset:0;background:var(--pat);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Cpath d='M0 0L8 8M56 0L48 8M0 56L8 48M56 56L48 48'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Cpath d='M0 0L8 8M56 0L48 8M0 56L8 48M56 56L48 48'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  animation:drift 60s linear infinite}
+@keyframes drift{to{background-position:0 0;transform:translateY(-56px)}}
+.band-in{position:relative;max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--display);font-size:1.7rem;font-weight:700;letter-spacing:0;color:#f6e7bf;line-height:1.2}
+.dateline{font-size:.85rem;color:#b9d2ca}
+.iconbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#f3efe2;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none}
+.sync{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:#b9d2ca}
+.sync i{width:8px;height:8px;border-radius:50%;background:#8aa;display:inline-block}
+.sync.ok i{background:#4fd1a5;box-shadow:0 0 0 3px rgba(79,209,165,.2)}
+.sync.local i{background:#e5b850}
+.sync.err i{background:#f0788a}
+
+.hero{display:flex;align-items:center;gap:18px}
+.ring{position:relative;width:118px;height:118px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .track{stroke:rgba(255,255,255,.12)}
+.ring .val{stroke:url(#goldGrad);stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)}
+.ring .center{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .big{font-family:var(--display);font-size:2rem;font-weight:700;color:#f6e7bf;line-height:1}
+.ring .small{font-size:.72rem;color:#b9d2ca}
+.herostats{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;flex:1;min-width:0}
+.hs b{display:block;font-size:1.2rem;color:#fff;line-height:1.2}
+.hs span{font-size:.75rem;color:#b9d2ca}
+.flame{display:inline-block;transform-origin:bottom center;animation:flick 1.6s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.12) rotate(3deg)}}
+
+main{max-width:720px;margin:-52px auto 0;padding:0 16px 120px;position:relative;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;animation:rise .45s both}
+@keyframes rise{from{transform:translateY(10px)}to{transform:none}}
+.card h2{font-family:var(--display);font-size:1.45rem;font-weight:700;line-height:1.3}
+.cardhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:600;color:var(--muted)}
+.kicker .dot{width:9px;height:9px;border-radius:3px;transform:rotate(45deg)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}
+.pill.green{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.pill.rose{background:var(--rose-soft);color:var(--rose)}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+
+/* day progress */
+.dayprog{display:flex;flex-direction:column;gap:8px}
+.bar{height:10px;border-radius:99px;background:var(--surface2);overflow:hidden;border:1px solid var(--line)}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.trio div{background:var(--surface2);border-radius:12px;padding:8px 10px;text-align:center}
+.trio b{display:block;font-size:1.05rem}
+.trio span{font-size:.72rem;color:var(--muted)}
+
+/* new page */
+.newpage{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pagebadge{width:74px;height:74px;flex:none;display:grid;place-content:center;text-align:center;border-radius:20px;background:linear-gradient(150deg,var(--accent),color-mix(in srgb,var(--accent) 60%,var(--band)));color:#fff;position:relative}
+.pagebadge::before{content:"";position:absolute;inset:6px;border:1.5px solid rgba(255,255,255,.35);border-radius:14px;transform:rotate(45deg) scale(.72)}
+.pagebadge b{font-family:var(--display);font-size:1.8rem;line-height:1;position:relative}
+.pagebadge span{font-size:.65rem;opacity:.85;position:relative}
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);text-align:start;width:100%;transition:transform .12s, background .2s, border-color .2s}
+.step:active{transform:scale(.98)}
+.step.full{border-color:color-mix(in srgb,var(--accent) 50%,transparent);background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
+.step .lbl{flex:1;min-width:0}
+.step .lbl b{display:block;font-size:.92rem;font-weight:600}
+.step .lbl span{font-size:.75rem;color:var(--muted)}
+.dots{display:flex;gap:4px;flex:none}
+.dots i{width:12px;height:12px;border-radius:4px;transform:rotate(45deg);border:1.5px solid var(--accent);transition:background .25s, transform .25s}
+.dots i.on{background:var(--accent);transform:rotate(45deg) scale(1.1)}
+.minus{border:none;background:transparent;color:var(--muted);width:30px;height:30px;border-radius:8px;flex:none;font-size:1.1rem}
+.btn{border:none;border-radius:14px;padding:12px 16px;font-weight:600;background:var(--accent);color:var(--accent-ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s, filter .2s}
+.btn:active{transform:scale(.97)}
+.btn.block{width:100%}
+.btn.gold{background:var(--gold);color:#241a05}
+.btn.ghost{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}
+.btn.rose{background:var(--rose);color:#fff}
+.btn.glow{animation:glow 1.8s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 50%,transparent)}50%{box-shadow:0 0 0 8px transparent}}
+.done-banner{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--accent);font-weight:600}
+
+/* review chips */
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}
+.chip{position:relative;border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:9px 8px 8px;text-align:center;transition:transform .12s, border-color .2s}
+.chip:active{transform:scale(.96)}
+.chip b{display:block;font-size:1.05rem;line-height:1.2}
+.chip span{display:block;font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip .st{position:absolute;top:6px;inset-inline-start:6px;width:9px;height:9px;border-radius:3px;transform:rotate(45deg)}
+.chip.rated{border-color:transparent;color:#fff}
+.chip.rated span{color:rgba(255,255,255,.85)}
+.chip.r3{background:var(--s3)}.chip.r2{background:var(--s2)}.chip.r1{background:var(--s1)}.chip.r0{background:var(--s0)}
+.chip.rated::after{content:"✓";position:absolute;top:4px;inset-inline-end:8px;font-size:.75rem;opacity:.9}
+.pop{animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(.85)}100%{transform:scale(1)}}
+
+/* week */
+.week{display:flex;align-items:flex-end;gap:8px;height:110px;padding-top:6px}
+.week .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.week .b{width:100%;max-width:34px;border-radius:8px 8px 4px 4px;background:color-mix(in srgb,var(--accent) 35%,var(--surface2));transition:height .8s cubic-bezier(.2,.8,.2,1);position:relative}
+.week .col.today .b{background:linear-gradient(180deg,var(--gold),var(--accent))}
+.week .v{font-size:.72rem;color:var(--muted)}
+.week .d{font-size:.7rem;color:var(--muted)}
+
+/* map */
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.75rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-inline-end:4px;vertical-align:-1px}
+.juz{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.juz:first-of-type{border-top:none}
+.juzhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.juzhead h3{font-family:var(--display);font-size:1.15rem}
+.minibar{display:flex;height:6px;border-radius:9px;overflow:hidden;width:120px;background:var(--surface2)}
+.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:4px}
+.cell{aspect-ratio:1;border-radius:7px;border:none;font-size:.62rem;display:grid;place-items:center;color:rgba(0,0,0,.55);transition:transform .15s;position:relative;padding:0}
+.cell:hover{transform:scale(1.12);z-index:1}
+.cell.s3{background:var(--s3);color:#fff}.cell.s2{background:var(--s2);color:#13300f}.cell.s1{background:var(--s1);color:#3a2604}.cell.s0{background:var(--s0);color:#fff}
+.cell.su{background:var(--su);color:var(--muted)}.cell.snm{background:var(--snm);color:var(--muted);opacity:.7}
+.cell.front{outline:2px dashed var(--gold);outline-offset:1px}
+.cell .mk{position:absolute;top:2px;inset-inline-end:2px;width:6px;height:6px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 1.5px var(--surface)}
+.seg{display:inline-flex;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{border:none;background:transparent;padding:6px 12px;border-radius:9px;font-size:.82rem;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+
+/* mistakes */
+.typebars{display:flex;flex-direction:column;gap:7px}
+.tb{display:grid;grid-template-columns:96px 1fr 30px;align-items:center;gap:8px;font-size:.82rem}
+.tb .t{height:10px;background:var(--surface2);border-radius:9px;overflow:hidden}
+.tb .t i{display:block;height:100%;background:var(--rose);border-radius:9px;transition:width .8s}
+.mlist{display:flex;flex-direction:column;gap:10px}
+.mi{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--surface);border-inline-start:4px solid var(--rose);animation:rise .35s both}
+.mi.solved{border-inline-start-color:var(--s3);opacity:.8}
+.mi .row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mi .where{font-weight:700}
+.mi .note{font-size:.88rem;background:var(--surface2);border-radius:10px;padding:8px 10px;white-space:pre-wrap}
+.count{font-family:var(--display);font-weight:700;color:var(--rose);font-size:1.2rem}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.sbtn{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:5px 10px;font-size:.8rem}
+.sbtn.warn{color:var(--rose);border-color:color-mix(in srgb,var(--rose) 40%,transparent)}
+
+/* pairs */
+.pair{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface);animation:rise .35s both}
+.pair .halves{display:grid;grid-template-columns:1fr 1fr}
+.pair .h{padding:12px;display:flex;flex-direction:column;gap:6px}
+.pair .h + .h{border-inline-start:1px dashed var(--line)}
+.pair .loc{font-size:.75rem;font-weight:600;color:var(--accent)}
+.pair .txt{font-family:var(--quran);font-size:calc(var(--qs,1.2rem) * .93);line-height:1.9;transition:filter .3s}
+.quiz .pair .txt{filter:blur(7px);cursor:pointer;user-select:none}
+.quiz .pair .txt.shown{filter:none}
+.pair .tip{background:var(--gold-soft);color:var(--ink);padding:10px 12px;font-size:.9rem;display:flex;gap:8px;align-items:flex-start}
+.pair .tip b{color:var(--gold)}
+.pair .foot{display:flex;justify-content:flex-end;padding:6px 10px;background:var(--surface2)}
+.empty{text-align:center;padding:22px 10px;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
+.empty .star{width:46px;height:46px;border:2px solid var(--gold);transform:rotate(45deg);border-radius:8px;position:relative;animation:spin 14s linear infinite}
+.empty .star::after{content:"";position:absolute;inset:-2px;border:2px solid var(--gold);border-radius:8px;transform:rotate(45deg)}
+@keyframes spin{to{transform:rotate(405deg)}}
+
+/* nav + fab */
+nav.tabs{position:fixed;bottom:0;inset-inline:0;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs .in{display:grid;grid-template-columns:repeat(4,1fr);max-width:720px;width:100%}
+nav.tabs button{border:none;background:transparent;padding:9px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;color:var(--muted)}
+nav.tabs button svg{width:22px;height:22px;transition:transform .2s}
+nav.tabs button.on{color:var(--accent);font-weight:600}
+nav.tabs button.on svg{transform:translateY(-2px)}
+.fab{position:fixed;top:14px;left:max(12px, calc(50% - 348px));z-index:21;background:var(--gold);border:none;border-radius:50%;width:46px;height:46px;padding:0;font-size:1.35rem;line-height:1;box-shadow:0 6px 18px rgba(196,146,42,.45);display:grid;place-items:center;transition:transform .15s}
+.topline{padding-inline-end:52px;align-items:flex-start}
+.topline .iconbtn{width:38px;height:38px;margin-top:4px}
+.fab:active{transform:scale(.94)}
+
+/* sheet */
+.backdrop{position:fixed;inset:0;background:rgba(5,20,17,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+.backdrop.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;inset-inline:0;bottom:0;z-index:41;max-height:88%;overflow:auto;background:var(--surface);border-radius:24px 24px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.9,.25,1);max-width:720px;margin:0 auto}
+.sheet.open{transform:none}
+.sheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.backdrop{touch-action:none;overscroll-behavior:contain}
+html.locked,html.locked body{overflow:hidden}
+.grab{padding:8px 0 16px;margin:-6px 0 0;touch-action:none;cursor:grab;display:flex;justify-content:center}
+.grab i{display:block;width:48px;height:5px;border-radius:9px;background:var(--muted);opacity:.6}
+.sheet h3{font-family:var(--display);font-size:1.4rem;margin-bottom:4px}
+.form{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:.82rem;font-weight:600;color:var(--muted)}
+.field input,.field select,.field textarea{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+.field textarea{min-height:70px;resize:vertical}
+.field .hint{font-size:.75rem;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.typechips{display:flex;flex-wrap:wrap;gap:6px}
+.typechips button{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 12px;font-size:.84rem}
+.typechips button.on{background:var(--rose);color:#fff;border-color:var(--rose)}
+.rates{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.rate{border:none;border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#fff;font-weight:700;font-size:.85rem;transition:transform .12s}
+.rate:active{transform:scale(.94)}
+.rate small{font-weight:400;font-size:.68rem;opacity:.9}
+.rate.r3{background:var(--s3)}.rate.r2{background:var(--s2);color:#13300f}.rate.r1{background:var(--s1);color:#3a2604}.rate.r0{background:var(--s0)}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.kv div{background:var(--surface2);border-radius:12px;padding:8px;text-align:center}
+.kv b{display:block}
+.kv span{font-size:.7rem;color:var(--muted)}
+
+.cell.sur{background:hsl(var(--h) var(--csat) var(--clit));color:var(--ctxt)}
+.cell.sur.nm{opacity:.5}
+.cell.start{border:2px solid var(--gold);align-content:center;gap:0;line-height:1.05;overflow:hidden}
+.cell small{display:block;font-size:.47rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;max-width:100%}
+.cell.dim,.cell.sur.nm.dim{opacity:.22}
+.juzhead{flex-wrap:wrap}
+.sname{border:1px solid transparent;background:transparent;padding:2px 8px;border-radius:10px;text-align:start;margin-inline-start:-8px}
+.sname.on{background:var(--gold-soft);border-color:var(--gold)}
+.hlbar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--gold-soft);border-radius:12px;padding:8px 12px;margin-top:10px;font-size:.88rem;font-weight:600}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bdg{border:1px dashed var(--line);border-radius:14px;padding:10px 6px;text-align:center;font-size:.75rem;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px}
+.bdg i{width:18px;height:18px;border-radius:5px;transform:rotate(45deg);background:var(--su);margin-top:4px}
+.bdg.got{border:1px solid var(--gold);background:var(--gold-soft);color:var(--ink);font-weight:600}
+.bdg.got i{background:var(--gold)}
+.newsdot{position:relative}
+.newsdot.has::after{content:"";position:absolute;top:5px;inset-inline-end:5px;width:10px;height:10px;border-radius:50%;background:#f6dc8a;box-shadow:0 0 0 2px var(--band)}
+.news ul{margin:6px 0 0;padding-inline-start:20px;font-size:.9rem}
+.sync span{white-space:nowrap}
+.toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-140%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:60;font-size:.9rem;font-weight:600;transition:transform .35s cubic-bezier(.2,.9,.25,1);max-width:90%;text-align:center}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:11px 2px;border:none;border-top:1px solid var(--line);background:transparent;text-align:start}
+.srow b{font-family:var(--display);font-size:1.15rem}
+.srow.on b{color:var(--accent)}
+.mrow{display:block;width:100%;text-align:start;border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:9px 11px;margin:0 0 6px;font-size:.88rem;line-height:1.7}
+.mrow b{color:var(--accent)}
+.aybox{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.aybox .loc{font-size:.8rem;font-weight:700;color:var(--accent)}
+.aytxt{font-family:var(--quran);font-size:var(--qs,1.2rem);line-height:2.1}
+.upd{position:fixed;bottom:calc(74px + env(safe-area-inset-bottom));inset-inline:0;margin:0 auto;width:max-content;max-width:calc(100% - 32px);z-index:55;background:var(--accent);color:var(--accent-ink);border:none;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:var(--shadow);display:none;white-space:nowrap}
+.upd.show{display:block;animation:rise .4s both}
+details.sec{border:1px solid var(--line);border-radius:14px;padding:0 12px;background:var(--surface)}
+details.sec summary{cursor:pointer;padding:12px 0;font-weight:700;display:flex;justify-content:space-between;align-items:center;list-style:none}
+details.sec summary::-webkit-details-marker{display:none}
+details.sec summary::after{content:"+";color:var(--muted);font-size:1.3rem;line-height:1}
+details.sec[open] summary::after{content:"−"}
+details.sec>.form{margin:0 0 12px;gap:4px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.row:last-child{border-bottom:none}
+.row .l{font-size:.9rem;font-weight:600}
+.row .hint{display:block;font-size:.72rem;color:var(--muted);font-weight:400}
+.switch{position:relative;width:46px;height:28px;flex:none;display:inline-block}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch i{position:absolute;inset:0;background:var(--line);border-radius:99px;transition:background .2s;cursor:pointer}
+.switch i::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked+i{background:var(--accent)}
+.switch input:checked+i::after{transform:translateX(-18px)}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.sw{width:40px;height:40px;border-radius:50%;border:3px solid transparent;padding:0;background:transparent;position:relative}
+.sw.on{border-color:var(--ink)}
+.sw span{position:absolute;inset:2px;border-radius:50%;background:linear-gradient(135deg,var(--a) 50%,var(--b) 50%)}
+.daychips button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !important;transition:none !important}
+.tundo{margin-inline-start:10px;border:none;background:var(--gold);color:#241a05;border-radius:8px;padding:3px 12px;font-weight:700}
+.rate.cur{outline:3px solid var(--ink);outline-offset:2px}
+.toast.show{transform:translate(-50%,0)}
+canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;height:100%}
+.view{display:none;flex-direction:column;gap:16px}
+.view.on{display:flex}
+.loading{font-size:.8rem;color:var(--muted);text-align:center}
+.lineitem{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.88rem}
+@media (max-width:420px){ .brand{font-size:1.2rem;white-space:nowrap} .dateline{font-size:.78rem} .ring{width:104px;height:104px} .ring svg{width:104px;height:104px} .pair .halves{grid-template-columns:1fr} .pair .h + .h{border-inline-start:none;border-top:1px dashed var(--line)} }
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none !important;transition:none !important} }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6dc8a"/><stop offset="1" stop-color="#c4922a"/></linearGradient></defs></svg>
+
+<header class="band">
+  <div class="pattern"></div>
+  <div class="band-in">
+    <div class="topline">
+      <div>
+        <div class="brand">مِشكاة <span style="font-family:var(--body);font-size:.8rem;font-weight:500;color:#b9d2ca">دفتر الحفظ والمراجعة</span></div>
+        <div class="dateline" id="dateline"></div>
+        <span class="sync" id="sync"><i></i><span>جاري التحميل…</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="iconbtn newsdot" id="newsbtn" data-act="news" aria-label="ما الجديد"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/></svg></button>
+        <button class="iconbtn" data-act="settings" aria-label="الإعدادات">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="ring">
+        <svg width="118" height="118" viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="10"/><circle class="val" id="ringval" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+        <div class="center"><div class="big num" id="pct">٠٪</div><div class="small">من المصحف</div></div>
+      </div>
+      <div class="herostats">
+        <div class="hs"><b class="num" id="hsPages">—</b><span>صفحة محفوظة</span></div>
+        <div class="hs"><b class="num" id="hsJuz">—</b><span>جزء</span></div>
+        <div class="hs"><b class="num"><span class="flame">🔥</span> <span id="hsStreak">٠</span></b><span>أيام متتالية</span></div>
+        <div class="hs"><b class="num" id="hsKhatm">—</b><span>الختم المتوقع بإذن الله</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="view on" id="v-today"></section>
+  <section class="view" id="v-map"></section>
+  <section class="view" id="v-mistakes"></section>
+  <section class="view" id="v-pairs"></section>
+</main>
+
+<button class="fab" data-act="fab" aria-label="سجّل خطأ" title="سجّل خطأ">⚠️</button>
+
+<nav class="tabs"><div class="in">
+  <button data-act="tab" data-v="today" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg>اليوم</button>
+  <button data-act="tab" data-v="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg>الخريطة</button>
+  <button data-act="tab" data-v="mistakes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17v.5"/></svg>الأخطاء</button>
+  <button data-act="tab" data-v="pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="8" height="12" rx="2"/><rect x="13" y="6" width="8" height="12" rx="2"/><path d="M11 12h2"/></svg>المتشابهات</button>
+</div></nav>
+
+<div class="backdrop" id="backdrop" data-act="close"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast"></div>
+<canvas id="fx"></canvas>
+<button class="upd" id="upd" type="button">نسخة جديدة متوفرة · اضغط للتحديث</button>
+
+<script src="mut.js"></script>
+<script>
+/* ---------- Mushaf data (Madinah 604) ---------- */
+const SURAH = "الفاتحة،البقرة،آل عمران،النساء،المائدة،الأنعام،الأعراف،الأنفال،التوبة،يونس،هود،يوسف،الرعد،إبراهيم،الحجر،النحل،الإسراء،الكهف،مريم،طه،الأنبياء،الحج،المؤمنون،النور،الفرقان،الشعراء،النمل،القصص،العنكبوت،الروم،لقمان،السجدة،الأحزاب،سبأ،فاطر،يس،الصافات،ص،الزمر،غافر،فصلت،الشورى،الزخرف،الدخان،الجاثية،الأحقاف،محمد،الفتح،الحجرات،ق،الذاريات،الطور،النجم،القمر،الرحمن،الواقعة،الحديد،المجادلة،الحشر،الممتحنة،الصف،الجمعة،المنافقون،التغابن،الطلاق،التحريم،الملك،القلم،الحاقة،المعارج،نوح،الجن،المزمل،المدثر،القيامة،الإنسان،المرسلات،النبأ،النازعات،عبس،التكوير،الانفطار،المطففين،الانشقاق،البروج،الطارق،الأعلى،الغاشية،الفجر،البلد،الشمس،الليل،الضحى،الشرح،التين،العلق،القدر،البينة،الزلزلة،العاديات،القارعة،التكاثر،العصر،الهمزة،الفيل،قريش،الماعون،الكوثر،الكافرون،النصر،المسد،الإخلاص،الفلق،الناس".split("،");
+const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,587,589,590,591,591,592,593,594,595,595,596,596,597,597,598,598,599,599,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
+const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
+const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
+const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
+const VERSION="1.7";
+const CHANGELOG=[
+ {v:"1.7",d:"2026-11-13",items:["إعدادات كاملة مقسّمة: المظهر، الخطة، اليوم والتقويم، الخريطة والمتشابهات، البيانات","٦ ألوان للتطبيق، وضع فاتح/داكن/تلقائي، ٤ خطوط للواجهة و٣ للآيات، وأحجام للخط","أرقام عربية أو إنجليزية، وإيقاف الحركات والاحتفال","بداية اليوم: المراجعة بعد منتصف الليل تنحسب على اليوم السابق لو تبي","أيام راحة ما تكسر سلسلة الأيام وتدخل في حساب الختم","سرعة تباعد المراجعة: بطيئة أو عادية أو سريعة","تعديل التاريخ الهجري بيوم، وإخفاء المتشابهات الجاهزة، والاهتزاز على أندرويد","إحصاءات بياناتك في الإعدادات"]},
+ {v:"1.6",d:"2026-11-13",items:["اسم التطبيق صار «مِشكاة»، من سورة النور: ﴿كَمِشْكَاةٍ فِيهَا مِصْبَاحٌ﴾","أيقونة جديدة: مشكاة فيها مصباح"]},
+ {v:"1.5.1",d:"2026-11-13",items:["النسخة الاحتياطية صارت ملف: «احفظ نسخة كملف» و«استرجع من ملف» في الإعدادات"]},
+ {v:"1.5",d:"2026-11-13",items:["صار تطبيق مستقل تثبته على الشاشة الرئيسية ويشتغل بدون إنترنت","إذا نزل تحديث يطلع لك زر «نسخة جديدة متوفرة» تحت","سحب شريط النافذة لتحت يسكرها، والخلفية ما تتحرك وهي مفتوحة"]},
+ {v:"1.4",d:"2026-11-13",items:["تبويب المتشابهات: قائمة جاهزة بكل سور محفوظك ومواضعها المتشابهة مع السور الثانية، مع نص الآيات","من أي موضع جاهز تقدر تضيفه لمتشابهاتك وتكتب ضابطه","إذا ضغطت نفس التقييم مرة ثانية ترجع الصفحة بدون تقييم"]},
+ {v:"1.3",d:"2026-11-13",items:["تراجع عن أي تقييم بالغلط: زر «تراجع» يطلع فوق بعد كل تقييم لصفحة أو سورة أو إتمام حفظ","اضغط على الصفحة واختر نفس التقييم مرة ثانية فينشال وترجع الصفحة كما كانت","زر تسجيل الخطأ صار ⚠️ فوق على اليسار"]},
+ {v:"1.2",d:"2026-11-13",items:["خريطة الأجزاء تتلون حسب السورة، واسم السورة مكتوب بخط صغير في أول مربع لها بإطار ذهبي","الشريط تحت كل صفحة يبيّن قوتها، وتقدر ترجع للتلوين حسب القوة من زر «التلوين»"]},
+ {v:"1.1",d:"2026-11-13",items:["خريطة السور تحت خريطة الأجزاء: كل سورة وصفحاتها وقوتها","اضغط اسم أي سورة فتتميز صفحاتها داخل خريطة الأجزاء كلها","زر «قيّم السورة» يقيّم كل صفحاتها مرة وحدة بعد تسميعها كاملة","اختبار مفاجئ: صفحة عشوائية من محفوظك (والضعيفة تطلع أكثر)","زر «زدني ٥ صفحات» إذا عندك وقت زيادة للبعيد","عدّاد للصفحات اللي حان موعدها وما دخلت ورد اليوم","الأوسمة والإنجازات","تصحيح حدود السور: كل صفحة تعرض السور اللي فيها فعلاً","إصلاح: التبديل بين التطبيقات ما عاد يضيّع آخر تعديل قبل حفظه"]},
+ {v:"1.0",d:"2026-11-13",items:["ورد اليوم: الجديد والقريب والبعيد","زر «لخبطت هنا» وسجل الأخطاء","خريطة الأجزاء وقسم المتشابهات"]}
+];
+const RATE=[{l:"نسيت",d:"غداً"},{l:"متعثرة",d:"بعد يومين"},{l:"جيدة",d:"تتباعد"},{l:"متقنة",d:"تتباعد كثير"}];
+const STEPS=[{t:"استمع للصفحة بصوت قارئ متقن",n:3},{t:"اقرأها نظراً بتأنٍّ وتركيز",n:5},{t:"سمّعها غيباً بلا خطأ",n:3},{t:"اربطها بالصفحة اللي قبلها",n:1}];
+
+const surahsOn=p=>{const r=[];for(let i=0;i<114;i++){if(SSTART[i]<=p&&p<=SEND[i])r.push(i)}return r};
+const juzOf=p=>{let j=1;for(let i=0;i<30;i++)if(JSTART[i]<=p)j=i+1;return j};
+const juzRange=j=>[JSTART[j-1], j<30?JSTART[j]-1:604];
+const pageLabel=p=>{const s=surahsOn(p).map(i=>SURAH[i]);return s.length>3?s[0]+" … "+s[s.length-1]:s.join(" · ")};
+
+/* ---------- ready-made mutashabihat (mut.js; optional) ---------- */
+const hasMut=typeof MUT!=="undefined"&&typeof ACNT!=="undefined"&&typeof AYT!=="undefined";
+const aloc=n=>{let i=0;while(i<113&&n>=ACNT[i]){n-=ACNT[i];i++}return[i,n+1]};
+const MUTBY=Array.from({length:114},()=>[]);
+if(hasMut)MUT.forEach((e,x)=>{const ss=new Set([aloc(e[0][0])[0],...e[1].map(m=>aloc(m[0])[0])]);ss.forEach(i=>MUTBY[i].push(x))});
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const LOC=()=>(S.ui&&S.ui.numerals==="en")?"ar-EG-u-nu-latn":"ar-EG";
+const ar=(n,g)=>Number(n).toLocaleString(LOC(),{useGrouping:!!g,maximumFractionDigits:1});
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const dstr=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>dstr(new Date(Date.now()-((S.ui&&S.ui.dayStart)||0)*36e5));
+const addDays=(s,n)=>{const[y,m,d]=s.split("-").map(Number);const x=new Date(y,m-1,d);x.setDate(x.getDate()+n);return dstr(x)};
+const diffDays=(a,b)=>{const p=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};return Math.round((p(b)-p(a))/864e5)};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const rng=a=>{const[i,x]=aloc(a[0]),y=aloc(a[a.length-1])[1];return SURAH[i]+" "+ar(x)+(a.length>1?"–"+ar(y):"")};
+const aytext=a=>a.map(n=>esc(AYT[n]||"")+" ﴿"+ar(aloc(n)[1])+"﴾").join(" ");
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmtDate=(s,opt)=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(LOC(),opt||{day:"numeric",month:"long"})};
+const isRest=s=>{const r=(S.ui&&S.ui.rest)||[];if(!r.length)return false;const[y,m,d]=s.split("-").map(Number);return r.includes(new Date(y,m-1,d).getDay())};
+
+/* ---------- state ---------- */
+const KEY="quran-hifz-v1";
+const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false},pages:{},mistakes:[],pairs:[],log:{}});
+function normalize(){const d=DEF();S.ui=Object.assign(d.ui,S.ui||{});S.settings=Object.assign(d.settings,S.settings||{});if(!Array.isArray(S.ui.rest))S.ui.rest=[]}
+let S=DEF();
+try{const c=localStorage.getItem(KEY);if(c)S=Object.assign(DEF(),JSON.parse(c))}catch(e){}
+normalize();
+let ref=null, writing=false, pending=false, saveTimer=null, view="today", mapOnly=true, mkFilter="active", quiz=false, hlSurah=null, openMut=null;
+let mapColor=S.ui.mapColor||"surah";
+
+const isMem=p=>p>=S.settings.from&&p<=S.settings.to;
+const memCount=()=>S.settings.to-S.settings.from+1;
+function nearPages(){const{from,to,near,dir}=S.settings;const r=[];if(dir==="back"){for(let p=from;p<=Math.min(to,from+near-1);p++)r.push(p)}else{for(let p=to;p>=Math.max(from,to-near+1);p--)r.push(p)}return r}
+function nextNew(){const{from,to,dir,perDay}=S.settings;const r=[];for(let i=1;i<=perDay;i++){const p=dir==="back"?from-i:to+i;if(p>=1&&p<=604)r.push(p)}return r}
+function computeFar(n,ex){const nr=new Set([...nearPages(),...(ex||[])]);const c=[];for(let p=S.settings.from;p<=S.settings.to;p++)if(!nr.has(p))c.push(p);
+  c.sort((a,b)=>{const A=S.pages[a]||{},B=S.pages[b]||{};const da=A.due||"0000",db=B.due||"0000";if(da!==db)return da<db?-1:1;return (A.r??2)-(B.r??2)||a-b});
+  return c.slice(0,n??S.settings.far)}
+function seed(){const nr=new Set(nearPages());const t=today();let i=0;const f=Math.max(1,S.settings.far);
+  for(let p=S.settings.from;p<=S.settings.to;p++){if(S.pages[p])continue;if(nr.has(p)){S.pages[p]={iv:1,due:t,n:0};continue}
+    S.pages[p]={iv:7,due:addDays(t,Math.floor(i/f)),n:0};i++}}
+function day(){const t=today();if(!S.log[t])S.log[t]={rev:{},mk:0,newDone:[],steps:{}};const L=S.log[t];
+  if(S.setup){if(!L.near)L.near=nearPages();if(!L.far)L.far=computeFar();if(!L.newT)L.newT=nextNew()}
+  L.rev=L.rev||{};L.newDone=L.newDone||[];L.steps=L.steps||{};return L}
+function prune(){const ks=Object.keys(S.log).sort();while(ks.length>150)delete S.log[ks.shift()]}
+
+function snap(ps){const L=day();const o=ps.map(p=>[p,S.pages[p]?{...S.pages[p]}:null,L.rev[p],L.prev?L.prev[p]:undefined]);
+  return()=>{const L=day();L.prev=L.prev||{};o.forEach(([p,rec,rv,pv])=>{if(rec)S.pages[p]=rec;else delete S.pages[p];if(rv==null)delete L.rev[p];else L.rev[p]=rv;if(pv===undefined)delete L.prev[p];else L.prev[p]=pv});save();renderAll();toast("تم التراجع")}}
+function unrate(p){const L=day();const pv=L.prev?L.prev[p]:undefined;const rec=pv?{...pv}:S.pages[p];if(rec){delete rec.r;S.pages[p]=rec}delete L.rev[p];if(L.prev)delete L.prev[p];save()}
+function ratePage(p,r,ns){const t=today();const L0=day();L0.prev=L0.prev||{};if(!(p in L0.prev))L0.prev[p]=S.pages[p]?{...S.pages[p]}:null;const rec=S.pages[p]||{iv:3,n:0};let iv=rec.iv||3;
+  const sp={slow:[1.7,1.3],normal:[2.2,1.5],fast:[2.8,1.8]}[S.settings.speed]||[2.2,1.5];
+  if(r===3)iv=Math.min(60,Math.max(4,Math.round(iv*sp[0])));else if(r===2)iv=Math.min(40,Math.max(3,Math.round(iv*sp[1])));else if(r===1)iv=2;else iv=1;
+  Object.assign(rec,{r,iv,due:addDays(t,iv),last:t,n:(rec.n||0)+1});S.pages[p]=rec;day().rev[p]=r;if(!ns)save()}
+
+function strength(p){if(!isMem(p))return"snm";const rec=S.pages[p];if(!rec||rec.r==null)return"su";let r=rec.r;
+  if(rec.due&&diffDays(rec.due,today())>10&&r>1)r--;return"s"+r}
+function streak(){let n=0,d=today();const act=L=>L&&((L.newDone||[]).length||Object.keys(L.rev||{}).length||L.mk);
+  if(!act(S.log[d]))d=addDays(d,-1);
+  for(let g=0;g<800;g++){if(act(S.log[d])){n++;d=addDays(d,-1)}else if(isRest(d)){d=addDays(d,-1)}else break}return n}
+
+/* ---------- persistence ---------- */
+function setSync(k,txt){const el=$("#sync");el.className="sync "+k;el.querySelector("span").textContent=txt}
+function save(){prune();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(ref){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;flush()},700)}}
+async function flush(){if(!ref)return;if(writing){pending=true;return}writing=true;
+  const body=JSON.parse(JSON.stringify(S));
+  try{await ref.set(body);setSync("ok","محفوظ في حسابك")}
+  catch(e){if(e&&e.code==="unavailable"){await sleep(1200+Math.random()*1200);try{await ref.set(body);setSync("ok","محفوظ في حسابك")}catch(x){setSync("err","تعذّر الحفظ")}}
+    else if(e&&e.code==="quota_exceeded"){setSync("err","المساحة ممتلئة");toast("المساحة ممتلئة. احذف بعض الأخطاء المؤرشفة")}
+    else setSync("err","تعذّر الحفظ")}
+  writing=false;if(pending){pending=false;flush()}}
+async function connect(){
+  if(!window.claude||!window.claude.use){setSync("ok","محفوظ على جهازك");return}
+  let timer=setTimeout(()=>setSync("local","على هذا الجهاز مؤقتاً"),10000);
+  try{const db=await claude.use("db");const user=await claude.use("user");const id=user?await user.id():null;
+    if(!db||!id){clearTimeout(timer);setSync("local","على هذا الجهاز فقط");return}
+    ref=db.doc("data/users/"+id+"/state");const snap=await ref.get();clearTimeout(timer);
+    if(snap.exists){S=Object.assign(DEF(),snap.data());S=JSON.parse(JSON.stringify(S));normalize();applyUI();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}setSync("ok","محفوظ في حسابك");renderAll()}
+    else if(S.setup){await flush()}else setSync("ok","متصل بحسابك");
+    document.addEventListener("visibilitychange",async()=>{if(document.visibilityState!=="visible"||writing||pending||saveTimer)return;
+      try{const s2=await ref.get();if(s2.exists&&!writing){S=JSON.parse(JSON.stringify(Object.assign(DEF(),s2.data())));normalize();applyUI();renderAll()}}catch(e){}});
+  }catch(e){clearTimeout(timer);ref=null;setSync("local","على هذا الجهاز فقط")}}
+
+/* ---------- appearance ---------- */
+const PALETTES={
+ emerald:{n:"زمردي",a:"#0f7a62",b:"#c4922a",L:{},D:{}},
+ sapphire:{n:"ياقوتي",a:"#1d5fa6",b:"#b98a1e",
+  L:{"--accent":"#1d5fa6","--gold":"#b98a1e","--gold-soft":"#f4e9cc","--band":"#102b4e","--band2":"#0a1c34","--bg":"#eef2f7","--surface2":"#f3f6fa","--line":"#d9e1ec","--ink":"#132034","--muted":"#5c6d84"},
+  D:{"--accent":"#6daaf2","--accent-ink":"#061a30","--band":"#0d2746","--band2":"#07192d","--bg":"#0a1220","--surface":"#111d30","--surface2":"#162639","--line":"#243750","--ink":"#e4ecf7","--muted":"#93a7bf"}},
+ amethyst:{n:"بنفسجي",a:"#6b3fae",b:"#c0902a",
+  L:{"--accent":"#6b3fae","--gold":"#c0902a","--gold-soft":"#f3e8d2","--band":"#2b1850","--band2":"#1b0e36","--bg":"#f2eff7","--surface2":"#f6f3fa","--line":"#e0d9ec","--ink":"#1f1533","--muted":"#6a5f80"},
+  D:{"--accent":"#b08cf0","--accent-ink":"#1a0b33","--band":"#261545","--band2":"#170b2d","--bg":"#100a1c","--surface":"#1a1230","--surface2":"#21183a","--line":"#352a52","--ink":"#ece6f7","--muted":"#a497bd"}},
+ rose:{n:"عنابي",a:"#a33253",b:"#c4922a",
+  L:{"--accent":"#a33253","--band":"#4a1528","--band2":"#300c1a","--bg":"#f7eff2","--surface2":"#faf4f6","--line":"#ead9df","--ink":"#331620","--muted":"#7d5f68"},
+  D:{"--accent":"#f08aa6","--accent-ink":"#330c18","--band":"#3f1224","--band2":"#290a17","--bg":"#1a0b11","--surface":"#26121a","--surface2":"#2f1821","--line":"#482733","--ink":"#f7e8ed","--muted":"#bb98a3"}},
+ sand:{n:"رملي",a:"#8a5a1f",b:"#b4791c",
+  L:{"--accent":"#8a5a1f","--gold":"#b4791c","--gold-soft":"#f4e4c3","--band":"#4b3416","--band2":"#30200b","--bg":"#f6f0e4","--surface":"#fffdf8","--surface2":"#f7f1e6","--line":"#e4d8c3","--ink":"#2e2314","--muted":"#75654b"},
+  D:{"--accent":"#dcae5e","--accent-ink":"#2a1a05","--band":"#3a2810","--band2":"#241806","--bg":"#15100a","--surface":"#1f1810","--surface2":"#292015","--line":"#3f3324","--ink":"#f3eadb","--muted":"#b3a48c"}},
+ night:{n:"ليلي",a:"#141a19",b:"#35c49b",
+  L:{"--band":"#1a1f1e","--band2":"#0a0c0c"},
+  D:{"--bg":"#000000","--surface":"#0d1211","--surface2":"#131a18","--line":"#222b29","--band":"#101514","--band2":"#000000"}}};
+const PKEYS=["--accent","--accent-ink","--gold","--gold-soft","--band","--band2","--bg","--surface","--surface2","--line","--ink","--muted"];
+const UF={plex:["IBM Plex Sans Arabic","IBM+Plex+Sans+Arabic:wght@400;500;600;700","بلكس (الافتراضي)"],cairo:["Cairo","Cairo:wght@400;600;700","القاهرة"],tajawal:["Tajawal","Tajawal:wght@400;500;700","تجوال"],kufi:["Noto Kufi Arabic","Noto+Kufi+Arabic:wght@400;600;700","كوفي"]};
+const QF={amiri:["Amiri","Amiri:wght@400;700","أميري (الافتراضي)"],scheherazade:["Scheherazade New","Scheherazade+New:wght@400;700","شهرزاد"],naskh:["Noto Naskh Arabic","Noto+Naskh+Arabic:wght@400;700","نسخ"]};
+const fontsLoaded=new Set(["IBM+Plex+Sans+Arabic:wght@400;500;600;700","Amiri:wght@400;700"]);
+function loadFont(spec){if(fontsLoaded.has(spec))return;fontsLoaded.add(spec);const l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?family="+spec+"&display=swap";document.head.appendChild(l)}
+function isDark(){const t=S.ui.theme;if(t==="dark")return true;if(t==="light")return false;return matchMedia("(prefers-color-scheme: dark)").matches}
+function applyUI(){const u=S.ui,r=document.documentElement;
+  if(u.theme==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",u.theme);
+  PKEYS.forEach(k=>r.style.removeProperty(k));const p=PALETTES[u.palette]||PALETTES.emerald;const set=isDark()?p.D:p.L;for(const k in set)r.style.setProperty(k,set[k]);
+  r.style.fontSize={sm:"14px",md:"16px",lg:"18px",xl:"20px"}[u.size]||"16px";
+  r.style.setProperty("--qs",{sm:"1.05rem",md:"1.2rem",lg:"1.45rem",xl:"1.75rem"}[u.qsize]||"1.2rem");
+  const uf=UF[u.ufont]||UF.plex,qf=QF[u.qfont]||QF.amiri;loadFont(uf[1]);loadFont(qf[1]);
+  r.style.setProperty("--body",`"${uf[0]}", "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif`);
+  r.style.setProperty("--quran",`"${qf[0]}", "Amiri", "Geeza Pro", "Noto Naskh Arabic", serif`);
+  r.classList.toggle("nomotion",!u.motion);
+  const m=document.querySelector("meta[name=theme-color]");if(m)m.content=getComputedStyle(r).getPropertyValue("--band").trim()||"#0e3b34"}
+try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>applyUI())}catch(e){}
+applyUI();
+
+/* ---------- UI bits ---------- */
+let toastT,undoFn=null;
+function toastUndo(m,fn){const t=$("#toast");t.innerHTML=esc(m)+'<button class="tundo" data-act="undo">تراجع</button>';undoFn=fn;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove("show");undoFn=null},6500)}
+function toast(m){const t=$("#toast");undoFn=null;t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200)}
+function openSheet(h){const s=$("#sheet");s.innerHTML='<div class="grab" role="button" aria-label="إغلاق"><i></i></div>'+h;s.classList.add("open");$("#backdrop").classList.add("open");document.documentElement.classList.add("locked");s.scrollTop=0}
+function closeSheet(){$("#sheet").classList.remove("open");$("#backdrop").classList.remove("open");document.documentElement.classList.remove("locked")}
+
+function renderHero(){const n=S.setup?memCount():0;const pct=n/604;
+  $("#ringval").style.strokeDashoffset=String(326.7*(1-pct));$("#pct").textContent=ar(Math.round(pct*100))+"٪";
+  $("#hsPages").textContent=S.setup?ar(n):"—";$("#hsJuz").textContent=S.setup?ar(Math.round(n/20.13*10)/10):"—";
+  $("#hsStreak").textContent=ar(streak());
+  const rem=S.settings.dir==="back"?S.settings.from-1:604-S.settings.to;
+  $("#hsKhatm").textContent=S.setup?(rem<=0?"تمّ الختم 🌙":fmtDate(addDays(today(),Math.ceil(Math.ceil(rem/Math.max(1,S.settings.perDay))*7/Math.max(1,7-(S.ui.rest||[]).length))),{month:"short",year:"numeric"})):"—";
+  const d=new Date();let h="";if(S.ui.hijri)try{const hd=new Date(d.getTime()+(S.ui.hijriAdj||0)*864e5);h=hd.toLocaleDateString("ar-SA-u-ca-islamic-umalqura"+(S.ui.numerals==="en"?"-nu-latn":""),{day:"numeric",month:"long",year:"numeric"})}catch(e){}
+  $("#dateline").textContent=d.toLocaleDateString(LOC(),{weekday:"long",day:"numeric",month:"long"})+(h?" · "+h:"")}
+
+function setupCard(){const f=S.settings.from;return`<div class="card">
+  <div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>أول خطوة</span><h2>من وين يبدأ محفوظك؟</h2></div></div>
+  <p class="muted small" style="margin:0 0 6px">حدد أول صفحة محفوظة وآخر صفحة (مصحف المدينة ٦٠٤). الحفظ الجديد يمشي للخلف صفحة صفحة باتجاه أول المصحف.</p>
+  <div class="form">
+    <div class="two"><div class="field"><label for="su-from">أول صفحة محفوظة</label><input id="su-from" type="number" min="1" max="604" value="${f}" inputmode="numeric"><span class="hint" id="su-from-l">${esc(pageLabel(f))} · الجزء ${ar(juzOf(f))}</span></div>
+    <div class="field"><label for="su-to">آخر صفحة محفوظة</label><input id="su-to" type="number" min="1" max="604" value="${S.settings.to}" inputmode="numeric"><span class="hint" id="su-to-l">${esc(pageLabel(S.settings.to))}</span></div></div>
+    <div class="two"><div class="field"><label for="su-near">صفحات القريب</label><input id="su-near" type="number" min="3" max="40" value="${S.settings.near}"><span class="hint">آخر ما حفظت، تراجعه يومياً</span></div>
+    <div class="field"><label for="su-far">صفحات البعيد يومياً</label><input id="su-far" type="number" min="2" max="60" value="${S.settings.far}"><span class="hint">١٠ = نصف جزء</span></div></div>
+    <button class="btn gold block" data-act="setup">ابدأ على بركة الله</button>
+  </div></div>`}
+
+function renderToday(){const el=$("#v-today");if(!S.setup){el.innerHTML=setupCard();return}
+  const L=day();const newT=L.newT,near=L.near,far=L.far;
+  const doneNew=newT.filter(p=>L.newDone.includes(p)).length,doneNear=near.filter(p=>L.rev[p]!=null).length,doneFar=far.filter(p=>L.rev[p]!=null).length;
+  const tot=newT.length+near.length+far.length,done=doneNew+doneNear+doneFar;
+  const nrS=new Set(near);let over=0;for(let p=S.settings.from;p<=S.settings.to;p++){const rc=S.pages[p];if(!nrS.has(p)&&!far.includes(p)&&rc&&rc.due&&rc.due<=today())over++}const pct=tot?done/tot:0;
+  let h=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>ورد اليوم</span><h2>${pct>=1?"اكتمل وردك اليوم، ما شاء الله":done?"استمر، أنت في الطريق":"يلا نبدأ"}</h2></div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${isRest(today())?'<span class="pill">يوم راحة 🌿</span>':""}<span class="pill gold num">${ar(done)} / ${ar(tot)}</span></div></div>
+  <div class="dayprog"><div class="bar"><i style="width:${pct*100}%"></i></div>
+  <div class="trio"><div><b class="num">${ar(doneNew)}/${ar(newT.length)}</b><span>الجديد</span></div><div><b class="num">${ar(doneNear)}/${ar(near.length)}</b><span>القريب</span></div><div><b class="num">${ar(doneFar)}/${ar(far.length)}</b><span>البعيد</span></div></div></div></div>`;
+
+  /* new */
+  h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--accent)"></i>١ · الحفظ الجديد</span><h2>صفحة اليوم</h2></div></div>`;
+  if(!newT.length)h+=`<div class="done-banner">ختمت المصحف حفظاً، الحمد لله 🌙</div>`;
+  newT.forEach(p=>{const isDone=L.newDone.includes(p);const st=L.steps[p]||[0,0,0,0];const all=STEPS.every((s,i)=>st[i]>=s.n);
+    h+=`<div class="newpage"><div class="pagebadge"><span>صفحة</span><b class="num">${ar(p)}</b></div><div><div style="font-family:var(--display);font-size:1.3rem;font-weight:700">${esc(pageLabel(p))}</div><div class="muted small">الجزء ${ar(juzOf(p))}</div></div></div>`;
+    if(isDone)h+=`<div class="done-banner"><span>✓</span> حفظت هذه الصفحة اليوم. تدخل القريب من بكرة</div>`;
+    else{h+=`<div class="steps">`+STEPS.map((s,i)=>`<div style="display:flex;gap:4px;align-items:center"><button class="step ${st[i]>=s.n?"full":""}" data-act="step" data-p="${p}" data-i="${i}"><div class="lbl"><b>${s.t}</b><span class="num">${ar(Math.min(st[i],s.n))} من ${ar(s.n)}</span></div><div class="dots">${Array.from({length:s.n},(_,k)=>`<i class="${k<st[i]?"on":""}"></i>`).join("")}</div></button><button class="minus" data-act="stepm" data-p="${p}" data-i="${i}" aria-label="إنقاص">−</button></div>`).join("")+`</div>
+      <button class="btn ${all?"gold glow":"ghost"} block" style="margin-top:12px" data-act="donenew" data-p="${p}">${all?"أتممت حفظ الصفحة ✓":"أتممت الحفظ (حتى لو ما كملت الخطوات)"}</button>`}});
+  h+=`</div>`;
+
+  const chips=arr=>`<div class="chips">`+arr.map(p=>{const r=L.rev[p];return`<button class="chip ${r!=null?"rated r"+r:""}" data-act="page" data-p="${p}">${r==null?`<i class="st" style="background:var(--${strength(p)==="snm"?"su":strength(p)})"></i>`:""}<b class="num">${ar(p)}</b><span>${esc(pageLabel(p))}</span></button>`}).join("")+`</div>`;
+  h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--s2)"></i>٢ · القريب</span><h2>آخر ما حفظت</h2></div><span class="pill green num">${ar(doneNear)}/${ar(near.length)}</span></div><p class="muted small" style="margin:0 0 10px">سمّع كل صفحة غيباً واضغط عليها وقيّمها.</p>${chips(near)}</div>`;
+  h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--s3)"></i>٣ · البعيد</span><h2>مراجعة المحفوظ القديم</h2></div><span class="pill green num">${ar(doneFar)}/${ar(far.length)}</span></div><p class="muted small" style="margin:0 0 10px">الصفحات اللي حان وقتها، والضعيفة تتكرر أكثر. التقييم يحدد متى ترجع لك.</p>${chips(far)}<div class="acts" style="margin-top:12px;align-items:center"><button class="sbtn" data-act="morefar">زدني ٥ صفحات</button><button class="sbtn" data-act="test">اختبار مفاجئ 🎲</button>${over>0?`<span class="small muted num">باقي ${ar(over)} صفحة حان موعدها</span>`:""}</div></div>`;
+
+  /* week */
+  const days=[];for(let i=6;i>=0;i--){const d=addDays(today(),-i);const x=S.log[d];days.push({d,v:x?Object.keys(x.rev||{}).length+(x.newDone||[]).length:0})}
+  const mx=Math.max(5,...days.map(x=>x.v));
+  h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--muted)"></i>آخر ٧ أيام</span><h2>صفحات راجعتها وحفظتها</h2></div></div>
+  <div class="week">${days.map((x,i)=>`<div class="col ${i===6?"today":""}"><span class="v num">${x.v?ar(x.v):""}</span><div class="b" style="height:${Math.max(4,x.v/mx*78)}px"></div><span class="d">${i===6?"اليوم":new Date(x.d+"T12:00").toLocaleDateString(LOC(),{weekday:"short"})}</span></div>`).join("")}</div></div>`;
+  const st=streak();S.best=Math.max(S.best||0,st);const revs=Object.values(S.pages).reduce((x,y)=>x+(y.n||0),0);const solved=S.mistakes.filter(m=>m.done).length;
+  const B=[["٧ أيام متتالية",S.best>=7],["٣٠ يوماً متتالياً",S.best>=30],["١٠٠ مراجعة",revs>=100],["٥٠٠ مراجعة",revs>=500],["نصف المصحف",memCount()>=302],["١٠ أخطاء ثبتت",solved>=10]];
+  h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>الأوسمة</span><h2>إنجازاتك</h2></div><span class="pill gold num">${ar(B.filter(x=>x[1]).length)}/${ar(B.length)}</span></div><div class="badges">${B.map(x=>`<div class="bdg ${x[1]?"got":""}"><i></i>${x[0]}</div>`).join("")}</div></div>`;
+  el.innerHTML=h}
+
+function cellsFor(a,b,front,mk,dim,o){const cnt={s3:0,s2:0,s1:0,s0:0,su:0,snm:0};let cells="";
+  for(let p=a;p<=b;p++){const s=strength(p);cnt[s]++;let cls=s,sty="",lab="";
+    if(o){const st=[];for(let i=0;i<114;i++)if(SSTART[i]===p)st.push(i);
+      if(st.length){cls+=" start";lab=`<small>${SURAH[st[0]]}${st.length>1?" +"+ar(st.length-1):""}</small>`}
+      if(o.mode==="surah"){const si=st.length?st[0]:surahsOn(p)[0];cls=(st.length?"start ":"")+"sur"+(s==="snm"?" nm":"");sty=` style="--h:${si*47%360}${s!=="snm"?";box-shadow:inset 0 -4px 0 var(--"+s+")":""}"`}}
+    cells+=`<button class="cell ${cls} ${p===front?"front":""} ${dim&&dim(p)?"dim":""} num"${sty} data-act="page" data-p="${p}">${lab}${ar(p)}${mk[p]?'<i class="mk"></i>':""}</button>`}
+  const tot=b-a+1;const seg=["s3","s2","s1","s0","su"].map(k=>cnt[k]?`<i style="width:${cnt[k]/tot*100}%;background:var(--${k})"></i>`:"").join("");return{cells,seg}}
+function renderMap(){const el=$("#v-map");if(!S.setup){el.innerHTML=setupCard();return}
+  const front=nextNew()[0];const hl=hlSurah;const dim=hl==null?null:p=>p<SSTART[hl]||p>SEND[hl];
+  const mkPages={};S.mistakes.filter(m=>!m.done).forEach(m=>mkPages[m.page]=1);
+  let h=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--accent)"></i>خريطة الأجزاء</span><h2>قوة كل صفحة</h2></div>
+  <div class="seg"><button class="${mapOnly?"on":""}" data-act="mapf" data-v="1">المحفوظ</button><button class="${!mapOnly?"on":""}" data-act="mapf" data-v="0">الكل</button></div></div>
+  <div class="legend"><span><i style="background:var(--s3)"></i>متقنة</span><span><i style="background:var(--s2)"></i>جيدة</span><span><i style="background:var(--s1)"></i>متعثرة</span><span><i style="background:var(--s0)"></i>نسيت</span><span><i style="background:var(--su)"></i>ما قُيّمت</span><span><i style="background:var(--rose);border-radius:50%"></i>فيها أخطاء</span></div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap"><span class="small muted">التلوين</span><div class="seg"><button class="${mapColor==="surah"?"on":""}" data-act="mapc" data-v="surah">حسب السورة</button><button class="${mapColor!=="surah"?"on":""}" data-act="mapc" data-v="str">حسب القوة</button></div>${mapColor==="surah"?'<span class="small muted">الشريط تحت كل صفحة = قوتها</span>':""}</div>
+  ${hl!=null?`<div class="hlbar"><span>سورة ${SURAH[hl]} · ص ${ar(SSTART[hl])}${SEND[hl]>SSTART[hl]?"–"+ar(SEND[hl]):""}</span><button class="sbtn" data-act="hlclear">إلغاء التمييز</button></div>`:""}`;
+  for(let j=1;j<=30;j++){const[a,b]=juzRange(j);let show=false;for(let p=a;p<=b;p++)if(isMem(p)||p===front)show=true;if(hl!=null&&a<=SEND[hl]&&b>=SSTART[hl])show=true;if(mapOnly&&!show)continue;
+    const c=cellsFor(a,b,front,mkPages,dim,{mode:mapColor});
+    h+=`<div class="juz" id="juz-${j}"><div class="juzhead"><h3>الجزء ${ar(j)}</h3><div class="minibar">${c.seg}</div></div><div class="cells">${c.cells}</div></div>`}
+  h+=`</div><div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>خريطة السور</span><h2>كل سورة وصفحاتها</h2></div></div>
+  <p class="muted small" style="margin:0 0 4px">اضغط اسم السورة فتتميز صفحاتها في خريطة الأجزاء فوق. وبعد ما تسمّع سورة كاملة اضغط «قيّم السورة».</p>`;
+  for(let i=0;i<114;i++){const a=SSTART[i],b=SEND[i];let n=0;for(let p=a;p<=b;p++)if(isMem(p))n++;if(mapOnly&&!n)continue;
+    const c=cellsFor(a,b,front,mkPages,null);
+    h+=`<div class="juz"><div class="juzhead"><button class="sname ${hl===i?"on":""}" data-act="hl" data-s="${i}"><h3>${ar(i+1)} · ${SURAH[i]}</h3></button><span class="small muted num">ص ${ar(a)}${b>a?"–"+ar(b):""}</span><div class="minibar" style="width:70px">${c.seg}</div>${n?`<button class="sbtn" data-act="surahrate" data-s="${i}">قيّم السورة</button>`:""}</div><div class="cells">${c.cells}</div></div>`}
+  h+=`</div>`;el.innerHTML=h}
+
+function renderMistakes(){const el=$("#v-mistakes");const act=S.mistakes.filter(m=>!m.done),sol=S.mistakes.filter(m=>m.done);
+  const byT={};act.forEach(m=>byT[m.type]=(byT[m.type]||0)+m.count);const mx=Math.max(1,...Object.values(byT));
+  const byP={};act.forEach(m=>byP[m.page]=(byP[m.page]||0)+m.count);const topP=Object.entries(byP).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  let h=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--rose)"></i>سجل الأخطاء</span><h2>وين أكثر شي تلخبط؟</h2></div><span class="pill rose num">${ar(act.length)} نشط</span></div>`;
+  if(!act.length&&!sol.length)h+=`<div class="empty"><div class="star"></div><div>ما سجلت أخطاء للحين.<br>وقت المراجعة إذا تلخبطت اضغط زر ⚠️ فوق على اليسار وسجلها بثواني.</div></div>`;
+  else{h+=`<div class="typebars">`+TYPES.map(t=>`<div class="tb"><span>${t}</span><div class="t"><i style="width:${(byT[t]||0)/mx*100}%"></i></div><b class="num">${ar(byT[t]||0)}</b></div>`).join("")+`</div>`;
+    if(topP.length)h+=`<div style="margin-top:14px" class="small muted">أكثر الصفحات أخطاءً</div><div class="chips" style="margin-top:6px">${topP.map(([p,c])=>`<button class="chip" data-act="page" data-p="${p}"><b class="num">${ar(p)}</b><span>${ar(c)} أخطاء</span></button>`).join("")}</div>`}
+  h+=`</div>`;
+  if(act.length||sol.length){const list=(mkFilter==="active"?act:sol).slice().sort((a,b)=>mkFilter==="active"?(b.count-a.count)||(b.last>a.last?1:-1):(b.last>a.last?1:-1));
+    h+=`<div class="card"><div class="cardhead"><h2>القائمة</h2><div class="seg"><button class="${mkFilter==="active"?"on":""}" data-act="mkf" data-v="active">نشطة</button><button class="${mkFilter==="done"?"on":""}" data-act="mkf" data-v="done">ثبتت</button></div></div><div class="mlist">`;
+    if(!list.length)h+=`<div class="empty">${mkFilter==="active"?"ما في أخطاء نشطة. ما شاء الله":"لا شي هنا بعد"}</div>`;
+    list.forEach(m=>{h+=`<div class="mi ${m.done?"solved":""}"><div class="row"><span class="where">${esc(SURAH[m.surah]||"")} ${m.ayah?"· آية "+ar(m.ayah):""}</span><span class="count num">×${ar(m.count)}</span></div>
+      <div class="row"><span class="small muted">صفحة ${ar(m.page)} · آخر مرة ${fmtDate(m.last)}</span><span class="pill rose">${esc(m.type)}</span></div>
+      ${m.note?`<div class="note">${esc(m.note)}</div>`:""}
+      <div class="acts">${m.done?`<button class="sbtn" data-act="mkundo" data-id="${m.id}">رجّعها للنشطة</button>`:`<button class="sbtn" data-act="mkplus" data-id="${m.id}">تكرر الخطأ +١</button><button class="sbtn" data-act="mkdone" data-id="${m.id}">ثبتت ✓</button>`}<button class="sbtn" data-act="page" data-p="${m.page}">الصفحة</button><button class="sbtn warn" data-act="mkdel" data-id="${m.id}">حذف</button></div></div>`});
+    h+=`</div></div>`}
+  el.innerHTML=h}
+
+function renderPairs(){const el=$("#v-pairs");let h=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>المتشابهات</span><h2>آيات تتلخبط بينها</h2></div>
+  ${S.pairs.length?`<div class="seg"><button class="${!quiz?"on":""}" data-act="quiz" data-v="0">عرض</button><button class="${quiz?"on":""}" data-act="quiz" data-v="1">اختبرني</button></div>`:""}</div>
+  <p class="muted small" style="margin:0 0 12px">اكتب الموضعين جنب بعض واكتب <b>ضابط</b> يفرّق بينهم: كلمة زايدة، حرف مختلف، أو قاعدة تذكّرك. في وضع "اختبرني" يختفي النص وتحاول تسترجعه من الموضع.</p>
+  <button class="btn gold block" data-act="pairnew">+ أضف متشابه</button></div>`;
+  if(!S.pairs.length)h+=`<div class="card"><div class="empty"><div class="star"></div><div>ما أضفت متشابهات للحين.<br>إذا سجلت خطأ نوعه "متشابه" يعرض عليك تضيفه هنا مباشرة.</div></div></div>`;
+  else h+=`<div class="${quiz?"quiz":""}" style="display:flex;flex-direction:column;gap:12px">`+S.pairs.slice().reverse().map(x=>`<div class="pair"><div class="halves"><div class="h"><span class="loc">${esc(x.aLoc)}</span><div class="txt" data-act="reveal">${esc(x.aTxt)||"<span class='muted small'>—</span>"}</div></div><div class="h"><span class="loc">${esc(x.bLoc)}</span><div class="txt" data-act="reveal">${esc(x.bTxt)||"<span class='muted small'>—</span>"}</div></div></div>
+    ${x.tip?`<div class="tip"><b>الضابط</b><span>${esc(x.tip)}</span></div>`:""}<div class="foot"><button class="sbtn" data-act="pairedit" data-id="${x.id}">تعديل</button>&nbsp;<button class="sbtn warn" data-act="pairdel" data-id="${x.id}">حذف</button></div></div>`).join("")+`</div>`;
+  if(hasMut&&S.setup&&S.ui.showMut!==false){const rows=[];for(let i=0;i<114;i++)if(SEND[i]>=S.settings.from&&SSTART[i]<=S.settings.to&&MUTBY[i].length)rows.push(i);
+    h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--accent)"></i>متشابهات جاهزة</span><h2>سور محفوظك ومتشابهاتها</h2></div></div>
+    <p class="muted small" style="margin:0 0 10px">اضغط السورة فتطلع لك مواضعها اللي تتشابه مع سور ثانية أو مع نفسها. اضغط أي موضع فتشوف الآيات جنب بعض، وتقدر تضيفه لمتشابهاتك وتكتب ضابطه.</p>`+
+    rows.map(i=>{let r=`<button class="srow ${openMut===i?"on":""}" data-act="mutsurah" data-s="${i}"><b>${SURAH[i]}</b><span class="pill num">${ar(MUTBY[i].length)} موضع</span></button>`;
+      if(openMut===i)r+=`<div style="padding:4px 0 8px">`+MUTBY[i].map(x=>{const e=MUT[x];const all=[e[0],...e[1]];const k=all.findIndex(a=>aloc(a[0])[0]===i);const lead=all[k<0?0:k];const rest=all.filter(a=>a!==lead);
+        return`<button class="mrow" data-act="mutopen" data-e="${x}" data-s="${i}"><b>${rng(lead)}</b> ⇄ ${rest.map(rng).join(" ، ")}</button>`}).join("")+`</div>`;return r}).join("")+
+    `<p class="muted small" style="margin:12px 0 0">القائمة لأشهر المتشابهات عند الحفاظ وليست حصراً لكل متشابه. مبنية على بيانات مفتوحة أصلها عمل القارئ إدريس العاصم، ونص الآيات من موسوعة القرآن الكريم (الرسم العثماني).</p></div>`}
+  el.innerHTML=h}
+
+function renderAll(){renderHero();renderToday();renderMap();renderMistakes();renderPairs()}
+
+/* ---------- sheets ---------- */
+function pageSheet(p){p=+p;const rec=S.pages[p];const mem=isMem(p);const mks=S.mistakes.filter(m=>m.page===p&&!m.done);const L=day();
+  let h=`<h3>صفحة ${ar(p)}</h3><div class="muted small">${esc(pageLabel(p))} · الجزء ${ar(juzOf(p))}</div>`;
+  if(!mem){h+=`<div class="done-banner" style="margin-top:12px;background:var(--surface2);color:var(--muted)">هذه الصفحة غير محفوظة بعد</div>`;openSheet(h);return}
+  h+=`<div class="kv"><div><b class="num">${rec&&rec.last?fmtDate(rec.last):"—"}</b><span>آخر مراجعة</span></div><div><b class="num">${rec&&rec.due?fmtDate(rec.due):"—"}</b><span>موعدها القادم</span></div><div><b class="num">${ar(rec?rec.n||0:0)}</b><span>مرات المراجعة</span></div></div>`;
+  h+=`<div style="margin-top:14px;font-weight:600">${L.rev[p]!=null?"قيّمتها اليوم: "+RATE[L.rev[p]].l+". اضغط نفس التقييم مرة ثانية عشان تشيله، أو اختر غيره":"كيف كان تسميعك؟"}</div><div class="rates">${[3,2,1,0].map(r=>`<button class="rate r${r} ${day().rev[p]===r?"cur":""}" data-act="rate" data-p="${p}" data-r="${r}">${RATE[r].l}<small>${RATE[r].d}</small></button>`).join("")}</div>`;
+  h+=`<button class="btn ghost block" style="margin-top:12px" data-act="fab" data-p="${p}">سجّل خطأ في هذه الصفحة</button>`;
+  if(mks.length)h+=`<div style="margin-top:14px;font-weight:600">أخطاء نشطة في الصفحة</div>`+mks.map(m=>`<div class="lineitem"><span>${esc(SURAH[m.surah])} ${m.ayah?"آية "+ar(m.ayah):""} · ${esc(m.type)}${m.note?" · "+esc(m.note):""}</span><b class="num" style="color:var(--rose)">×${ar(m.count)}</b></div>`).join("");
+  openSheet(h)}
+
+let mkType="نسيان";
+function mkSheet(p){p=+(p||S.settings.from);mkType="نسيان";const ss=surahsOn(p);
+  openSheet(`<h3>سجّل خطأ</h3><div class="muted small">سجّله الحين وكمّل مراجعتك</div><div class="form">
+  <div class="two"><div class="field"><label for="mk-page">الصفحة</label><input id="mk-page" type="number" min="1" max="604" value="${p}" inputmode="numeric"></div>
+  <div class="field"><label for="mk-ayah">رقم الآية</label><input id="mk-ayah" type="number" min="1" max="286" inputmode="numeric" placeholder="اختياري"></div></div>
+  <div class="field"><label for="mk-surah">السورة</label><select id="mk-surah">${ss.map(i=>`<option value="${i}">${SURAH[i]}</option>`).join("")}</select></div>
+  <div class="field"><label>نوع الخطأ</label><div class="typechips" id="mk-types">${TYPES.map(t=>`<button type="button" class="${t===mkType?"on":""}" data-act="mktype" data-t="${t}">${t}</button>`).join("")}</div></div>
+  <div class="field"><label for="mk-note">ملاحظة</label><textarea id="mk-note" placeholder="مثلاً: أقول (عليم حكيم) والصح (حكيم عليم)"></textarea></div>
+  <label id="mk-pairrow" style="display:none;align-items:center;gap:8px;font-size:.9rem"><input type="checkbox" id="mk-pair" checked> أضفه للمتشابهات بعد الحفظ</label>
+  <button class="btn rose block" data-act="mksave">حفظ الخطأ</button></div>`);
+  $("#mk-page").addEventListener("input",e=>{const v=+e.target.value;if(v>=1&&v<=604)$("#mk-surah").innerHTML=surahsOn(v).map(i=>`<option value="${i}">${SURAH[i]}</option>`).join("")})}
+
+function pairSheet(pre){pre=pre||{};openSheet(`<h3>${pre.id?"تعديل متشابه":"متشابه جديد"}</h3><div class="form">
+  <div class="field"><label for="pa-al">الموضع الأول</label><input id="pa-al" value="${esc(pre.aLoc||"")}" placeholder="مثلاً: البقرة ٤٩"></div>
+  <div class="field"><label for="pa-at">النص (الكلمات المتشابهة فقط)</label><textarea id="pa-at" placeholder="انسخ أو اكتب موضع الشاهد">${esc(pre.aTxt||"")}</textarea></div>
+  <div class="field"><label for="pa-bl">الموضع الثاني</label><input id="pa-bl" value="${esc(pre.bLoc||"")}" placeholder="مثلاً: إبراهيم ٦"></div>
+  <div class="field"><label for="pa-bt">النص</label><textarea id="pa-bt">${esc(pre.bTxt||"")}</textarea></div>
+  <div class="field"><label for="pa-tip">الضابط</label><textarea id="pa-tip" placeholder="القاعدة اللي تفرّق بينهم">${esc(pre.tip||"")}</textarea><span class="hint">تأكد من النص من المصحف قبل ما تحفظه</span></div>
+  <button class="btn gold block" data-act="pairsave" data-id="${pre.id||""}">حفظ</button></div>`)}
+
+function segc(k,opts,cur){return `<div class="seg">${opts.map(([v,l])=>`<button type="button" class="${String(cur)===String(v)?"on":""}" data-act="uiset" data-k="${k}" data-v="${v}">${l}</button>`).join("")}</div>`}
+function swc(k,on){return `<label class="switch"><input type="checkbox" data-ui="${k}" ${on?"checked":""}><i></i></label>`}
+function rowc(l,hint,ctrl){return `<div class="row"><div><span class="l">${l}</span>${hint?`<span class="hint">${hint}</span>`:""}</div>${ctrl}</div>`}
+function settingsSheet(){const s=S.settings,u=S.ui;const DAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  const revs=Object.values(S.pages).reduce((x,y)=>x+(y.n||0),0),mkA=S.mistakes.filter(m=>!m.done).length,mkS=S.mistakes.length-mkA,kb=Math.round(JSON.stringify(S).length/1024);
+  openSheet(`<h3>الإعدادات</h3><div class="muted small">كل تغيير في المظهر يتطبق فوراً وينحفظ</div><div class="form" style="gap:10px;margin-top:10px">
+  <details class="sec" open><summary>المظهر</summary><div class="form">
+    ${rowc("الوضع","",segc("theme",[["auto","تلقائي"],["light","فاتح"],["dark","داكن"]],u.theme))}
+    <div class="row"><div><span class="l">لون التطبيق</span><span class="hint">${(PALETTES[u.palette]||PALETTES.emerald).n}</span></div><div class="swatches">${Object.entries(PALETTES).map(([k,p])=>`<button type="button" class="sw ${u.palette===k?"on":""}" data-act="uiset" data-k="palette" data-v="${k}" aria-label="${p.n}" title="${p.n}"><span style="--a:${p.a};--b:${p.b}"></span></button>`).join("")}</div></div>
+    <div class="two" style="padding:8px 0"><div class="field"><label for="ui-ufont">خط الواجهة</label><select id="ui-ufont" data-ui="ufont">${Object.entries(UF).map(([k,v])=>`<option value="${k}" ${u.ufont===k?"selected":""}>${v[2]}</option>`).join("")}</select></div>
+    <div class="field"><label for="ui-qfont">خط الآيات</label><select id="ui-qfont" data-ui="qfont">${Object.entries(QF).map(([k,v])=>`<option value="${k}" ${u.qfont===k?"selected":""}>${v[2]}</option>`).join("")}</select></div></div>
+    ${rowc("حجم الخط","",segc("size",[["sm","صغير"],["md","عادي"],["lg","كبير"],["xl","أكبر"]],u.size))}
+    ${rowc("حجم خط الآيات","في المتشابهات",segc("qsize",[["sm","صغير"],["md","عادي"],["lg","كبير"],["xl","أكبر"]],u.qsize))}
+    ${rowc("الأرقام","",segc("numerals",[["ar","١٢٣"],["en","123"]],u.numerals))}
+    ${rowc("الحركات والاحتفال","القصاصات وحركات الانتقال",swc("motion",u.motion))}
+  </div></details>
+  <details class="sec"><summary>خطة الحفظ والمراجعة</summary><div class="form" style="gap:12px">
+    <div class="two"><div class="field"><label for="st-from">أول صفحة محفوظة</label><input id="st-from" type="number" min="1" max="604" value="${s.from}"><span class="hint">${esc(pageLabel(s.from))}</span></div>
+    <div class="field"><label for="st-to">آخر صفحة محفوظة</label><input id="st-to" type="number" min="1" max="604" value="${s.to}"></div></div>
+    <div class="two"><div class="field"><label for="st-per">الحفظ اليومي (صفحات)</label><input id="st-per" type="number" min="1" max="5" value="${s.perDay}"></div>
+    <div class="field"><label for="st-dir">اتجاه الحفظ</label><select id="st-dir"><option value="back" ${s.dir==="back"?"selected":""}>للخلف (من الناس إلى الفاتحة)</option><option value="fwd" ${s.dir==="fwd"?"selected":""}>للأمام</option></select></div></div>
+    <div class="two"><div class="field"><label for="st-near">صفحات القريب</label><input id="st-near" type="number" min="3" max="40" value="${s.near}"><span class="hint">آخر ما حفظت، كل يوم</span></div>
+    <div class="field"><label for="st-far">صفحات البعيد يومياً</label><input id="st-far" type="number" min="2" max="60" value="${s.far}"><span class="hint">١٠ = نصف جزء</span></div></div>
+    <div class="field"><label for="st-speed">سرعة تباعد المراجعة</label><select id="st-speed"><option value="slow" ${s.speed==="slow"?"selected":""}>بطيئة: الصفحات ترجع أكثر (للحفظ الجديد والضعيف)</option><option value="normal" ${s.speed==="normal"||!s.speed?"selected":""}>عادية</option><option value="fast" ${s.speed==="fast"?"selected":""}>سريعة: المتقنة تغيب أطول</option></select></div>
+    <span class="hint muted small">تتطبق على ورد بكرة. ورد اليوم يبقى كما هو.</span>
+    <button class="btn block" data-act="setsave">حفظ الخطة</button>
+  </div></details>
+  <details class="sec"><summary>اليوم والتقويم</summary><div class="form">
+    <div class="field" style="padding:8px 0"><label for="ui-daystart">متى يبدأ يومك؟</label><select id="ui-daystart" data-ui="dayStart">${[0,1,2,3,4,5,6].map(h=>`<option value="${h}" ${(u.dayStart||0)===h?"selected":""}>${h===0?"منتصف الليل":"الساعة "+ar(h)+" فجراً"}</option>`).join("")}</select><span class="hint">إذا راجعت بعد منتصف الليل وقبل هذا الوقت، تنحسب على اليوم اللي قبله</span></div>
+    <div class="field" style="padding:8px 0"><label>أيام الراحة</label><div class="typechips daychips">${DAYS.map((d,i)=>`<button type="button" class="${(u.rest||[]).includes(i)?"on":""}" data-act="uirest" data-d="${i}">${d}</button>`).join("")}</div><span class="hint">ما تكسر سلسلة الأيام، وتدخل في حساب موعد الختم</span></div>
+    ${rowc("التاريخ الهجري","في أعلى الصفحة",swc("hijri",u.hijri))}
+    ${rowc("تعديل الهجري","إذا كان التقويم عندك يختلف بيوم",segc("hijriAdj",[[-1,"−١"],[0,"٠"],[1,"+١"]],u.hijriAdj||0))}
+  </div></details>
+  <details class="sec"><summary>الخريطة والمتشابهات</summary><div class="form">
+    ${rowc("تلوين الخريطة الافتراضي","",segc("mapColor",[["surah","حسب السورة"],["str","حسب القوة"]],u.mapColor||"surah"))}
+    ${rowc("المتشابهات الجاهزة","قائمة سور محفوظك ومواضعها",swc("showMut",u.showMut!==false))}
+    ${rowc("اهتزاز عند الضغط","يشتغل على أندرويد فقط",swc("haptic",!!u.haptic))}
+  </div></details>
+  <details class="sec"><summary>البيانات</summary><div class="form" style="gap:10px">
+    <div class="kv"><div><b class="num">${ar(memCount())}</b><span>صفحة محفوظة</span></div><div><b class="num">${ar(revs)}</b><span>مراجعة</span></div><div><b class="num">${ar(Object.keys(S.log).length)}</b><span>يوم مسجّل</span></div>
+    <div><b class="num">${ar(mkA)}</b><span>خطأ نشط</span></div><div><b class="num">${ar(mkS)}</b><span>خطأ ثبت</span></div><div><b class="num">${ar(S.pairs.length)}</b><span>متشابه</span></div></div>
+    <div class="two"><button class="btn gold" data-act="filesave">احفظ نسخة كملف</button><label class="btn gold" for="st-file" style="cursor:pointer">استرجع من ملف</label></div>
+    <input type="file" id="st-file" accept=".json,application/json,text/plain" style="display:none">
+    <div class="two"><button class="btn ghost" data-act="backup">انسخ البيانات</button><button class="btn ghost" data-act="restore">استرجع من نص</button></div>
+    <textarea id="st-json" placeholder="الصق النسخة الاحتياطية هنا ثم اضغط استرجع"></textarea>
+    <span class="hint muted small">حجم بياناتك ${ar(kb)} ك.ب. احفظ نسخة كملف بين فترة وفترة.</span>
+    <button class="btn ghost block" style="color:var(--rose)" data-act="reset" id="resetbtn">مسح كل البيانات</button>
+  </div></details>
+  <details class="sec"><summary>عن التطبيق</summary><div class="form">
+    <div class="row"><div><span class="l">مِشكاة · الإصدار ${esc(VERSION)}</span><span class="hint">﴿كَمِشْكَاةٍ فِيهَا مِصْبَاحٌ﴾ النور ٣٥</span></div><button class="sbtn" data-act="news">ما الجديد</button></div>
+    <p class="muted small" style="margin:8px 0">بياناتك تنحفظ على جهازك فقط. مواضع المتشابهات من بيانات مفتوحة أصلها عمل القارئ إدريس العاصم، ونص الآيات بالرسم العثماني من موسوعة القرآن الكريم.</p>
+  </div></details>
+  </div>`)}
+
+/* ---------- confetti ---------- */
+function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const c=$("#fx"),x=c.getContext("2d");const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;
+  const cols=["#e5b850","#c4922a","#16946b","#35c49b","#f6dc8a","#ffffff"];const P=Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.55,vx:(Math.random()-.5)*18*devicePixelRatio,vy:-(Math.random()*18+10)*devicePixelRatio,s:(Math.random()*7+5)*devicePixelRatio,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.random()*cols.length|0],star:Math.random()<.4}));
+  let t=0;(function f(){x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.55*devicePixelRatio;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;
+    if(p.star){x.fillRect(-p.s/2,-p.s/2,p.s,p.s);x.rotate(Math.PI/4);x.fillRect(-p.s/2,-p.s/2,p.s,p.s)}else x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});
+    if(++t<150)requestAnimationFrame(f);else x.clearRect(0,0,W,H)})()}
+
+/* ---------- actions ---------- */
+const A={
+  tab(el){view=el.dataset.v;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===view));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));scrollTo({top:0,behavior:"smooth"})},
+  close:closeSheet,
+  undo(){if(undoFn){const f=undoFn;undoFn=null;$("#toast").classList.remove("show");f()}},
+  settings:settingsSheet,
+  setup(){const f=+$("#su-from").value,t=+$("#su-to").value,n=+$("#su-near").value,fa=+$("#su-far").value;
+    if(!(f>=1&&t<=604&&f<=t)){toast("تأكد من أرقام الصفحات");return}
+    Object.assign(S.settings,{from:f,to:t,near:Math.max(3,n||10),far:Math.max(2,fa||10)});S.setup=true;seed();day();save();renderAll();confetti();toast("بسم الله، بدأنا")},
+  step(el){const p=el.dataset.p,i=+el.dataset.i;const L=day();const st=L.steps[p]=L.steps[p]||[0,0,0,0];if(st[i]<STEPS[i].n){st[i]++;save();renderToday();
+    const b=document.querySelector(`.step[data-p="${p}"][data-i="${i}"]`);b&&b.classList.add("pop");if(STEPS.every((s,k)=>st[k]>=s.n))toast("كل الخطوات تمت. ثبّتها بالضغط على أتممت")}},
+  stepm(el){const p=el.dataset.p,i=+el.dataset.i;const L=day();const st=L.steps[p]=L.steps[p]||[0,0,0,0];if(st[i]>0){st[i]--;save();renderToday()}},
+  donenew(el){const p=+el.dataset.p;const L=day();if(L.newDone.includes(p))return;const pS={...S.settings},pR=S.pages[p]?{...S.pages[p]}:null;L.newDone.push(p);
+    if(S.settings.dir==="back"){if(p<S.settings.from)S.settings.from=p}else{if(p>S.settings.to)S.settings.to=p}
+    S.pages[p]={r:2,iv:1,due:addDays(today(),1),last:today(),n:1};save();renderAll();confetti();toastUndo("بارك الله فيك! صفحة "+ar(p)+" صارت محفوظة",()=>{const L=day();S.settings=pS;if(pR)S.pages[p]=pR;else delete S.pages[p];L.newDone=L.newDone.filter(x=>x!==p);save();renderAll();toast("تم التراجع")})},
+  page(el){pageSheet(el.dataset.p)},
+  rate(el){const p=+el.dataset.p,r=+el.dataset.r;if(day().rev[p]===r){unrate(p);closeSheet();renderAll();toast("انشال التقييم. صفحة "+ar(p)+" رجعت بدون تقييم");return}
+    const u=snap([p]);ratePage(p,r);closeSheet();renderAll();toastUndo(r>=2?"ممتاز، ترجع لك بعد "+ar(S.pages[p].iv)+" أيام":r===1?"راح ترجع لك بعد يومين":"ترجع لك بكرة. لا تشيل هم",u);
+    const L=day();const all=[...L.near,...L.far];if(all.every(q=>L.rev[q]!=null)&&L.newT.every(q=>L.newDone.includes(q)))confetti()},
+  fab(el){mkSheet(el.dataset.p)},
+  mktype(el){mkType=el.dataset.t;document.querySelectorAll("#mk-types button").forEach(b=>b.classList.toggle("on",b.dataset.t===mkType));$("#mk-pairrow").style.display=mkType==="متشابه"?"flex":"none"},
+  mksave(){const p=+$("#mk-page").value,ay=+$("#mk-ayah").value||null,su=+$("#mk-surah").value,note=$("#mk-note").value.trim();if(!(p>=1&&p<=604)){toast("رقم الصفحة غير صحيح");return}
+    const t=today();const ex=S.mistakes.find(m=>!m.done&&m.page===p&&m.surah===su&&m.ayah===ay&&m.type===mkType);
+    if(ex){ex.count++;ex.last=t;if(note)ex.note=ex.note?ex.note+"\n"+note:note}else S.mistakes.push({id:uid(),page:p,surah:su,ayah:ay,type:mkType,note,count:1,date:t,last:t,done:false});
+    if(isMem(p)){const rec=S.pages[p]||{n:0};rec.r=Math.min(rec.r??2,1);rec.iv=1;rec.due=addDays(t,1);S.pages[p]=rec}
+    day().mk=(day().mk||0)+1;const wantPair=mkType==="متشابه"&&$("#mk-pair")&&$("#mk-pair").checked;save();renderAll();
+    if(wantPair){pairSheet({aLoc:SURAH[su]+(ay?" "+ar(ay):""),aTxt:note})}else{closeSheet();toast(ex?"تكرر الخطأ ×"+ar(ex.count)+". ركّز عليه":"انسجل. الصفحة بترجع لك بكرة")}},
+  mkf(el){mkFilter=el.dataset.v;renderMistakes()},
+  mkplus(el){const m=S.mistakes.find(x=>x.id===el.dataset.id);if(m){m.count++;m.last=today();day().mk=(day().mk||0)+1;save();renderAll()}},
+  mkdone(el){const m=S.mistakes.find(x=>x.id===el.dataset.id);if(m){m.done=true;save();renderAll();toast("ثبتت إن شاء الله ✓")}},
+  mkundo(el){const m=S.mistakes.find(x=>x.id===el.dataset.id);if(m){m.done=false;save();renderAll()}},
+  mkdel(el){if(el.dataset.armed){S.mistakes=S.mistakes.filter(x=>x.id!==el.dataset.id);save();renderAll()}else{el.dataset.armed=1;el.textContent="متأكد؟ اضغط مرة ثانية";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="حذف"}},3000)}},
+  mapf(el){mapOnly=el.dataset.v==="1";renderMap()},
+  hl(el){const i=+el.dataset.s;hlSurah=hlSurah===i?null:i;renderMap();if(hlSurah!=null){const t=document.getElementById("juz-"+juzOf(SSTART[i]));if(t)t.scrollIntoView({behavior:"smooth",block:"start"});toast("صفحات سورة "+SURAH[i]+" مميزة في خريطة الأجزاء")}},
+  hlclear(){hlSurah=null;renderMap()},
+  mapc(el){mapColor=el.dataset.v;S.ui.mapColor=mapColor;save();renderMap()},
+  surahrate(el){const i=+el.dataset.s;let n=0;for(let p=SSTART[i];p<=SEND[i];p++)if(isMem(p))n++;
+    openSheet(`<h3>سورة ${SURAH[i]}</h3><div class="muted small num">${ar(n)} صفحة محفوظة · ص ${ar(SSTART[i])}${SEND[i]>SSTART[i]?"–"+ar(SEND[i]):""}</div><div style="margin-top:14px;font-weight:600">كيف كان تسميع السورة كاملة؟</div><div class="rates">${[3,2,1,0].map(r=>`<button class="rate r${r}" data-act="ratesurah" data-s="${i}" data-r="${r}">${RATE[r].l}<small>${RATE[r].d}</small></button>`).join("")}</div><p class="muted small">التقييم ينطبق على كل صفحات السورة المحفوظة، ومنها الصفحة المشتركة مع السورة المجاورة. إذا في صفحة معينة أضعف من الباقي قيّمها لحالها بعدين.</p>`)},
+  ratesurah(el){const i=+el.dataset.s,r=+el.dataset.r;const ps=[];for(let p=SSTART[i];p<=SEND[i];p++)if(isMem(p))ps.push(p);const u=snap(ps);ps.forEach(p=>ratePage(p,r,true));save();closeSheet();renderAll();toastUndo("تقيّمت سورة "+SURAH[i],u)},
+  morefar(){const L=day();const more=computeFar(5,L.far);if(!more.length){toast("ما بقى صفحات. راجعت كل محفوظك اليوم!");return}L.far.push(...more);save();renderToday();toast("أضفت "+ar(more.length)+" صفحات للبعيد")},
+  test(){if(!S.setup)return;const c=[];for(let p=S.settings.from;p<=S.settings.to;p++){const w=4-((S.pages[p]||{}).r??2);for(let k=0;k<w;k++)c.push(p)}
+    const p=c[Math.random()*c.length|0];const W=["من أول الصفحة","من منتصف الصفحة","من آخر ثلاثة أسطر وكمّل للصفحة اللي بعدها"];const w=W[Math.random()*W.length|0];
+    openSheet(`<h3>اختبار مفاجئ 🎲</h3><div class="newpage" style="margin-top:12px"><div class="pagebadge"><span>صفحة</span><b class="num">${ar(p)}</b></div><div><div style="font-family:var(--display);font-size:1.3rem;font-weight:700">${esc(pageLabel(p))}</div><div class="muted small">الجزء ${ar(juzOf(p))}</div></div></div>
+    <div class="done-banner" style="background:var(--gold-soft);color:var(--ink)">سمّع ${w} غيباً، بعدين افتح المصحف وتأكد وقيّم نفسك.</div>
+    <div class="rates">${[3,2,1,0].map(r=>`<button class="rate r${r} ${day().rev[p]===r?"cur":""}" data-act="rate" data-p="${p}" data-r="${r}">${RATE[r].l}<small>${RATE[r].d}</small></button>`).join("")}</div>
+    <button class="btn ghost block" style="margin-top:12px" data-act="test">صفحة ثانية</button>`)},
+  news(){openSheet(`<h3>ما الجديد</h3><div class="news">${CHANGELOG.map(c=>`<div style="margin-top:14px"><b>الإصدار ${c.v}</b> <span class="muted small">${fmtDate(c.d)}</span><ul>${c.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>`);
+    try{localStorage.setItem("quran-hifz-seen",VERSION)}catch(e){}$("#newsbtn").classList.remove("has")},
+  pairnew(){pairSheet()},
+  pairedit(el){pairSheet(S.pairs.find(x=>x.id===el.dataset.id))},
+  pairsave(el){const o={aLoc:$("#pa-al").value.trim(),aTxt:$("#pa-at").value.trim(),bLoc:$("#pa-bl").value.trim(),bTxt:$("#pa-bt").value.trim(),tip:$("#pa-tip").value.trim()};
+    if(!o.aLoc&&!o.bLoc){toast("اكتب الموضعين على الأقل");return}
+    const id=el.dataset.id;if(id){Object.assign(S.pairs.find(x=>x.id===id)||{},o)}else S.pairs.push({id:uid(),date:today(),...o});save();closeSheet();renderPairs();toast("انحفظ المتشابه")},
+  pairdel(el){if(el.dataset.armed){S.pairs=S.pairs.filter(x=>x.id!==el.dataset.id);save();renderPairs()}else{el.dataset.armed=1;el.textContent="متأكد؟";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="حذف"}},3000)}},
+  quiz(el){quiz=el.dataset.v==="1";renderPairs()},
+  mutsurah(el){const i=+el.dataset.s;openMut=openMut===i?null:i;renderPairs();const b=document.querySelector('.srow[data-s="'+i+'"]');if(b&&openMut!=null)b.scrollIntoView({behavior:"smooth",block:"start"})},
+  mutopen(el){const x=+el.dataset.e,i=+el.dataset.s;const e=MUT[x];const all=[e[0],...e[1]];const k=Math.max(0,all.findIndex(a=>aloc(a[0])[0]===i));const lead=all[k];const rest=all.filter(a=>a!==lead);
+    openSheet(`<h3>متشابه</h3><div class="muted small">قارن بين المواضع وطالع وين الفرق</div><div class="aybox"><span class="loc">${rng(lead)}</span><div class="aytxt">${aytext(lead)}</div></div>`+
+      rest.map(a=>`<div class="aybox"><span class="loc">${rng(a)}</span><div class="aytxt">${aytext(a)}</div><button class="sbtn" data-act="mutadd" data-e="${x}" data-a="${k}" data-b="${all.indexOf(a)}">أضفه لمتشابهاتي واكتب الضابط</button></div>`).join(""))},
+  mutadd(el){const e=MUT[+el.dataset.e];const all=[e[0],...e[1]];const a=all[+el.dataset.a],b=all[+el.dataset.b];const tx=r=>r.map(n=>AYT[n]||"").join(" ");
+    pairSheet({aLoc:rng(a),aTxt:tx(a),bLoc:rng(b),bTxt:tx(b)})},
+  reveal(el){if(quiz)el.classList.toggle("shown")},
+  setsave(){const f=+$("#st-from").value,t=+$("#st-to").value;if(!(f>=1&&t<=604&&f<=t)){toast("تأكد من أرقام الصفحات");return}
+    Object.assign(S.settings,{from:f,to:t,perDay:Math.min(5,Math.max(1,+$("#st-per").value||1)),dir:$("#st-dir").value,speed:$("#st-speed").value,near:Math.min(40,Math.max(3,+$("#st-near").value||10)),far:Math.min(60,Math.max(2,+$("#st-far").value||10))});
+    seed();save();closeSheet();renderAll();toast("انحفظت الخطة")},
+  uiset(el){const k=el.dataset.k;let v=el.dataset.v;if(k==="hijriAdj")v=+v;S.ui[k]=v;if(k==="mapColor")mapColor=v;
+    [...el.parentElement.children].forEach(b=>b.classList.toggle("on",b===el));const hn=el.closest(".row")&&el.closest(".row").querySelector(".hint");if(k==="palette"&&hn)hn.textContent=PALETTES[v].n;applyUI();save();renderAll()},
+  uirest(el){const d=+el.dataset.d;const r=S.ui.rest||[];const i=r.indexOf(d);if(i<0)r.push(d);else r.splice(i,1);S.ui.rest=r;el.classList.toggle("on",i<0);save();renderAll()},
+  async filesave(){const name="hifz-backup-"+today()+".json";const blob=new Blob([JSON.stringify(S)],{type:"application/json"});
+    try{const file=new File([blob],name,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"نسخة احتياطية"});return}}catch(e){if(e&&e.name==="AbortError")return}
+    try{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();toast("انحفظ الملف")}catch(e){toast("ما قدرت أحفظ الملف. استخدم «انسخ البيانات»")}},
+  async backup(){try{await navigator.clipboard.writeText(JSON.stringify(S));toast("انسخت. الصقها في الملاحظات عندك")}catch(e){$("#st-json").value=JSON.stringify(S);toast("انسخ النص من المربع")}},
+  restore(){try{const o=JSON.parse($("#st-json").value);if(!o.settings)throw 0;S=Object.assign(DEF(),o);normalize();applyUI();save();closeSheet();renderAll();toast("تم الاسترجاع")}catch(e){toast("النص غير صالح")}},
+  reset(el){if(el.dataset.armed){const u=S.ui;S=DEF();S.ui=u;save();closeSheet();renderAll();toast("انمسحت البيانات")}else{el.dataset.armed=1;el.textContent="اضغط مرة ثانية للتأكيد";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="مسح كل البيانات"}},3500)}}
+};
+document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if(!el)return;if(S.ui.haptic&&navigator.vibrate)try{navigator.vibrate(8)}catch(x){}const f=A[el.dataset.act];if(f){f(el,e)}});
+document.addEventListener("change",e=>{const el=e.target;const k=el.dataset&&el.dataset.ui;if(!k)return;let v=el.type==="checkbox"?el.checked:el.value;if(k==="dayStart")v=+v;S.ui[k]=v;applyUI();save();renderAll()});
+document.addEventListener("input",e=>{if(e.target.id==="su-from"||e.target.id==="su-to"){const v=+e.target.value;const l=$("#"+e.target.id+"-l");if(l&&v>=1&&v<=604)l.textContent=pageLabel(v)+" · الجزء "+ar(juzOf(v))}});
+{const sh=$("#sheet");let gy=null,gd=0;
+  sh.addEventListener("pointerdown",e=>{if(!e.target.closest(".grab"))return;gy=e.clientY;gd=0;sh.style.transition="none";try{sh.setPointerCapture(e.pointerId)}catch(x){}});
+  sh.addEventListener("pointermove",e=>{if(gy==null)return;gd=Math.max(0,e.clientY-gy);sh.style.transform="translateY("+gd+"px)"});
+  const end=c=>{if(gy==null)return;gy=null;sh.style.transition="";sh.style.transform="";if(!c&&(gd>80||gd<6))closeSheet()};
+  sh.addEventListener("pointerup",()=>end(false));sh.addEventListener("pointercancel",()=>end(true))}
+document.addEventListener("change",async e=>{if(e.target.id!=="st-file"||!e.target.files[0])return;
+  try{const o=JSON.parse(await e.target.files[0].text());if(!o||!o.settings||!o.pages)throw 0;S=Object.assign(DEF(),o);normalize();applyUI();save();closeSheet();renderAll();confetti();toast("رجعت بياناتك كاملة، الحمد لله")}
+  catch(x){toast("الملف غير صالح. تأكد إنه ملف النسخة الاحتياطية")}e.target.value=""});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+
+renderAll();
+try{if(localStorage.getItem("quran-hifz-seen")!==VERSION)$("#newsbtn").classList.add("has")}catch(e){}
+setSync("local","جاري الاتصال…");
+connect();
+/* standalone app: offline cache + update banner */
+if("serviceWorker" in navigator&&location.protocol!=="file:"){
+  let reloading=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!reloading){reloading=true;location.reload()}});
+  navigator.serviceWorker.register("sw.js").then(reg=>{
+    const show=w=>{const b=$("#upd");b.classList.add("show");b.onclick=()=>{b.textContent="جاري التحديث…";w.postMessage("skipWaiting")}};
+    if(reg.waiting&&navigator.serviceWorker.controller)show(reg.waiting);
+    reg.addEventListener("updatefound",()=>{const w=reg.installing;w&&w.addEventListener("statechange",()=>{if(w.state==="installed"&&navigator.serviceWorker.controller)show(w)})});
+    document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")reg.update().catch(()=>{})});
+  }).catch(()=>{});
+  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+}
+</script>
+</body>
+</html>
