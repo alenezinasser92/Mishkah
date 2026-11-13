@@ -1,7 +1,7 @@
-// Bump CACHE on every release: a changed sw.js is how the app learns an update exists.
-const CACHE = "hifz-1.7.3";
+// Bump CACHE on every release.
+const CACHE = "hifz-1.7.4";
 const CORE = ["./", "./index.html", "./mut.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
-self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); });
+self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k !== "hifz-fonts").map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
@@ -17,5 +17,14 @@ self.addEventListener("fetch", e => {
     return;
   }
   if (u.origin !== location.origin) return;
+  // Network first for the app itself, so opening it online always gives the newest version; cache when offline.
+  const isApp = e.request.mode === "navigate" || /\/(index\.html)?$/.test(u.pathname) || u.pathname.endsWith(".js") || u.pathname.endsWith(".json");
+  if (isApp) {
+    e.respondWith(fetch(e.request, { cache: "no-store" }).then(r => {
+      if (r.ok) { const cl = r.clone(); caches.open(CACHE).then(c => c.put(e.request, cl)); }
+      return r;
+    }).catch(() => caches.match(e.request, { ignoreSearch: true }).then(h => h || caches.match("./index.html"))));
+    return;
+  }
   e.respondWith(caches.match(e.request, { ignoreSearch: true }).then(hit => hit || fetch(e.request)));
 });

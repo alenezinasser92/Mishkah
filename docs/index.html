@@ -325,6 +325,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
       <div>
         <div class="brand">مِشكاة <span style="font-family:var(--body);font-size:.8rem;font-weight:500;color:#b9d2ca">دفتر الحفظ والمراجعة</span></div>
         <div class="dateline" id="dateline"></div>
+        <div class="dateline" style="opacity:.6;font-size:.7rem" id="verline"></div>
         <span class="sync" id="sync"><i></i><span>جاري التحميل…</span></span>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
@@ -379,8 +380,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.7.3";
+const VERSION="1.7.4";
 const CHANGELOG=[
+ {v:"1.7.4",d:"2026-11-13",items:["التحديثات صارت توصل تلقائياً كل ما فتحت التطبيق وأنت متصل بالإنترنت","رقم الإصدار يبين تحت التاريخ فوق"]},
  {v:"1.7.3",d:"2026-11-13",items:["مساحة أكبر بكثير تحت شريط التبويبات للسحب لفوق براحة"]},
  {v:"1.7.2",d:"2026-11-13",items:["شريط التبويبات (اليوم، الخريطة، الأخطاء، المتشابهات) ارتفع أكثر، وتحته مساحة فاضية بنفس لونه عشان السحب لفوق يكون سهل"]},
  {v:"1.7.1",d:"2026-11-13",items:["شريط التبويبات تحت ارتفع شوي على الجوال وصار بعيد عن شريط الآيفون السفلي","الهيدر وزر ⚠️ والإشعارات صارت تحترم حواف الشاشة على الآيفون"]},
@@ -641,7 +643,7 @@ function renderPairs(){const el=$("#v-pairs");let h=`<div class="card"><div clas
     `<p class="muted small" style="margin:12px 0 0">القائمة لأشهر المتشابهات عند الحفاظ وليست حصراً لكل متشابه. مبنية على بيانات مفتوحة أصلها عمل القارئ إدريس العاصم، ونص الآيات من موسوعة القرآن الكريم (الرسم العثماني).</p></div>`}
   el.innerHTML=h}
 
-function renderAll(){renderHero();renderToday();renderMap();renderMistakes();renderPairs()}
+function renderAll(){const vl=$("#verline");if(vl)vl.textContent="الإصدار "+VERSION;renderHero();renderToday();renderMap();renderMistakes();renderPairs()}
 
 /* ---------- sheets ---------- */
 function pageSheet(p){p=+p;const rec=S.pages[p];const mem=isMem(p);const mks=S.mistakes.filter(m=>m.page===p&&!m.done);const L=day();
@@ -829,7 +831,7 @@ connect();
 /* standalone app: offline cache + update banner */
 if("serviceWorker" in navigator&&location.protocol!=="file:"){
   let reloading=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!reloading){reloading=true;location.reload()}});
-  navigator.serviceWorker.register("sw.js").then(reg=>{
+  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{
     const show=w=>{const b=$("#upd");b.classList.add("show");b.onclick=()=>{b.textContent="جاري التحديث…";w.postMessage("skipWaiting")}};
     if(reg.waiting&&navigator.serviceWorker.controller)show(reg.waiting);
     reg.addEventListener("updatefound",()=>{const w=reg.installing;w&&w.addEventListener("statechange",()=>{if(w.state==="installed"&&navigator.serviceWorker.controller)show(w)})});
