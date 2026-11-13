@@ -586,8 +586,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.3";
+const VERSION="2.4";
 const CHANGELOG=[
+ {v:"2.4",d:"2026-11-14",items:["نسخ احتياطية تلقائية على جهازك: نسخة كل يوم (آخر ١٤ يوم) ونسخة عند كل تحديث للتطبيق، وتسترجع أي وحدة منها من الإعدادات ← البيانات","تذكير في الصفحة الرئيسية إذا صار لك أسبوع بدون نسخة على iCloud، وزر يحفظها بضغطة"]},
  {v:"2.3",d:"2026-11-14",items:["المساعد الصوتي صار يسوي أشياء كثيرة مو بس الأخطاء","قيّم بالكلام: «حط سورة فصلت كلها متقنة»، والصفحات اللي عليها أخطاء نشطة تنزل درجتها تلقائياً حسب عدد الأخطاء","افتح أي سورة أو صفحة أو جزء أو آية بالكلام","اسأله: كم باقي من ورد اليوم، وين أضعف صفحاتي، متى أختم، كم صفحة حافظ","ثبّت خطأ، سجّل حفظ صفحة اليوم، اطلب اقتراح للإمامة أو اختبار، وغيّر الوضع الداكن","زر «كل الأوامر» يعرض كل اللي يفهمه"]},
  {v:"2.2",d:"2026-11-13",items:["فهرس وبحث داخل المصحف: اضغط اسم السورة فوق أو زر 🔍. قائمة كل السور والأجزاء وأخطائك بتمرير ناعم","بحث فوري: اسم سورة، «النور ٣٥»، رقم صفحة، أو كلمات من أي آية، والآية تتميز بالذهبي لما توصلها","شريط سحب تحت للتنقل السريع بين الـ٦٠٤ صفحة مع عرض الصفحة والسورة وأنت تسحب","اضغط على الصفحة فتختفي الأزرار وتصير القراءة على كامل الشاشة، واضغط مرة ثانية ترجع","زر المصحف في الصفحة الرئيسية يفتح آخر صفحة وقفت عليها"]},
  {v:"2.1",d:"2026-11-13",items:["المساعد الصوتي 🎙: زر المايك الأخضر تحت. قل وين أخطأت بكلامك العادي أو اقرأ جزء من الآية، وهو يحدد السورة والآية والصفحة ونوع الخطأ ويسجلها","إذا كان متأكد من الآية يسجلها تلقائياً بعد ٤ ثواني، مناسب إذا كنت مستعجل","الآيات اللي فيها أخطاء نشطة تتلون بالأحمر داخل المصحف","بيج المصحف صار أخف شوي"]},
@@ -748,6 +749,20 @@ function applyUI(){const u=S.ui,r=document.documentElement;
 try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>applyUI())}catch(e){}
 applyUI();
 
+/* ---------- automatic on-device snapshots ---------- */
+const SNAPS={db:null,
+  open(){if(this.db)return Promise.resolve(this.db);return new Promise((res,rej)=>{try{const r=indexedDB.open("mishkah-backups",1);r.onupgradeneeded=()=>r.result.createObjectStore("snaps",{keyPath:"id"});r.onsuccess=()=>{this.db=r.result;res(this.db)};r.onerror=()=>rej(r.error)}catch(e){rej(e)}})},
+  async all(){try{const db=await this.open();return await new Promise((res,rej)=>{const q=db.transaction("snaps").objectStore("snaps").getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)})}catch(e){try{return JSON.parse(localStorage.getItem("mishkah-snaps")||"[]")}catch(x){return[]}}},
+  async put(sn){try{const db=await this.open();await new Promise((res,rej)=>{const t=db.transaction("snaps","readwrite");t.objectStore("snaps").put(sn);t.oncomplete=res;t.onerror=()=>rej(t.error)})}catch(e){try{const a=JSON.parse(localStorage.getItem("mishkah-snaps")||"[]").filter(x=>x.id!==sn.id);a.push(sn);while(a.length>7)a.shift();localStorage.setItem("mishkah-snaps",JSON.stringify(a))}catch(x){}}},
+  async del(id){try{const db=await this.open();await new Promise(res=>{const t=db.transaction("snaps","readwrite");t.objectStore("snaps").delete(id);t.oncomplete=res;t.onerror=res})}catch(e){}},
+  async take(kind,label){if(!S.setup)return;const now=new Date();const sn={id:kind+"-"+(kind==="day"?today():now.getTime()),kind,label,d:today(),t:now.toISOString(),v:VERSION,pages:memCount(),rated:Object.values(S.pages).filter(x=>x.r!=null).length,mk:S.mistakes.filter(m=>!m.done).length,data:JSON.parse(JSON.stringify(S))};
+    await this.put(sn);const a=(await this.all()).sort((x,y)=>x.t<y.t?1:-1);const keep={day:14,update:6,manual:6};const seen={};for(const x of a){seen[x.kind]=(seen[x.kind]||0)+1;if(seen[x.kind]>(keep[x.kind]||6))await this.del(x.id)}}};
+async function autoSnapshots(){if(!S.setup)return;let lastV=null;try{lastV=localStorage.getItem("mishkah-lastver")}catch(e){}
+  const a=await SNAPS.all();if(lastV&&lastV!==VERSION)await SNAPS.take("update","قبل/بعد التحديث من "+lastV+" إلى "+VERSION);
+  if(!a.some(x=>x.id==="day-"+today()))await SNAPS.take("day","نسخة اليوم");
+  try{localStorage.setItem("mishkah-lastver",VERSION)}catch(e){}}
+function exportAge(){let d=null;try{d=localStorage.getItem("mishkah-lastexport")}catch(e){}return d?diffDays(d,today()):null}
+
 /* ---------- UI bits ---------- */
 let toastT,undoFn=null;
 function toastUndo(m,fn){const t=$("#toast");t.innerHTML=esc(m)+'<button class="tundo" data-act="undo">تراجع</button>';undoFn=fn;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove("show");undoFn=null},6500)}
@@ -780,7 +795,8 @@ function renderToday(){const el=$("#v-today");if(!S.setup){el.innerHTML=setupCar
   const doneNew=newT.filter(p=>L.newDone.includes(p)).length,doneNear=near.filter(p=>L.rev[p]!=null).length,doneFar=far.filter(p=>L.rev[p]!=null).length;
   const tot=newT.length+near.length+far.length,done=doneNew+doneNear+doneFar;
   const nrS=new Set(near);let over=0;for(let p=S.settings.from;p<=S.settings.to;p++){const rc=S.pages[p];if(!nrS.has(p)&&!far.includes(p)&&rc&&rc.due&&rc.due<=today())over++}const pct=tot?done/tot:0;
-  let h=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>ورد اليوم</span><h2>${pct>=1?"اكتمل وردك اليوم، ما شاء الله":done?"استمر، أنت في الطريق":"يلا نبدأ"}</h2></div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${isRest(today())?'<span class="pill">يوم راحة 🌿</span>':""}<span class="pill gold num">${ar(done)} / ${ar(tot)}</span></div></div>
+  const ea=exportAge();let h=(ea===null||ea>=7)?`<div class="done-banner" style="background:var(--gold-soft);color:var(--ink);justify-content:space-between;flex-wrap:wrap"><span><i class="star8"></i> ${ea===null?"ما حفظت نسخة احتياطية على iCloud للحين":"صار لك "+ar(ea)+" أيام بدون نسخة على iCloud"}</span><button class="sbtn" data-act="filesave">احفظ الحين</button></div>`:"";
+  h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>ورد اليوم</span><h2>${pct>=1?"اكتمل وردك اليوم، ما شاء الله":done?"استمر، أنت في الطريق":"يلا نبدأ"}</h2></div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${isRest(today())?'<span class="pill">يوم راحة 🌿</span>':""}<span class="pill gold num">${ar(done)} / ${ar(tot)}</span></div></div>
   <div class="dayprog"><div class="bar"><i style="width:${pct*100}%"></i></div>
   <div class="trio"><div><b class="num">${ar(doneNew)}/${ar(newT.length)}</b><span>الجديد</span></div><div><b class="num">${ar(doneNear)}/${ar(near.length)}</b><span>القريب</span></div><div><b class="num">${ar(doneFar)}/${ar(far.length)}</b><span>البعيد</span></div></div></div></div>`;
 
@@ -902,6 +918,8 @@ function pairSheet(pre){pre=pre||{};openSheet(`<h3>${pre.id?"تعديل متشا
 function segc(k,opts,cur){return `<div class="seg">${opts.map(([v,l])=>`<button type="button" class="${String(cur)===String(v)?"on":""}" data-act="uiset" data-k="${k}" data-v="${v}">${l}</button>`).join("")}</div>`}
 function swc(k,on){return `<label class="switch"><input type="checkbox" data-ui="${k}" ${on?"checked":""}><i></i></label>`}
 function rowc(l,hint,ctrl){return `<div class="row"><div><span class="l">${l}</span>${hint?`<span class="hint">${hint}</span>`:""}</div>${ctrl}</div>`}
+async function renderSnaps(){const el=$("#snaplist");if(!el)return;const a=(await SNAPS.all()).sort((x,y)=>x.t<y.t?1:-1);if(!$("#snaplist"))return;
+  el.innerHTML=a.length?a.map(x=>`<div class="lineitem"><span><b style="color:var(--ink)">${fmtDate(x.d)}</b> · ${esc(x.label)}<br><span class="num">${ar(x.rated)} صفحة مقيّمة · ${ar(x.mk)} خطأ نشط · إصدار ${esc(x.v)}</span></span><button class="sbtn" data-act="snaprestore" data-id="${esc(x.id)}">استرجع</button></div>`).join(""):"ما في نسخ للحين"}
 function settingsSheet(){const s=S.settings,u=S.ui;const DAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
   const revs=Object.values(S.pages).reduce((x,y)=>x+(y.n||0),0),mkA=S.mistakes.filter(m=>!m.done).length,mkS=S.mistakes.length-mkA,kb=Math.round(JSON.stringify(S).length/1024);
   openSheet(`<h3>الإعدادات</h3><div class="muted small">كل تغيير في المظهر يتطبق فوراً وينحفظ</div><div class="form" style="gap:10px;margin-top:10px">
@@ -937,7 +955,7 @@ function settingsSheet(){const s=S.settings,u=S.ui;const DAYS=["الأحد","ا�
     ${rowc("المتشابهات الجاهزة","قائمة سور محفوظك ومواضعها",swc("showMut",u.showMut!==false))}
     ${rowc("اهتزاز عند الضغط","يشتغل على أندرويد فقط",swc("haptic",!!u.haptic))}
   </div></details>
-  <details class="sec"><summary>البيانات</summary><div class="form" style="gap:10px">
+  <details class="sec" id="sec-data"><summary>البيانات</summary><div class="form" style="gap:10px">
     <div class="kv"><div><b class="num">${ar(memCount())}</b><span>صفحة محفوظة</span></div><div><b class="num">${ar(revs)}</b><span>مراجعة</span></div><div><b class="num">${ar(Object.keys(S.log).length)}</b><span>يوم مسجّل</span></div>
     <div><b class="num">${ar(mkA)}</b><span>خطأ نشط</span></div><div><b class="num">${ar(mkS)}</b><span>خطأ ثبت</span></div><div><b class="num">${ar(S.pairs.length)}</b><span>متشابه</span></div></div>
     <div class="two"><button class="btn gold" data-act="filesave">احفظ نسخة كملف</button><label class="btn gold" for="st-file" style="cursor:pointer">استرجع من ملف</label></div>
@@ -945,7 +963,9 @@ function settingsSheet(){const s=S.settings,u=S.ui;const DAYS=["الأحد","ا�
     <div class="two"><button class="btn ghost" data-act="backup">انسخ البيانات</button><button class="btn ghost" data-act="restore">استرجع من نص</button></div>
     <textarea id="st-json" placeholder="الصق النسخة الاحتياطية هنا ثم اضغط استرجع"></textarea>
     <button class="btn ghost block" data-act="qdl" id="qdlbtn">حمّل المصحف كامل للقراءة بدون إنترنت (٩٥ م.ب)</button>
-    <span class="hint muted small">حجم بياناتك ${ar(kb)} ك.ب. احفظ نسخة كملف بين فترة وفترة.</span>
+    <span class="hint muted small">حجم بياناتك ${ar(kb)} ك.ب. احفظ الملف في iCloud Drive عشان يبقى لو ضاع الجوال.</span>
+    <div class="field" style="margin-top:6px"><label>النسخ التلقائية على جهازك</label><span class="hint">ينحفظ تلقائياً نسخة كل يوم (آخر ١٤ يوم)، ونسخة عند كل تحديث للتطبيق. تحميك لو صار خلل في تحديث أو مسحت شي بالغلط.</span>
+    <div id="snaplist" class="small muted" style="margin-top:6px">جاري التحميل…</div><button class="sbtn" style="margin-top:6px;align-self:flex-start" data-act="snapnow">خذ نسخة الحين</button></div>
     <button class="btn ghost block" style="color:var(--rose)" data-act="reset" id="resetbtn">مسح كل البيانات</button>
   </div></details>
   <details class="sec"><summary>عن التطبيق</summary><div class="form">
@@ -1306,7 +1326,7 @@ const A={
   rfit(){S.ui.rfit=S.ui.rfit===false;applyRS();fitPage();save();toast(S.ui.rfit?"الصفحة كاملة في الشاشة":"الخط يدوي، تقدر تنزل بالصفحة")},
   rrate(){pageSheet(rPage)},
   undo(){if(undoFn){const f=undoFn;undoFn=null;$("#toast").classList.remove("show");f()}},
-  settings:settingsSheet,
+  settings(){settingsSheet();renderSnaps()},
   setup(){const f=+$("#su-from").value,t=+$("#su-to").value,n=+$("#su-near").value,fa=+$("#su-far").value;
     if(!(f>=1&&t<=604&&f<=t)){toast("تأكد من أرقام الصفحات");return}
     Object.assign(S.settings,{from:f,to:t,near:Math.max(3,n||10),far:Math.max(2,fa||10)});S.setup=true;seed();day();save();renderAll();confetti();toast("بسم الله، بدأنا")},
@@ -1369,7 +1389,11 @@ const A={
   uiset(el){const k=el.dataset.k;let v=el.dataset.v;if(k==="hijriAdj")v=+v;S.ui[k]=v;if(k==="mapColor")mapColor=v;
     [...el.parentElement.children].forEach(b=>b.classList.toggle("on",b===el));const hn=el.closest(".row")&&el.closest(".row").querySelector(".hint");if(k==="palette"&&hn)hn.textContent=PALETTES[v].n;applyUI();save();renderAll()},
   uirest(el){const d=+el.dataset.d;const r=S.ui.rest||[];const i=r.indexOf(d);if(i<0)r.push(d);else r.splice(i,1);S.ui.rest=r;el.classList.toggle("on",i<0);save();renderAll()},
-  async filesave(){const name="hifz-backup-"+today()+".json";const blob=new Blob([JSON.stringify(S)],{type:"application/json"});
+  async snapnow(){await SNAPS.take("manual","نسخة يدوية");renderSnaps();toast("انحفظت نسخة على جهازك")},
+  async snaprestore(el){if(!el.dataset.armed){el.dataset.armed=1;el.textContent="متأكد؟ اضغط مرة ثانية";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="استرجع"}},3500);return}
+    const a=await SNAPS.all();const sn=a.find(x=>x.id===el.dataset.id);if(!sn){toast("ما لقيت النسخة");return}
+    await SNAPS.take("manual","قبل الاسترجاع (احتياط)");S=Object.assign(DEF(),JSON.parse(JSON.stringify(sn.data)));normalize();applyUI();save();closeSheet();renderAll();confetti();toast("رجعت بياناتك ليوم "+fmtDate(sn.d))},
+  async filesave(){try{localStorage.setItem("mishkah-lastexport",today())}catch(e){}setTimeout(renderToday,400);const name="hifz-backup-"+today()+".json";const blob=new Blob([JSON.stringify(S)],{type:"application/json"});
     try{const file=new File([blob],name,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"نسخة احتياطية"});return}}catch(e){if(e&&e.name==="AbortError")return}
     try{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();toast("انحفظ الملف")}catch(e){toast("ما قدرت أحفظ الملف. استخدم «انسخ البيانات»")}},
   async backup(){try{await navigator.clipboard.writeText(JSON.stringify(S));toast("انسخت. الصقها في الملاحظات عندك")}catch(e){$("#st-json").value=JSON.stringify(S);toast("انسخ النص من المربع")}},
@@ -1393,6 +1417,7 @@ document.addEventListener("keydown",e=>{const ro=$("#reader").classList.contains
   else if((e.key==="Enter"||e.key===" ")&&e.target.classList&&e.target.classList.contains("pagebadge")){e.preventDefault();e.target.click()}});
 
 renderAll();
+autoSnapshots().catch(()=>{});
 try{if(localStorage.getItem("quran-hifz-seen")!==VERSION)$("#newsbtn").classList.add("has")}catch(e){}
 setSync("local","جاري الاتصال…");
 connect();
