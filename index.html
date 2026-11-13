@@ -348,13 +348,13 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .pagebadge{cursor:pointer;transition:transform .15s}
 .pagebadge:active{transform:scale(.94)}
 .pagebadge .readhint{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);background:var(--gold);color:#241a05;font-size:.6rem;font-weight:700;padding:1px 7px;border-radius:99px;white-space:nowrap;opacity:1}
-.mq{background:#f4f1e3;color:#111;border-radius:4px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 8px 24px rgba(60,40,10,.2);padding:6px 0 4px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
-.mqtop{display:flex;justify-content:space-between;width:100%;padding:2px 16px 0;font-family:"Amiri",serif;font-size:.82rem;color:#333}
+.mq{background:#f4f1e3;color:#111;border-radius:4px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 8px 24px rgba(60,40,10,.2);padding:16px 0 12px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.mqtop{display:flex;justify-content:space-between;width:100%;padding:0 8.5% 10px;font-family:"Amiri",serif;font-size:.82rem;color:#333}
 .mqlines{direction:rtl;text-align:center;white-space:nowrap;color:#111;width:100%}
 .ql{display:flex;align-items:center;justify-content:center;white-space:nowrap}
 .ql .surhead{margin:0;width:92%;padding:2px}
 .ql .surhead div{font-family:"Amiri",serif;font-size:.62em;padding:0 4px;line-height:1.5}
-.mqnum{font-family:"Amiri",serif;font-size:.95rem;color:#222;line-height:1.4}
+.mqnum{font-family:"Amiri",serif;font-size:.95rem;color:#222;line-height:1.4;margin-top:10px}
 .reader.glyph [data-act=rsize],.reader.glyph #r-fit{display:none}
 .reader.glyph .rbody{padding:6px 4px;overflow:hidden;display:flex;align-items:center}
 .reader.glyph .rpage{width:100%}
@@ -453,8 +453,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.9";
+const VERSION="1.9.1";
 const CHANGELOG=[
+ {v:"1.9.1",d:"2026-11-13",items:["صفحة المصحف صار لها هوامش يمين ويسار وفوق وتحت مثل المصحف، والخط أصغر شوي وأريح للعين"]},
  {v:"1.9",d:"2026-11-13",items:["المصحف صار نفس مصحف المدينة بالضبط: نفس الخط ونفس الأسطر الخمسة عشر ونفس علامات الآيات","الصفحة كاملة في الشاشة دائماً","في وضع التسميع 👁 اضغط أي كلمة فتظهر آيتها كاملة","زر في الإعدادات (البيانات) لتحميل المصحف كامل للقراءة بدون إنترنت"]},
  {v:"1.8.2",d:"2026-11-13",items:["صفحة المصحف كاملة تطلع في الشاشة بدون ما تنزل: حجم الخط يتعدّل تلقائياً لكل صفحة","مسافات أقل بين الأسطر والآيات","زر ⤢ يبدّل بين الصفحة كاملة والخط اليدوي"]},
  {v:"1.8.1",d:"2026-11-13",items:["المصحف صار شكله صفحة مصحف: ورق بيج، خط أسود، إطار مزخرف، اسم السورة والجزء فوق، ورقم الصفحة تحت في دائرة"]},
@@ -849,7 +850,7 @@ function drawGlyph(p){const pg=$("#r-page");$("#reader").classList.add("glyph");
   $("#r-body").scrollTop=0;fitGlyph()}
 function fitGlyph(){const box=document.getElementById("mqlines");if(!box)return;const body=$("#r-body");const n=box.children.length;
   box.style.fontSize="40px";let mw=1;box.querySelectorAll(".qi").forEach(q=>{const w=q.getBoundingClientRect().width;if(w>mw)mw=w});
-  const aw=body.clientWidth-8-14,ah=body.clientHeight-12-56;const lh=ah/15;
+  const aw=(body.clientWidth-8)*.83,ah=body.clientHeight-12-56-48;const lh=ah/15;
   const fs=Math.min(40*aw/mw,lh/1.62);box.style.fontSize=fs+"px";const h=Math.min(lh,fs*2.3);
   [...box.children].forEach(c=>{c.style.height=h+"px"})}
 let drawSeq=0;
