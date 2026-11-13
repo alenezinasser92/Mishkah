@@ -586,8 +586,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.4";
+const VERSION="2.5";
 const CHANGELOG=[
+ {v:"2.5",d:"2026-11-14",items:["النسخ السحابي التلقائي: بعد ربط مستودع خاص على GitHub، بياناتك تنحفظ تلقائياً بعد كل تعديل، ونسخة مستقلة لكل يوم","استرجاع أي يوم سابق من السحابة، ولو ركّبت التطبيق على جوال جديد يعرض عليك ترجع بياناتك","الشريط فوق يبين آخر حفظ سحابي، وتنبيه إذا توقف"]},
  {v:"2.4",d:"2026-11-14",items:["نسخ احتياطية تلقائية على جهازك: نسخة كل يوم (آخر ١٤ يوم) ونسخة عند كل تحديث للتطبيق، وتسترجع أي وحدة منها من الإعدادات ← البيانات","تذكير في الصفحة الرئيسية إذا صار لك أسبوع بدون نسخة على iCloud، وزر يحفظها بضغطة"]},
  {v:"2.3",d:"2026-11-14",items:["المساعد الصوتي صار يسوي أشياء كثيرة مو بس الأخطاء","قيّم بالكلام: «حط سورة فصلت كلها متقنة»، والصفحات اللي عليها أخطاء نشطة تنزل درجتها تلقائياً حسب عدد الأخطاء","افتح أي سورة أو صفحة أو جزء أو آية بالكلام","اسأله: كم باقي من ورد اليوم، وين أضعف صفحاتي، متى أختم، كم صفحة حافظ","ثبّت خطأ، سجّل حفظ صفحة اليوم، اطلب اقتراح للإمامة أو اختبار، وغيّر الوضع الداكن","زر «كل الأوامر» يعرض كل اللي يفهمه"]},
  {v:"2.2",d:"2026-11-13",items:["فهرس وبحث داخل المصحف: اضغط اسم السورة فوق أو زر 🔍. قائمة كل السور والأجزاء وأخطائك بتمرير ناعم","بحث فوري: اسم سورة، «النور ٣٥»، رقم صفحة، أو كلمات من أي آية، والآية تتميز بالذهبي لما توصلها","شريط سحب تحت للتنقل السريع بين الـ٦٠٤ صفحة مع عرض الصفحة والسورة وأنت تسحب","اضغط على الصفحة فتختفي الأزرار وتصير القراءة على كامل الشاشة، واضغط مرة ثانية ترجع","زر المصحف في الصفحة الرئيسية يفتح آخر صفحة وقفت عليها"]},
@@ -691,8 +692,48 @@ function streak(){let n=0,d=today();const act=L=>L&&((L.newDone||[]).length||Obj
   for(let g=0;g<800;g++){if(act(S.log[d])){n++;d=addDays(d,-1)}else if(isRest(d)){d=addDays(d,-1)}else break}return n}
 
 /* ---------- persistence ---------- */
+/* ---------- cloud backup to the user's private GitHub repo ---------- */
+const CLOUD={t:null,busy:false,again:false,
+  get cfg(){try{return JSON.parse(localStorage.getItem("mishkah-cloud")||"null")}catch(e){return null}},
+  set cfg(v){try{if(v)localStorage.setItem("mishkah-cloud",JSON.stringify(v));else localStorage.removeItem("mishkah-cloud")}catch(e){}},
+  st(){try{return JSON.parse(localStorage.getItem("mishkah-cloud-st")||"{}")}catch(e){return{}}},
+  setSt(o){try{localStorage.setItem("mishkah-cloud-st",JSON.stringify(o))}catch(e){}},
+  api(path,opt={},cfg){const c=cfg||this.cfg;return fetch("https://api.github.com/repos/"+c.repo+(path?"/"+path:""),Object.assign({cache:"no-store"},opt,{headers:Object.assign({"Authorization":"Bearer "+c.token,"Accept":"application/vnd.github+json"},opt.headers||{})}))},
+  b64(str){const b=new TextEncoder().encode(str);let s="";for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)},
+  unb64(x){const s=atob(x.replace(/\n/g,""));const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return new TextDecoder().decode(u)},
+  hash(str){let h=5381;for(let i=0;i<str.length;i++)h=((h<<5)+h+str.charCodeAt(i))|0;return h},
+  async putFile(path,content,msg){let sha;const g=await this.api("contents/"+path);if(g.ok)sha=(await g.json()).sha;else if(g.status!==404)throw g.status;
+    const body={message:msg,content:this.b64(content)};if(sha)body.sha=sha;const r=await this.api("contents/"+path,{method:"PUT",body:JSON.stringify(body)});if(!r.ok)throw r.status},
+  async getFile(path){const r=await this.api("contents/"+path,{headers:{"Accept":"application/vnd.github.raw"}});if(!r.ok)throw r.status;return await r.text()},
+  schedule(ms){if(!this.cfg||!S.setup||this.st().choose)return;clearTimeout(this.t);this.t=setTimeout(()=>this.push(),ms??12000)},
+  async push(force){if(!this.cfg||!S.setup)return;const st=this.st();if(st.choose)return;if(this.busy){this.again=true;return}this.busy=true;clearTimeout(this.t);
+    const data=JSON.stringify(S);const h=this.hash(data);
+    try{if(!force&&h===st.hash&&st.day===today()){this.busy=false;return}
+      if(!navigator.onLine)throw "offline";
+      if(h!==st.hash||force)await this.putFile("data/latest.json",data,"نسخة تلقائية "+new Date().toISOString().slice(0,16).replace("T"," "));
+      if(st.day!==today()){await this.putFile("data/daily/"+today()+".json",data,"نسخة اليوم "+today());st.day=today()}
+      st.at=new Date().toISOString();st.hash=h;st.err=null}
+    catch(e){st.err=String(e)}
+    this.setSt(st);this.busy=false;cloudUI();if(this.again){this.again=false;this.schedule(3000)}},
+  async list(){const r=await this.api("contents/data/daily");if(!r.ok)return[];return(await r.json()).filter(x=>/\.json$/.test(x.name)).map(x=>x.name.replace(".json","")).sort().reverse()}};
+function cloudErr(e){return e==="401"||e==="403"?"الرمز انتهى أو ما عنده صلاحية. أنشئ رمز جديد والصقه في الإعدادات":e==="404"?"ما لقيت المستودع. تأكد من الاسم وإن الرمز له صلاحية عليه":e==="offline"||/TypeError|Failed/.test(e)?"بدون إنترنت. بيحاول تلقائياً لما يرجع النت":"تعذّر الحفظ ("+e+")"}
+function cloudAgo(iso){if(!iso)return"";const m=Math.round((Date.now()-new Date(iso).getTime())/6e4);return m<1?"الحين":m<60?"قبل "+ar(m)+" دقيقة":m<1440?"قبل "+ar(Math.round(m/60))+" ساعة":"قبل "+ar(Math.round(m/1440))+" يوم"}
+function cloudUI(){const c=CLOUD.cfg,st=CLOUD.st();
+  if(c&&!st.choose){if(st.err&&st.err!=="offline")setSync("err","تعذّر الحفظ السحابي");else if(st.at)setSync("ok","محفوظ في السحابة "+cloudAgo(st.at));else setSync("local","يجهّز أول نسخة سحابية…")}
+  else setSync("local","محفوظ على جهازك فقط");
+  const box=document.getElementById("cloudbox");if(box)box.innerHTML=cloudBox();if(view==="today")renderToday()}
+function cloudBox(){const c=CLOUD.cfg,st=CLOUD.st();
+  if(!c)return `<div class="hint">بياناتك تنحفظ تلقائياً في مستودع <b>خاص</b> على GitHub حقك: بعد كل تعديل بثواني، ونسخة مستقلة لكل يوم. ما تحتاج تسوي شي بعد الربط، ولو ضاع الجوال ترجعها كاملة.</div>
+    <div class="field"><label for="cl-repo">المستودع الخاص</label><input id="cl-repo" value="alenezinasser92/mishkah-data" autocapitalize="off" autocorrect="off" spellcheck="false" dir="ltr"></div>
+    <div class="field"><label for="cl-tok">رمز الوصول (Token)</label><input id="cl-tok" type="password" placeholder="github_pat_…" autocapitalize="off" autocorrect="off" spellcheck="false" dir="ltr"><span class="hint">ينحفظ على جوالك بس، وما يطلع في ملفات النسخ الاحتياطية.</span></div>
+    <button class="btn block" data-act="cloudlink">اربط النسخ السحابي</button><div id="cl-msg" class="small"></div>`;
+  if(st.choose)return `<div class="done-banner" style="background:var(--gold-soft);color:var(--ink);flex-direction:column;align-items:stretch;gap:8px"><b>لقيت نسخة محفوظة في السحابة (${esc(st.choose)})</b><span class="small">تبي ترجعها لهذا الجهاز، ولا تحفظ بيانات هذا الجهاز فوقها؟</span>
+    <div class="two"><button class="btn" data-act="cloudpick" data-v="remote">استرجع السحابية</button><button class="btn ghost" data-act="cloudpick" data-v="local">استخدم بيانات هذا الجهاز</button></div></div>`;
+  return `<div class="row"><div><span class="l">${st.err&&st.err!=="offline"?"⚠️ ":"✓ "}${esc(c.repo)}</span><span class="hint">${st.err?esc(cloudErr(st.err)):st.at?"آخر حفظ "+cloudAgo(st.at)+(st.day===today()?" · نسخة اليوم محفوظة":""):"يجهّز أول نسخة…"}</span></div><button class="sbtn" data-act="cloudnow">احفظ الحين</button></div>
+  <div class="field"><label>نسخ الأيام السابقة في السحابة</label><div id="cl-days" class="small muted">اضغط «اعرض» عشان أجيبها</div><button class="sbtn" style="align-self:flex-start;margin-top:4px" data-act="clouddays">اعرض</button></div>
+  <button class="sbtn warn" style="align-self:flex-start" data-act="cloudunlink">فك الربط</button>`}
 function setSync(k,txt){const el=$("#sync");el.className="sync "+k;el.querySelector("span").textContent=txt}
-function save(){prune();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(ref){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;flush()},700)}}
+function save(){prune();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}CLOUD.schedule();if(ref){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;flush()},700)}}
 async function flush(){if(!ref)return;if(writing){pending=true;return}writing=true;
   const body=JSON.parse(JSON.stringify(S));
   try{await ref.set(body);setSync("ok","محفوظ في حسابك")}
@@ -701,7 +742,7 @@ async function flush(){if(!ref)return;if(writing){pending=true;return}writing=tr
     else setSync("err","تعذّر الحفظ")}
   writing=false;if(pending){pending=false;flush()}}
 async function connect(){
-  if(!window.claude||!window.claude.use){setSync("ok","محفوظ على جهازك");return}
+  if(!window.claude||!window.claude.use){cloudUI();return}
   let timer=setTimeout(()=>setSync("local","على هذا الجهاز مؤقتاً"),10000);
   try{const db=await claude.use("db");const user=await claude.use("user");const id=user?await user.id():null;
     if(!db||!id){clearTimeout(timer);setSync("local","على هذا الجهاز فقط");return}
@@ -795,7 +836,9 @@ function renderToday(){const el=$("#v-today");if(!S.setup){el.innerHTML=setupCar
   const doneNew=newT.filter(p=>L.newDone.includes(p)).length,doneNear=near.filter(p=>L.rev[p]!=null).length,doneFar=far.filter(p=>L.rev[p]!=null).length;
   const tot=newT.length+near.length+far.length,done=doneNew+doneNear+doneFar;
   const nrS=new Set(near);let over=0;for(let p=S.settings.from;p<=S.settings.to;p++){const rc=S.pages[p];if(!nrS.has(p)&&!far.includes(p)&&rc&&rc.due&&rc.due<=today())over++}const pct=tot?done/tot:0;
-  const ea=exportAge();let h=(ea===null||ea>=7)?`<div class="done-banner" style="background:var(--gold-soft);color:var(--ink);justify-content:space-between;flex-wrap:wrap"><span><i class="star8"></i> ${ea===null?"ما حفظت نسخة احتياطية على iCloud للحين":"صار لك "+ar(ea)+" أيام بدون نسخة على iCloud"}</span><button class="sbtn" data-act="filesave">احفظ الحين</button></div>`:"";
+  const ea=exportAge(),cst=CLOUD.st();const cloudOk=CLOUD.cfg&&!cst.choose&&cst.at&&(Date.now()-new Date(cst.at).getTime())<3*864e5;
+  let h=CLOUD.cfg&&cst.err&&cst.err!=="offline"?`<div class="done-banner" style="background:var(--rose-soft);color:var(--rose);justify-content:space-between;flex-wrap:wrap"><span>⚠️ النسخ السحابي متوقف: ${esc(cloudErr(cst.err))}</span><button class="sbtn" data-act="settings">الإعدادات</button></div>`:"";
+  h+=(!cloudOk&&(ea===null||ea>=7))?`<div class="done-banner" style="background:var(--gold-soft);color:var(--ink);justify-content:space-between;flex-wrap:wrap"><span><i class="star8"></i> ${ea===null?"ما حفظت نسخة احتياطية على iCloud للحين":"صار لك "+ar(ea)+" أيام بدون نسخة على iCloud"}</span><span class="acts"><button class="sbtn" data-act="filesave">احفظ الحين</button>${CLOUD.cfg?"":`<button class="sbtn" data-act="cloudsetup">خلها تلقائية</button>`}</span></div>`:"";
   h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>ورد اليوم</span><h2>${pct>=1?"اكتمل وردك اليوم، ما شاء الله":done?"استمر، أنت في الطريق":"يلا نبدأ"}</h2></div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${isRest(today())?'<span class="pill">يوم راحة 🌿</span>':""}<span class="pill gold num">${ar(done)} / ${ar(tot)}</span></div></div>
   <div class="dayprog"><div class="bar"><i style="width:${pct*100}%"></i></div>
   <div class="trio"><div><b class="num">${ar(doneNew)}/${ar(newT.length)}</b><span>الجديد</span></div><div><b class="num">${ar(doneNear)}/${ar(near.length)}</b><span>القريب</span></div><div><b class="num">${ar(doneFar)}/${ar(far.length)}</b><span>البعيد</span></div></div></div></div>`;
@@ -964,6 +1007,7 @@ function settingsSheet(){const s=S.settings,u=S.ui;const DAYS=["الأحد","ا�
     <textarea id="st-json" placeholder="الصق النسخة الاحتياطية هنا ثم اضغط استرجع"></textarea>
     <button class="btn ghost block" data-act="qdl" id="qdlbtn">حمّل المصحف كامل للقراءة بدون إنترنت (٩٥ م.ب)</button>
     <span class="hint muted small">حجم بياناتك ${ar(kb)} ك.ب. احفظ الملف في iCloud Drive عشان يبقى لو ضاع الجوال.</span>
+    <div class="field" style="margin-top:6px"><label>☁️ النسخ السحابي التلقائي</label><div id="cloudbox" style="display:flex;flex-direction:column;gap:10px">${cloudBox()}</div></div>
     <div class="field" style="margin-top:6px"><label>النسخ التلقائية على جهازك</label><span class="hint">ينحفظ تلقائياً نسخة كل يوم (آخر ١٤ يوم)، ونسخة عند كل تحديث للتطبيق. تحميك لو صار خلل في تحديث أو مسحت شي بالغلط.</span>
     <div id="snaplist" class="small muted" style="margin-top:6px">جاري التحميل…</div><button class="sbtn" style="margin-top:6px;align-self:flex-start" data-act="snapnow">خذ نسخة الحين</button></div>
     <button class="btn ghost block" style="color:var(--rose)" data-act="reset" id="resetbtn">مسح كل البيانات</button>
@@ -1389,6 +1433,25 @@ const A={
   uiset(el){const k=el.dataset.k;let v=el.dataset.v;if(k==="hijriAdj")v=+v;S.ui[k]=v;if(k==="mapColor")mapColor=v;
     [...el.parentElement.children].forEach(b=>b.classList.toggle("on",b===el));const hn=el.closest(".row")&&el.closest(".row").querySelector(".hint");if(k==="palette"&&hn)hn.textContent=PALETTES[v].n;applyUI();save();renderAll()},
   uirest(el){const d=+el.dataset.d;const r=S.ui.rest||[];const i=r.indexOf(d);if(i<0)r.push(d);else r.splice(i,1);S.ui.rest=r;el.classList.toggle("on",i<0);save();renderAll()},
+  cloudsetup(){A.settings();setTimeout(()=>{const d=$("#sec-data");if(d){d.open=true;d.scrollIntoView({behavior:"smooth"})}},350)},
+  async cloudlink(){const repo=$("#cl-repo").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\.git$/,"").replace(/\/$/,""),token=$("#cl-tok").value.trim(),msg=$("#cl-msg");
+    if(!/^[\w.-]+\/[\w.-]+$/.test(repo)||token.length<20){msg.textContent="اكتب اسم المستودع والرمز كاملين";return}
+    msg.textContent="أتأكد من الربط…";const cfg={repo,token};
+    try{const r=await CLOUD.api("",{},cfg);if(!r.ok){msg.textContent=cloudErr(String(r.status));return}const j=await r.json();
+      if(!j.private){msg.textContent="المستودع عام! لازم يكون خاص (Private) عشان بياناتك ما تنكشف";return}
+      if(j.permissions&&j.permissions.push===false){msg.textContent="الرمز ما عنده صلاحية كتابة. اختر Contents: Read and write";return}
+      CLOUD.cfg=cfg;const st={};const ex=await CLOUD.api("contents/data/latest.json");
+      if(ex.ok){const k=(await ex.json());st.choose="موجودة";CLOUD.setSt(st);cloudUI();return}
+      CLOUD.setSt(st);msg.textContent="تم الربط ✓ أحفظ أول نسخة…";await CLOUD.push(true);confetti();toast("صارت بياناتك تنحفظ في السحابة تلقائياً ✓")}
+    catch(e){msg.textContent=cloudErr(String(e))}},
+  async cloudpick(el){const st=CLOUD.st();if(el.dataset.v==="remote"){try{const txt=await CLOUD.getFile("data/latest.json");const o=JSON.parse(txt);if(!o.settings)throw 0;await SNAPS.take("manual","قبل الاسترجاع من السحابة");S=Object.assign(DEF(),o);normalize();applyUI();
+      delete st.choose;st.hash=CLOUD.hash(JSON.stringify(S));st.at=new Date().toISOString();CLOUD.setSt(st);save();closeSheet();renderAll();cloudUI();confetti();toast("رجعت بياناتك من السحابة ✓")}catch(e){toast("تعذّر الاسترجاع: "+cloudErr(String(e)))}}
+    else{delete st.choose;CLOUD.setSt(st);await CLOUD.push(true);cloudUI();toast("انحفظت بيانات هذا الجهاز في السحابة")}},
+  async cloudnow(){toast("أحفظ…");await CLOUD.push(true);const st=CLOUD.st();toast(st.err?cloudErr(st.err):"انحفظت في السحابة ✓")},
+  async clouddays(){const el=$("#cl-days");el.textContent="أجيبها…";try{const a=await CLOUD.list();el.innerHTML=a.length?a.slice(0,30).map(d=>`<div class="lineitem"><span>${fmtDate(d)}</span><button class="sbtn" data-act="cloudrestore" data-d="${d}">استرجع</button></div>`).join(""):"ما في نسخ أيام للحين"}catch(e){el.textContent=cloudErr(String(e))}},
+  async cloudrestore(el){if(!el.dataset.armed){el.dataset.armed=1;el.textContent="متأكد؟ اضغط مرة ثانية";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="استرجع"}},3500);return}
+    try{const o=JSON.parse(await CLOUD.getFile("data/daily/"+el.dataset.d+".json"));if(!o.settings)throw 0;await SNAPS.take("manual","قبل الاسترجاع من السحابة");S=Object.assign(DEF(),o);normalize();applyUI();save();closeSheet();renderAll();confetti();toast("رجعت بياناتك ليوم "+fmtDate(el.dataset.d))}catch(e){toast("تعذّر الاسترجاع: "+cloudErr(String(e)))}},
+  cloudunlink(el){if(!el.dataset.armed){el.dataset.armed=1;el.textContent="متأكد؟ النسخ السحابية تبقى في GitHub";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="فك الربط"}},3500);return}CLOUD.cfg=null;CLOUD.setSt({});cloudUI();toast("انفك الربط")},
   async snapnow(){await SNAPS.take("manual","نسخة يدوية");renderSnaps();toast("انحفظت نسخة على جهازك")},
   async snaprestore(el){if(!el.dataset.armed){el.dataset.armed=1;el.textContent="متأكد؟ اضغط مرة ثانية";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="استرجع"}},3500);return}
     const a=await SNAPS.all();const sn=a.find(x=>x.id===el.dataset.id);if(!sn){toast("ما لقيت النسخة");return}
@@ -1418,6 +1481,9 @@ document.addEventListener("keydown",e=>{const ro=$("#reader").classList.contains
 
 renderAll();
 autoSnapshots().catch(()=>{});
+cloudUI();{const st=CLOUD.st();if(CLOUD.cfg&&(!st.at||st.day!==today()||Date.now()-new Date(st.at).getTime()>6*36e5))CLOUD.schedule(2500)}
+addEventListener("online",()=>CLOUD.schedule(2000));
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&CLOUD.t)CLOUD.push()});
 try{if(localStorage.getItem("quran-hifz-seen")!==VERSION)$("#newsbtn").classList.add("has")}catch(e){}
 setSync("local","جاري الاتصال…");
 connect();
