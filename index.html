@@ -211,8 +211,8 @@ main{max-width:720px;margin:-52px auto 0;padding:0 16px calc(130px + var(--sab) 
 /* nav + fab */
 nav.tabs{position:fixed;bottom:0;inset-inline:0;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:20;padding-bottom:calc(var(--sab) + var(--navlift))}
 nav.tabs .in{display:grid;grid-template-columns:repeat(4,1fr);max-width:720px;width:100%}
-nav.tabs button{border:none;background:transparent;padding:9px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;color:var(--muted)}
-nav.tabs button svg{width:22px;height:22px;transition:transform .2s}
+nav.tabs button{border:none;background:transparent;padding:12px 4px 12px;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.76rem;color:var(--muted);touch-action:manipulation}
+nav.tabs button svg{width:25px;height:25px;transition:transform .2s}
 nav.tabs button.on{color:var(--accent);font-weight:600}
 nav.tabs button.on svg{transform:translateY(-2px)}
 .fab{position:fixed;top:calc(14px + env(safe-area-inset-top));left:max(12px, calc(50% - 348px));z-index:21;background:var(--gold);border:none;border-radius:50%;width:46px;height:46px;padding:0;font-size:1.35rem;line-height:1;box-shadow:0 6px 18px rgba(196,146,42,.45);display:grid;place-items:center;transition:transform .15s}
@@ -312,7 +312,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
 .lineitem{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.88rem}
 @media (max-width:420px){ .brand{font-size:1.2rem;white-space:nowrap} .dateline{font-size:.78rem} .ring{width:104px;height:104px} .ring svg{width:104px;height:104px} .pair .halves{grid-template-columns:1fr} .pair .h + .h{border-inline-start:none;border-top:1px dashed var(--line)} }
 @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none !important;transition:none !important} }
-@media (display-mode: standalone) and (max-width:820px){ :root{--navlift:0px;--sab:calc(env(safe-area-inset-bottom) * .55)} nav.tabs button{padding:10px 4px 6px} }
+@media (display-mode: standalone) and (max-width:820px){ :root{--navlift:0px;--sab:calc(env(safe-area-inset-bottom) * .72)} }
 </style>
 </head>
 <body>
@@ -380,8 +380,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.7.6";
+const VERSION="1.7.7";
 const CHANGELOG=[
+ {v:"1.7.7",d:"2026-11-13",items:["شريط التبويبات ارتفع شوي بسيط","أزرار التبويبات صارت أكبر وأسهل في الضغط"]},
  {v:"1.7.6",d:"2026-11-13",items:["شريط التبويبات نزل أكثر"]},
  {v:"1.7.5",d:"2026-11-13",items:["المسافة تحت شريط التبويبات صارت أقل ومريحة","التطبيق يعبّي الشاشة كاملة على الآيفون: لون الهيدر يكمل خلف الساعة والبطارية بدل الشريط الأسود"]},
  {v:"1.7.4",d:"2026-11-13",items:["التحديثات صارت توصل تلقائياً كل ما فتحت التطبيق وأنت متصل بالإنترنت","رقم الإصدار يبين تحت التاريخ فوق"]},
