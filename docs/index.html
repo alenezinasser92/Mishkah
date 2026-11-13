@@ -320,7 +320,7 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .rhead .t span{font-size:.75rem;color:#b9d2ca}
 .rbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#f3efe2;min-width:38px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:.85rem;font-weight:700;padding:0 8px}
 .rbtn.on{background:#f6e7bf;color:#241a05}
-.rbody{flex:1;overflow:hidden;overscroll-behavior:contain;touch-action:pan-y;background:#d9ccad;position:relative;direction:ltr}
+.rbody{flex:1;overflow:hidden;overscroll-behavior:contain;touch-action:pan-y;background:#cbb88f;position:relative;direction:ltr}
 .rtrack{display:flex;direction:ltr;width:300%;height:100%;transform:translateX(-33.3333%);will-change:transform}
 .rtrack.anim{transition:transform .32s cubic-bezier(.25,.8,.3,1)}
 :root[data-theme="dark"] .rbody{background:#2a251c}
@@ -328,7 +328,7 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .rpage{flex:0 0 33.3333%;min-width:0;height:100%;direction:rtl;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 4px;display:flex;flex-direction:column}
 .rpage>*{margin:auto 0;width:100%}
 
-.mpage{position:relative;background:#fbf5e4;background-image:radial-gradient(ellipse at 50% 40%,#fffaee 0%,#f8efd9 70%,#f1e5c8 100%);color:#151515;border-radius:6px;padding:12px 10px 10px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 10px 30px rgba(60,40,10,.22);border:1px solid #c8b483}
+.mpage{position:relative;background:#f1e4c3;background-image:radial-gradient(ellipse at 50% 45%,#f5ead0 0%,#f1e4c3 65%,#eadab3 100%);color:#151515;border-radius:6px;padding:12px 10px 10px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 10px 30px rgba(60,40,10,.22);border:1px solid #c8b483}
 .mpage::before{content:"";position:absolute;inset:6px;border:3px double #b8954a;border-radius:4px;pointer-events:none}
 .mpage::after{content:"";position:absolute;inset:12px;border:1px solid rgba(31,95,74,.45);border-radius:3px;pointer-events:none}
 .mtop{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 8px 4px;margin-bottom:2px;border-bottom:1px solid rgba(184,149,74,.55);font-family:var(--display);font-size:.85rem;color:#6b5420;position:relative;z-index:1}
@@ -351,9 +351,9 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .pagebadge{cursor:pointer;transition:transform .15s}
 .pagebadge:active{transform:scale(.94)}
 .pagebadge .readhint{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);background:var(--gold);color:#241a05;font-size:.6rem;font-weight:700;padding:1px 7px;border-radius:99px;white-space:nowrap;opacity:1}
-.mq{background:#f4f1e3;color:#111;border-radius:4px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 8px 24px rgba(60,40,10,.2);padding:16px 0 12px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.mq{background:#f1e4c3;background-image:radial-gradient(ellipse at 50% 45%,#f5ead0 0%,#f1e4c3 65%,#eadab3 100%);color:#1b140a;border-radius:4px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 8px 24px rgba(60,40,10,.2);padding:16px 0 12px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
 .mqtop{display:flex;justify-content:space-between;width:100%;padding:0 8.5% 10px;font-family:"Amiri",serif;font-size:.82rem;color:#333}
-.mqlines{direction:rtl;text-align:center;white-space:nowrap;color:#111;width:100%}
+.mqlines{direction:rtl;text-align:center;white-space:nowrap;color:#1b140a;width:100%}
 .ql{display:flex;align-items:center;justify-content:center;white-space:nowrap}
 .ql .surhead{margin:0;width:92%;padding:2px}
 .ql .surhead div{font-family:"Amiri",serif;font-size:.62em;padding:0 4px;line-height:1.5}
@@ -404,7 +404,7 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .rakbody{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 .rakbody details summary{cursor:pointer;font-size:.85rem;font-weight:600;color:var(--accent);list-style:none;padding:4px 0}
 .rakbody details summary::-webkit-details-marker{display:none}
-.rakbody .aytxt{background:#f4f1e3;color:#111;border-radius:12px;padding:10px 12px;text-align:justify}
+.rakbody .aytxt{background:#f1e4c3;color:#1b140a;border-radius:12px;padding:10px 12px;text-align:justify}
 .rakbody .aytxt .an{color:#8a6a1c;font-size:.85em}
 .rollbtn .star8{width:14px;height:14px;border-color:currentColor}
 .rollbtn .star8::after{border-color:currentColor}
@@ -511,8 +511,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.0";
+const VERSION="2.0.1";
 const CHANGELOG=[
+ {v:"2.0.1",d:"2026-11-13",items:["خلفية صفحة المصحف صارت بيج أدفى وأريح للعين"]},
  {v:"2.0",d:"2026-11-13",items:["تبويب جديد «الإمامة»: اقتراح عشوائي لمقطعين للركعتين حسب الصلاة وطولها، من محفوظك أو من كل القرآن","خيار المتقن والجيد فقط، والركعة الثانية تكمّل الأولى، مع مدة القراءة التقريبية","مفضلة لمقاطعك، وسجل «صليت بهما» يمنع التكرار أسبوعين","القراءات الثابتة عن النبي ﷺ، وتتميز سنن الجمعة يوم الجمعة"]},
  {v:"1.9.3",d:"2026-11-13",items:["تقليب المصحف صار متصل: الصفحة اللي بعدها مشبوكة بالصفحة الحالية وتنسحب مع إصبعك مثل تقليب المصحف"]},
  {v:"1.9.2",d:"2026-11-13",items:["حركات أكثر بنجمة مِشكاة: نجمة تدور جنب الاسم، نجوم تلمع في الهيدر، ونجوم صغيرة تدور عند العناوين والأجزاء والسور والأوسمة","تقليب صفحات المصحف صار فوري بدون تأثير التلاشي"]},
