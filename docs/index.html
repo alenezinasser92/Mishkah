@@ -320,11 +320,14 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .rhead .t span{font-size:.75rem;color:#b9d2ca}
 .rbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#f3efe2;min-width:38px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:.85rem;font-weight:700;padding:0 8px}
 .rbtn.on{background:#f6e7bf;color:#241a05}
-.rbody{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:8px 6px;background:#d9ccad}
+.rbody{flex:1;overflow:hidden;overscroll-behavior:contain;touch-action:pan-y;background:#d9ccad;position:relative;direction:ltr}
+.rtrack{display:flex;direction:ltr;width:300%;height:100%;transform:translateX(-33.3333%);will-change:transform}
+.rtrack.anim{transition:transform .32s cubic-bezier(.25,.8,.3,1)}
 :root[data-theme="dark"] .rbody{background:#2a251c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .rbody{background:#2a251c}}
-.rpage{max-width:640px;margin:0 auto}
-.rpage.out-next{transform:translateX(-40px);opacity:0}.rpage.out-prev{transform:translateX(40px);opacity:0}
+.rpage{flex:0 0 33.3333%;min-width:0;height:100%;direction:rtl;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 4px;display:flex;flex-direction:column}
+.rpage>*{margin:auto 0;width:100%}
+
 .mpage{position:relative;background:#fbf5e4;background-image:radial-gradient(ellipse at 50% 40%,#fffaee 0%,#f8efd9 70%,#f1e5c8 100%);color:#151515;border-radius:6px;padding:12px 10px 10px;box-shadow:0 1px 2px rgba(60,40,10,.25),0 10px 30px rgba(60,40,10,.22);border:1px solid #c8b483}
 .mpage::before{content:"";position:absolute;inset:6px;border:3px double #b8954a;border-radius:4px;pointer-events:none}
 .mpage::after{content:"";position:absolute;inset:12px;border:1px solid rgba(31,95,74,.45);border-radius:3px;pointer-events:none}
@@ -356,8 +359,8 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .ql .surhead div{font-family:"Amiri",serif;font-size:.62em;padding:0 4px;line-height:1.5}
 .mqnum{font-family:"Amiri",serif;font-size:.95rem;color:#222;line-height:1.4;margin-top:10px}
 .reader.glyph [data-act=rsize],.reader.glyph #r-fit{display:none}
-.reader.glyph .rbody{padding:6px 4px;overflow:hidden;display:flex;align-items:center}
-.reader.glyph .rpage{width:100%}
+
+
 .star8{display:inline-block;position:relative;width:16px;height:16px;border:2px solid var(--gold);border-radius:3px;flex:none;animation:spin 12s linear infinite;vertical-align:middle}
 .star8::after{content:"";position:absolute;inset:-2px;border:2px solid var(--gold);border-radius:3px;transform:rotate(45deg)}
 .star8.fill{background:var(--gold);border-color:var(--gold)}
@@ -460,7 +463,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
     <button class="rbtn" data-act="rsize" data-d="-1" aria-label="تصغير الخط">ـأ</button>
     <button class="rbtn" data-act="rsize" data-d="1" aria-label="تكبير الخط">أ+</button>
   </div>
-  <div class="rbody" id="r-body"><div class="rpage" id="r-page"><div class="loading">جاري تحميل المصحف…</div></div></div>
+  <div class="rbody" id="r-body"><div class="rtrack" id="r-track"><div class="rpage"></div><div class="rpage"></div><div class="rpage"></div></div></div>
   <div class="rfoot">
     <button class="rnav" data-act="rgo" data-d="-1" id="r-prev">→ السابقة<small></small></button>
     <div class="rmid"><b class="num" id="r-num">—</b><button class="sbtn" data-act="rrate">قيّم الصفحة</button></div>
@@ -481,8 +484,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="1.9.2";
+const VERSION="1.9.3";
 const CHANGELOG=[
+ {v:"1.9.3",d:"2026-11-13",items:["تقليب المصحف صار متصل: الصفحة اللي بعدها مشبوكة بالصفحة الحالية وتنسحب مع إصبعك مثل تقليب المصحف"]},
  {v:"1.9.2",d:"2026-11-13",items:["حركات أكثر بنجمة مِشكاة: نجمة تدور جنب الاسم، نجوم تلمع في الهيدر، ونجوم صغيرة تدور عند العناوين والأجزاء والسور والأوسمة","تقليب صفحات المصحف صار فوري بدون تأثير التلاشي"]},
  {v:"1.9.1",d:"2026-11-13",items:["صفحة المصحف صار لها هوامش يمين ويسار وفوق وتحت مثل المصحف، والخط أصغر شوي وأريح للعين"]},
  {v:"1.9",d:"2026-11-13",items:["المصحف صار نفس مصحف المدينة بالضبط: نفس الخط ونفس الأسطر الخمسة عشر ونفس علامات الآيات","الصفحة كاملة في الشاشة دائماً","في وضع التسميع 👁 اضغط أي كلمة فتظهر آيتها كاملة","زر في الإعدادات (البيانات) لتحميل المصحف كامل للقراءة بدون إنترنت"]},
@@ -849,11 +853,12 @@ function loadQuran(){if(window.QTEXT)return Promise.resolve();if(qLoading)return
 function qloc(id){let n=id-1,i=0;const C=window.QACNT;while(i<113&&n>=C[i]){n-=C[i];i++}return[i,n+1]}
 const RS={sm:"1.3rem",md:"1.55rem",lg:"1.85rem",xl:"2.2rem"},RSK=["sm","md","lg","xl"];
 function applyRS(){document.documentElement.style.setProperty("--rs",RS[S.ui.rsize]||RS.md);const fb=document.getElementById("r-fit");if(fb)fb.classList.toggle("on",S.ui.rfit!==false)}
-function fitPage(){const pg=$("#r-page"),body=$("#r-body");if(!pg||!$("#reader").classList.contains("open"))return;if($("#reader").classList.contains("glyph")){fitGlyph();return}
+function fitText(pg){const body=$("#r-body");if(!pg||!pg.querySelector(".mpage"))return;
   if(S.ui.rfit===false){pg.style.removeProperty("--rs");return}
-  const avail=body.clientHeight-16;let lo=11,hi=30,best=11;
-  for(let k=0;k<9;k++){const mid=(lo+hi)/2;pg.style.setProperty("--rs",mid+"px");if(pg.scrollHeight<=avail){best=mid;lo=mid}else hi=mid}
+  const avail=body.clientHeight-14;let lo=11,hi=30,best=11;const m=pg.firstElementChild;
+  for(let k=0;k<9;k++){const mid=(lo+hi)/2;pg.style.setProperty("--rs",mid+"px");if(m.offsetHeight<=avail){best=mid;lo=mid}else hi=mid}
   pg.style.setProperty("--rs",Math.floor(best*10)/10+"px")}
+function fitPage(){if(!$("#reader").classList.contains("open"))return;document.querySelectorAll("#r-track .rpage").forEach(pg=>{if(pg.querySelector(".mqlines"))fitGlyph(pg);else fitText(pg)})}
 let fitT;addEventListener("resize",()=>{clearTimeout(fitT);fitT=setTimeout(fitPage,120)});
 try{document.fonts&&document.fonts.addEventListener&&document.fonts.addEventListener("loadingdone",()=>fitPage())}catch(e){}
 const JUZN=["الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع","الثامن","التاسع","العاشر","الحادي عشر","الثاني عشر","الثالث عشر","الرابع عشر","الخامس عشر","السادس عشر","السابع عشر","الثامن عشر","التاسع عشر","العشرون","الحادي والعشرون","الثاني والعشرون","الثالث والعشرون","الرابع والعشرون","الخامس والعشرون","السادس والعشرون","السابع والعشرون","الثامن والعشرون","التاسع والعشرون","الثلاثون"];
@@ -863,48 +868,64 @@ function loadLayout(){if(window.MLAY)return Promise.resolve();if(layLoading)retu
 function loadQFont(name,url){if(qFonts[name])return qFonts[name];if(typeof FontFace==="undefined")return Promise.resolve(false);
   qFonts[name]=new FontFace(name,"url("+url+")").load().then(ff=>{document.fonts.add(ff);return true}).catch(()=>{delete qFonts[name];return false});return qFonts[name]}
 const pageFont=p=>loadQFont("qpc2p"+p,"qpc2/p"+String(p).padStart(3,"0")+".woff2");
-function drawText(p){const pg=$("#r-page");$("#reader").classList.remove("glyph");const a=QPAGE[p],b=QPAGE[p+1]-1;let h="";let txt="";
+const rSlots=()=>[...document.getElementById("r-track").children];
+function drawText(p,pg){const a=QPAGE[p],b=QPAGE[p+1]-1;let h="";let txt="";
   const flush=()=>{if(txt){h+=`<div class="rtext">${txt}</div>`;txt=""}};
   for(let id=a;id<=b;id++){const[si,ay]=qloc(id);
     if(ay===1){flush();h+=`<div class="surhead"><div>سورة ${SURAH[si]}</div></div>`;if(si!==0&&si!==8)h+=`<div class="basm">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>`}
     txt+=`<span class="ay" data-act="ayah">${esc(QTEXT[id-1])} <span class="an">﴿${ar(ay)}﴾</span></span> `}
   flush();const sn=surahsOn(p).map(i=>"سورة "+SURAH[i]);
-  pg.innerHTML=`<div class="mpage"><div class="mtop"><span>${esc(sn.length>2?sn[0]+" …":sn.join(" · "))}</span><span>الجزء ${ar(juzOf(p))}</span></div><div class="minner">${h}</div><div class="mnum"><span class="num">${ar(p)}</span></div></div>`;$("#r-body").scrollTop=0;fitPage();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitPage)}
-function drawGlyph(p){const pg=$("#r-page");$("#reader").classList.add("glyph");pg.style.removeProperty("--rs");const L=MLAY[p-1];
-  const so=surahsOn(p);const sname=SURAH[so[so.length>1&&L[0][0]==="h"?0:0]];
+  pg.innerHTML=`<div class="mpage"><div class="mtop"><span>${esc(sn.length>2?sn[0]+" …":sn.join(" · "))}</span><span>الجزء ${ar(juzOf(p))}</span></div><div class="minner">${h}</div><div class="mnum"><span class="num">${ar(p)}</span></div></div>`;pg.scrollTop=0;fitText(pg);syncGlyphClass()}
+function drawGlyph(p,pg){pg.style.removeProperty("--rs");const L=MLAY[p-1];const sname=SURAH[surahsOn(p)[0]];
   const lines=L.map(l=>l[0]==="h"?`<div class="ql"><div class="surhead"><div>سورة ${SURAH[l[1]-1]}</div></div></div>`
     :l[0]==="b"?`<div class="ql"><span class="qi" style="font-family:qpc2bsml">${l[1]}</span></div>`
     :`<div class="ql"><span class="qi">${l[1].map(sg=>`<span class="ay" data-act="ayah" data-k="${sg[0]}">${sg[1]}</span>`).join("")}</span></div>`).join("");
-  pg.innerHTML=`<div class="mq"><div class="mqtop"><span>الجزء ${JUZN[juzOf(p)-1]}</span><span>سورة ${sname}</span></div><div class="mqlines" id="mqlines" style="font-family:qpc2p${p}">${lines}</div><div class="mqnum num">${ar(p)}</div></div>`;
-  $("#r-body").scrollTop=0;fitGlyph()}
-function fitGlyph(){const box=document.getElementById("mqlines");if(!box)return;const body=$("#r-body");const n=box.children.length;
+  pg.innerHTML=`<div class="mq"><div class="mqtop"><span>الجزء ${JUZN[juzOf(p)-1]}</span><span>سورة ${sname}</span></div><div class="mqlines" style="font-family:qpc2p${p}">${lines}</div><div class="mqnum num">${ar(p)}</div></div>`;
+  pg.scrollTop=0;fitGlyph(pg);syncGlyphClass()}
+function syncGlyphClass(){const c=rSlots()[1];$("#reader").classList.toggle("glyph",!!c.querySelector(".mqlines")||!c.querySelector(".mpage"))}
+function fitGlyph(pg){const box=pg.querySelector(".mqlines");if(!box)return;const body=$("#r-body");
   box.style.fontSize="40px";let mw=1;box.querySelectorAll(".qi").forEach(q=>{const w=q.getBoundingClientRect().width;if(w>mw)mw=w});
   const aw=(body.clientWidth-8)*.83,ah=body.clientHeight-12-56-48;const lh=ah/15;
   const fs=Math.min(40*aw/mw,lh/1.62);box.style.fontSize=fs+"px";const h=Math.min(lh,fs*2.3);
   [...box.children].forEach(c=>{c.style.height=h+"px"})}
-let drawSeq=0;
-async function drawPage(p){const my=++drawSeq;let ok=false;
+async function drawPage(p,pg){pg.dataset.p=p;if(p<1||p>604){pg.innerHTML="";return}
+  if(!pg.firstElementChild||pg.firstElementChild.dataset.for!=p)pg.innerHTML='<div class="rload" data-for="'+p+'"><i class="star8 fast"></i>جاري فتح الصفحة…</div>';
+  let ok=false;
   try{await loadLayout();const need=[pageFont(p)];if(MLAY[p-1].some(l=>l[0]==="b"))need.push(loadQFont("qpc2bsml","qpc2/QPC2BSML.ttf"));ok=(await Promise.all(need)).every(Boolean)}catch(e){ok=false}
-  if(my!==drawSeq)return;
-  if(ok){drawGlyph(p);if(p>1)pageFont(p-1);if(p<604)pageFont(p+1);return}
-  try{await loadQuran();if(my===drawSeq)drawText(p)}catch(e){if(my===drawSeq)$("#r-page").innerHTML='<div class="empty">ما قدرت أحمّل المصحف. افتح التطبيق مرة وأنت متصل بالإنترنت.</div>'}}
-function renderReader(dir){const pg=$("#r-page");const p=rPage;
-  $("#r-title").textContent=pageLabel(p);
+  if(pg.dataset.p!=p)return;
+  if(ok){drawGlyph(p,pg);return}
+  try{await loadQuran();if(pg.dataset.p==p)drawText(p,pg)}catch(e){if(pg.dataset.p==p)pg.innerHTML='<div class="empty">ما قدرت أحمّل المصحف. افتح التطبيق مرة وأنت متصل بالإنترنت.</div>'}}
+function rHeader(){const p=rPage;$("#r-title").textContent=pageLabel(p);
   const st=strength(p);const stl={s3:"متقنة",s2:"جيدة",s1:"متعثرة",s0:"نسيت",su:"ما قُيّمت",snm:"غير محفوظة"}[st];
   $("#r-sub").textContent="الجزء "+ar(juzOf(p))+" · "+stl;$("#r-num").textContent=ar(p);
   const pv=$("#r-prev"),nx=$("#r-next");pv.disabled=p<=1;nx.disabled=p>=604;
-  pv.querySelector("small").textContent=p>1?ar(p-1)+" · "+pageLabel(p-1):"";nx.querySelector("small").textContent=p<604?ar(p+1)+" · "+pageLabel(p+1):"";
-  if(dir===0&&pg.querySelector(".mq,.mpage"))return;
-  pg.className="rpage";drawPage(p)}
+  pv.querySelector("small").textContent=p>1?ar(p-1)+" · "+pageLabel(p-1):"";nx.querySelector("small").textContent=p<604?ar(p+1)+" · "+pageLabel(p+1):""}
+function renderReader(){rHeader()}
+function drawAll(){const[n,c,pv]=rSlots();drawPage(rPage,c);drawPage(rPage+1,n);drawPage(rPage-1,pv)}
 function openReader(p){rPage=Math.min(604,Math.max(1,+p||1));applyRS();const r=$("#reader");r.classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);
   r.classList.add("open");document.documentElement.classList.add("locked");
-  $("#r-page").innerHTML='<div class="rload"><i class="star8 fast"></i>جاري فتح الصفحة…</div>';renderReader(null)}
+  const tr=$("#r-track");tr.classList.remove("anim");tr.style.transform="";rBusy=false;rSlots().forEach(x=>{x.innerHTML="";delete x.dataset.p});rHeader();drawAll()}
 function closeReader(){$("#reader").classList.remove("open");if(!$("#sheet").classList.contains("open"))document.documentElement.classList.remove("locked")}
-function readerGo(d){const n=rPage+d;if(n<1||n>604)return;rPage=n;renderReader(d)}
-{const rb=document.getElementById("r-body");let sx=null,sy=0;
-  rb.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});
-  rb.addEventListener("touchend",e=>{if(sx==null)return;const t=e.changedTouches[0];const dx=t.clientX-sx,dy=t.clientY-sy;sx=null;
-    if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6)readerGo(dx>0?1:-1)},{passive:true})}
+let rBusy=false;
+function readerGo(d){const n=rPage+d;if(rBusy||n<1||n>604)return;rBusy=true;const tr=$("#r-track");
+  const finish=()=>{tr.classList.remove("anim");
+    if(d>0)tr.prepend(tr.lastElementChild);else tr.append(tr.firstElementChild);
+    tr.style.transform="";rPage=n;rHeader();syncGlyphClass();
+    const sl=rSlots();if(d>0)drawPage(rPage+1,sl[0]);else drawPage(rPage-1,sl[2]);rBusy=false};
+  if(!S.ui.motion){finish();return}
+  tr.classList.add("anim");let done=false;const end=()=>{if(done)return;done=true;tr.removeEventListener("transitionend",end);finish()};
+  tr.addEventListener("transitionend",end);setTimeout(end,380);
+  requestAnimationFrame(()=>{tr.style.transform=d>0?"translateX(0)":"translateX(-66.6667%)"})}
+{const rb=document.getElementById("r-body"),tr=document.getElementById("r-track");let sx=null,sy=0,drag=false,dx=0;
+  rb.addEventListener("touchstart",e=>{if(rBusy||e.touches.length>1){sx=null;return}const t=e.touches[0];sx=t.clientX;sy=t.clientY;drag=false;dx=0},{passive:true});
+  rb.addEventListener("touchmove",e=>{if(sx==null)return;const t=e.touches[0];dx=t.clientX-sx;const dy=t.clientY-sy;
+    if(!drag){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.3){drag=true;tr.classList.remove("anim")}else if(Math.abs(dy)>12){sx=null;return}else return}
+    if((dx>0&&rPage>=604)||(dx<0&&rPage<=1))dx=dx/4;
+    tr.style.transform="translateX(calc(-33.3333% + "+dx+"px))";if(e.cancelable)e.preventDefault()},{passive:false});
+  const up=()=>{if(sx==null)return;sx=null;if(!drag)return;drag=false;const w=rb.clientWidth;
+    if(Math.abs(dx)>Math.min(90,w*.2)&&((dx>0&&rPage<604)||(dx<0&&rPage>1))){readerGo(dx>0?1:-1)}
+    else{tr.classList.add("anim");tr.style.transform="";setTimeout(()=>tr.classList.remove("anim"),340)}};
+  rb.addEventListener("touchend",up,{passive:true});rb.addEventListener("touchcancel",up,{passive:true})}
 
 /* ---------- confetti ---------- */
 function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const c=$("#fx"),x=c.getContext("2d");const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;
@@ -925,8 +946,8 @@ const A={
     try{await fetch("qpc2/QPC2BSML.ttf")}catch(e){}
     delete el.dataset.busy;el.textContent=bad?"توقف التحميل. تأكد من الإنترنت واضغط مرة ثانية":"تم تحميل المصحف كامل ✓"},
   rgo(el){readerGo(+el.dataset.d)},
-  rhide(){rHide=!rHide;$("#reader").classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);document.querySelectorAll("#r-page .ay.shown").forEach(x=>x.classList.remove("shown"));toast(rHide?"الآيات مخفية. اضغط على أي آية تظهر":"الآيات ظاهرة")},
-  ayah(el){if(!rHide)return;const k=el.dataset.k;if(k){const on=!el.classList.contains("shown");document.querySelectorAll('#r-page .ay[data-k="'+k+'"]').forEach(x=>x.classList.toggle("shown",on))}else el.classList.toggle("shown")},
+  rhide(){rHide=!rHide;$("#reader").classList.toggle("hide",rHide);$("#r-hide").classList.toggle("on",rHide);document.querySelectorAll("#r-track .ay.shown").forEach(x=>x.classList.remove("shown"));toast(rHide?"الآيات مخفية. اضغط على أي آية تظهر":"الآيات ظاهرة")},
+  ayah(el){if(!rHide)return;const k=el.dataset.k;if(k){const on=!el.classList.contains("shown");el.closest(".rpage").querySelectorAll('.ay[data-k="'+k+'"]').forEach(x=>x.classList.toggle("shown",on))}else el.classList.toggle("shown")},
   rsize(el){const wasFit=S.ui.rfit!==false;const i=Math.max(0,Math.min(3,RSK.indexOf(S.ui.rsize||"md")+(wasFit?0:+el.dataset.d)));S.ui.rsize=RSK[i];S.ui.rfit=false;applyRS();fitPage();save();if(wasFit)toast("صار الخط يدوي. زر ⤢ يرجّع الصفحة كاملة")},
   rfit(){S.ui.rfit=S.ui.rfit===false;applyRS();fitPage();save();toast(S.ui.rfit?"الصفحة كاملة في الشاشة":"الخط يدوي، تقدر تنزل بالصفحة")},
   rrate(){pageSheet(rPage)},
@@ -942,7 +963,7 @@ const A={
     if(S.settings.dir==="back"){if(p<S.settings.from)S.settings.from=p}else{if(p>S.settings.to)S.settings.to=p}
     S.pages[p]={r:2,iv:1,due:addDays(today(),1),last:today(),n:1};save();renderAll();confetti();toastUndo("بارك الله فيك! صفحة "+ar(p)+" صارت محفوظة",()=>{const L=day();S.settings=pS;if(pR)S.pages[p]=pR;else delete S.pages[p];L.newDone=L.newDone.filter(x=>x!==p);save();renderAll();toast("تم التراجع")})},
   page(el){pageSheet(el.dataset.p)},
-  rate(el){setTimeout(()=>{if($("#reader").classList.contains("open"))renderReader(0)},0);const p=+el.dataset.p,r=+el.dataset.r;if(day().rev[p]===r){unrate(p);closeSheet();renderAll();toast("انشال التقييم. صفحة "+ar(p)+" رجعت بدون تقييم");return}
+  rate(el){setTimeout(()=>{if($("#reader").classList.contains("open"))rHeader()},0);const p=+el.dataset.p,r=+el.dataset.r;if(day().rev[p]===r){unrate(p);closeSheet();renderAll();toast("انشال التقييم. صفحة "+ar(p)+" رجعت بدون تقييم");return}
     const u=snap([p]);ratePage(p,r);closeSheet();renderAll();toastUndo(r>=2?"ممتاز، ترجع لك بعد "+ar(S.pages[p].iv)+" أيام":r===1?"راح ترجع لك بعد يومين":"ترجع لك بكرة. لا تشيل هم",u);
     const L=day();const all=[...L.near,...L.far];if(all.every(q=>L.rev[q]!=null)&&L.newT.every(q=>L.newDone.includes(q)))confetti()},
   fab(el){mkSheet(el.dataset.p)},
