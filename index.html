@@ -502,6 +502,15 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .plstep button{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);font-size:1.5rem;transition:transform .12s}
 .plstep button:active{transform:scale(.9)}
 .plstep input{width:110px;text-align:center;font-family:var(--display);font-size:2.4rem;font-weight:700;border:none;border-bottom:3px solid var(--accent);background:transparent;padding:0;color:var(--ink)}
+.ay.nt{background-image:linear-gradient(transparent 82%,rgba(196,146,42,.55) 82%);border-radius:2px}
+.ntd{position:absolute;top:6px;inset-inline-end:6px;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px var(--surface)}
+.chip.rated .ntd{inset-inline-end:20px}
+.note{border:1px solid color-mix(in srgb,var(--gold) 55%,var(--line));border-inline-start:4px solid var(--gold);background:color-mix(in srgb,var(--gold-soft) 60%,var(--surface));border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;animation:rise .35s both}
+.note .nt-t{white-space:pre-wrap;line-height:1.75;font-size:.95rem}
+.note .nt-h{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.78rem;color:var(--muted)}
+.note .nt-h b{color:var(--ink);font-size:.88rem}
+.rbtn .nb{position:absolute;top:-5px;inset-inline-end:-5px;min-width:17px;height:17px;border-radius:9px;background:var(--gold);color:#241a05;font-size:.66rem;font-weight:800;display:grid;place-items:center;padding:0 3px}
+.rbtn{position:relative}
 .tundo{margin-inline-start:10px;border:none;background:var(--gold);color:#241a05;border-radius:8px;padding:3px 12px;font-weight:700}
 .rate.cur{outline:3px solid var(--ink);outline-offset:2px}
 .toast:not(.show){transform:translate(-50%,calc(-100% - 60px));visibility:hidden;transition:transform .35s, visibility 0s .35s}
@@ -577,6 +586,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;heigh
     <button class="rbtn" data-act="rclose" aria-label="إغلاق">✕</button>
     <button class="t" data-act="ridx" aria-label="الفهرس والبحث"><b id="r-title">—</b><span id="r-sub"></span></button>
     <button class="rbtn" data-act="ridx" aria-label="بحث وفهرس"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+    <button class="rbtn" data-act="rnotes" id="r-notes" aria-label="تنبيهات الصفحة" style="display:none">📌<i class="nb"></i></button>
     <button class="rbtn" data-act="rhide" id="r-hide" aria-label="إخفاء للتسميع" title="إخفاء للتسميع">👁</button>
     <button class="rbtn" data-act="rfit" id="r-fit" aria-label="الصفحة كاملة في الشاشة" title="الصفحة كاملة في الشاشة">⤢</button>
     <button class="rbtn" data-act="rsize" data-d="-1" aria-label="تصغير الخط">ـأ</button>
@@ -604,8 +614,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.7";
+const VERSION="2.8";
 const CHANGELOG=[
+ {v:"2.8",d:"2026-11-14",items:["تنبيهاتي: حط ملاحظة على أي سورة بالمايك («انتبه في سورة النور …») أو بالكتابة","إذا ذكرت كلمات من آيات السورة، تنربط تلقائياً وتتميّز بخط ذهبي داخل المصحف","التنبيه يطلع لك وقت تقيّم الصفحة، وزر 📌 في المصحف، ونقطة ذهبية على صفحات الورد","كل التنبيهات في تبويب المتشابهات"]},
  {v:"2.7",d:"2026-11-14",items:["طريقة الحفظ الجديدة: السور من الناس للفاتحة، وداخل كل سورة من أولها لآخرها. صفحة اليوم والقريب يمشون عليها تلقائياً","«حدّد محفوظك»: اضغط الصفحات اللي حافظها بالضبط، أو سورة كاملة بضغطة. موجود في «عدّل ورد اليوم» وفي الإعدادات","معاينة الأيام الجاية في محرر الورد"]},
  {v:"2.6",d:"2026-11-14",items:["ورد اليوم على كيفك: زر «عدّل ورد اليوم» في الصفحة الرئيسية","اختر صفحة الحفظ الجديد اللي تبيها، وتقدر تكمل منها الأيام الجاية","اختر صفحات القريب والبعيد بالضغط على خريطة محفوظك، أو أضف سورة أو جزء أو الأضعف أو اللي فيها أخطاء بضغطة","لو حفظت صفحة بعيدة عن محفوظك تنحسب محفوظة وتدخل المراجعة"]},
  {v:"2.5",d:"2026-11-14",items:["النسخ السحابي التلقائي: بعد ربط مستودع خاص على GitHub، بياناتك تنحفظ تلقائياً بعد كل تعديل، ونسخة مستقلة لكل يوم","استرجاع أي يوم سابق من السحابة، ولو ركّبت التطبيق على جوال جديد يعرض عليك ترجع بياناتك","الشريط فوق يبين آخر حفظ سحابي، وتنبيه إذا توقف"]},
@@ -674,9 +685,9 @@ const isRest=s=>{const r=(S.ui&&S.ui.rest)||[];if(!r.length)return false;const[y
 
 /* ---------- state ---------- */
 const KEY="quran-hifz-v1";
-const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md",rfit:true},pages:{},extra:{},gap:{},mistakes:[],pairs:[],log:{},imam:{src:"mem",len:"auto",strong:false,cont:true,fav:[],hist:[]}});
+const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md",rfit:true},pages:{},extra:{},gap:{},notes:[],mistakes:[],pairs:[],log:{},imam:{src:"mem",len:"auto",strong:false,cont:true,fav:[],hist:[]}});
 let dirMigrated=false;
-function normalize(){const d=DEF();if(!S.extra||typeof S.extra!=="object"||Array.isArray(S.extra))S.extra={};if(!S.gap||typeof S.gap!=="object"||Array.isArray(S.gap))S.gap={};
+function normalize(){const d=DEF();if(!S.extra||typeof S.extra!=="object"||Array.isArray(S.extra))S.extra={};if(!S.gap||typeof S.gap!=="object"||Array.isArray(S.gap))S.gap={};if(!Array.isArray(S.notes))S.notes=[];
   if(S.settings&&!S.settings.dirV2){if(S.settings.dir==="back"){S.settings.dir="sfwd";dirMigrated=true;const k=Object.keys(S.log||{}).sort().pop();const L=k&&S.log[k];if(L&&!L.custom&&!(L.newDone||[]).length){delete L.newT;delete L.near;delete L.far}}S.settings.dirV2=1}S.imam=Object.assign(d.imam,S.imam||{});if(!Array.isArray(S.imam.fav))S.imam.fav=[];if(!Array.isArray(S.imam.hist))S.imam.hist=[];S.ui=Object.assign(d.ui,S.ui||{});S.settings=Object.assign(d.settings,S.settings||{});if(!Array.isArray(S.ui.rest))S.ui.rest=[]}
 let S=DEF();
 try{const c=localStorage.getItem(KEY);if(c)S=Object.assign(DEF(),JSON.parse(c))}catch(e){}
@@ -888,7 +899,7 @@ function renderToday(){const el=$("#v-today");if(!S.setup){el.innerHTML=setupCar
       <button class="btn ${all?"gold glow":"ghost"} block" style="margin-top:12px" data-act="donenew" data-p="${p}">${all?"أتممت حفظ الصفحة ✓":"أتممت الحفظ (حتى لو ما كملت الخطوات)"}</button>`}});
   h+=`</div>`;
 
-  const chips=arr=>`<div class="chips">`+arr.map(p=>{const r=L.rev[p];return`<button class="chip ${r!=null?"rated r"+r:""}" data-act="page" data-p="${p}">${r==null?`<i class="st" style="background:var(--${strength(p)==="snm"?"su":strength(p)})"></i>`:""}<b class="num">${ar(p)}</b><span>${esc(pageLabel(p))}</span></button>`}).join("")+`</div>`;
+  const chips=arr=>`<div class="chips">`+arr.map(p=>{const r=L.rev[p];return`<button class="chip ${r!=null?"rated r"+r:""}" data-act="page" data-p="${p}">${pageNotes(p).length?'<i class="ntd" title="فيها تنبيه"></i>':""}${r==null?`<i class="st" style="background:var(--${strength(p)==="snm"?"su":strength(p)})"></i>`:""}<b class="num">${ar(p)}</b><span>${esc(pageLabel(p))}</span></button>`}).join("")+`</div>`;
   h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--s2)"></i>٢ · القريب</span><h2>آخر ما حفظت</h2></div><span class="pill green num">${ar(doneNear)}/${ar(near.length)}</span></div><p class="muted small" style="margin:0 0 10px">سمّع كل صفحة غيباً واضغط عليها وقيّمها.</p>${chips(near)}</div>`;
   h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--s3)"></i>٣ · البعيد</span><h2>مراجعة المحفوظ القديم</h2></div><span class="pill green num">${ar(doneFar)}/${ar(far.length)}</span></div><p class="muted small" style="margin:0 0 10px">الصفحات اللي حان وقتها، والضعيفة تتكرر أكثر. التقييم يحدد متى ترجع لك.</p>${chips(far)}<div class="acts" style="margin-top:12px;align-items:center"><button class="sbtn" data-act="morefar">زدني ٥ صفحات</button><button class="sbtn" data-act="test">اختبار مفاجئ 🎲</button>${over>0?`<span class="small muted num">باقي ${ar(over)} صفحة حان موعدها</span>`:""}</div></div>`;
 
@@ -924,7 +935,7 @@ function renderMap(){const el=$("#v-map");if(!S.setup){el.innerHTML=setupCard();
   <p class="muted small" style="margin:0 0 4px">اضغط اسم السورة فتتميز صفحاتها في خريطة الأجزاء فوق. وبعد ما تسمّع سورة كاملة اضغط «قيّم السورة».</p>`;
   for(let i=0;i<114;i++){const a=SSTART[i],b=SEND[i];let n=0;for(let p=a;p<=b;p++)if(isMem(p))n++;if(mapOnly&&!n)continue;
     const c=cellsFor(a,b,front,mkPages,null);
-    h+=`<div class="juz"><div class="juzhead"><button class="sname ${hl===i?"on":""}" data-act="hl" data-s="${i}"><h3>${ar(i+1)} · ${SURAH[i]}</h3></button><span class="small muted num">ص ${ar(a)}${b>a?"–"+ar(b):""}</span><div class="minibar" style="width:70px">${c.seg}</div>${n?`<button class="sbtn" data-act="surahrate" data-s="${i}">قيّم السورة</button>`:""}</div><div class="cells">${c.cells}</div></div>`}
+    h+=`<div class="juz"><div class="juzhead"><button class="sname ${hl===i?"on":""}" data-act="hl" data-s="${i}"><h3>${ar(i+1)} · ${SURAH[i]}${notesFor(i).length?" 📌":""}</h3></button><span class="small muted num">ص ${ar(a)}${b>a?"–"+ar(b):""}</span><div class="minibar" style="width:70px">${c.seg}</div>${n?`<button class="sbtn" data-act="surahrate" data-s="${i}">قيّم السورة</button>`:""}</div><div class="cells">${c.cells}</div></div>`}
   h+=`</div>`;el.innerHTML=h}
 
 function renderMistakes(){const el=$("#v-mistakes");const act=S.mistakes.filter(m=>!m.done),sol=S.mistakes.filter(m=>m.done);
@@ -945,7 +956,7 @@ function renderMistakes(){const el=$("#v-mistakes");const act=S.mistakes.filter(
     h+=`</div></div>`}
   el.innerHTML=h}
 
-function renderPairs(){const el=$("#v-pairs");let h=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>المتشابهات</span><h2>آيات تتلخبط بينها</h2></div>
+function renderPairs(){const el=$("#v-pairs");let h=noteCard()+`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>المتشابهات</span><h2>آيات تتلخبط بينها</h2></div>
   ${S.pairs.length?`<div class="seg"><button class="${!quiz?"on":""}" data-act="quiz" data-v="0">عرض</button><button class="${quiz?"on":""}" data-act="quiz" data-v="1">اختبرني</button></div>`:""}</div>
   <p class="muted small" style="margin:0 0 12px">اكتب الموضعين جنب بعض واكتب <b>ضابط</b> يفرّق بينهم: كلمة زايدة، حرف مختلف، أو قاعدة تذكّرك. في وضع "اختبرني" يختفي النص وتحاول تسترجعه من الموضع.</p>
   <button class="btn gold block" data-act="pairnew">+ أضف متشابه</button></div>`;
@@ -965,7 +976,7 @@ function renderAll(){if(view==="imam")renderImam();const vl=$("#verline");if(vl)
 
 /* ---------- sheets ---------- */
 function pageSheet(p){p=+p;const rec=S.pages[p];const mem=isMem(p);const mks=S.mistakes.filter(m=>m.page===p&&!m.done);const L=day();
-  let h=`<h3>صفحة ${ar(p)}</h3><div class="muted small">${esc(pageLabel(p))} · الجزء ${ar(juzOf(p))}</div>`;
+  let h=`<h3>صفحة ${ar(p)}</h3><div class="muted small">${esc(pageLabel(p))} · الجزء ${ar(juzOf(p))}</div>`;const pn=pageNotes(p);if(pn.length)h+=`<div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">${pn.map(n=>noteHTML(n,{edit:false})).join("")}</div>`;
   if(!mem){h+=`<div class="done-banner" style="margin-top:12px;background:var(--surface2);color:var(--muted)">هذه الصفحة غير محفوظة بعد</div><button class="btn gold block" style="margin-top:12px" data-act="read" data-p="${p}">اقرأ الصفحة</button>`;openSheet(h);return}
   h+=`<div class="kv"><div><b class="num">${rec&&rec.last?fmtDate(rec.last):"—"}</b><span>آخر مراجعة</span></div><div><b class="num">${rec&&rec.due?fmtDate(rec.due):"—"}</b><span>موعدها القادم</span></div><div><b class="num">${ar(rec?rec.n||0:0)}</b><span>مرات المراجعة</span></div></div>`;
   h+=`<div style="margin-top:14px;font-weight:600">${L.rev[p]!=null?"قيّمتها اليوم: "+RATE[L.rev[p]].l+". اضغط نفس التقييم مرة ثانية عشان تشيله، أو اختر غيره":"كيف كان تسميعك؟"}</div><div class="rates">${[3,2,1,0].map(r=>`<button class="rate r${r} ${day().rev[p]===r?"cur":""}" data-act="rate" data-p="${p}" data-r="${r}">${RATE[r].l}<small>${RATE[r].d}</small></button>`).join("")}</div>`;
@@ -1084,10 +1095,10 @@ function drawText(p,pg){const a=QPAGE[p],b=QPAGE[p+1]-1;let h="";let txt="";
     txt+=`<span class="ay" data-act="ayah">${esc(QTEXT[id-1])} <span class="an">﴿${ar(ay)}﴾</span></span> `}
   flush();const sn=surahsOn(p).map(i=>"سورة "+SURAH[i]);
   pg.innerHTML=`<div class="mpage"><div class="mtop"><span>${esc(sn.length>2?sn[0]+" …":sn.join(" · "))}</span><span>الجزء ${ar(juzOf(p))}</span></div><div class="minner">${h}</div><div class="mnum"><span class="num">${ar(p)}</span></div></div>`;pg.scrollTop=0;fitText(pg);syncGlyphClass()}
-function drawGlyph(p,pg){pg.style.removeProperty("--rs");const L=MLAY[p-1];const mkset=new Set(S.mistakes.filter(m=>!m.done&&m.ayah).map(m=>(m.surah+1)*1000+m.ayah));const sname=SURAH[surahsOn(p)[0]];
+function drawGlyph(p,pg){pg.style.removeProperty("--rs");const L=MLAY[p-1];const mkset=new Set(S.mistakes.filter(m=>!m.done&&m.ayah).map(m=>(m.surah+1)*1000+m.ayah));const ntset=new Set(S.notes.flatMap(n=>n.ayahs||[]));const sname=SURAH[surahsOn(p)[0]];
   const lines=L.map(l=>l[0]==="h"?`<div class="ql"><div class="surhead"><div>سورة ${SURAH[l[1]-1]}</div></div></div>`
     :l[0]==="b"?`<div class="ql"><span class="qi" style="font-family:qpc2bsml">${l[1]}</span></div>`
-    :`<div class="ql"><span class="qi">${l[1].map(sg=>`<span class="ay${mkset.has(sg[0])?" mkd":""}" data-act="ayah" data-k="${sg[0]}">${sg[1]}</span>`).join("")}</span></div>`).join("");
+    :`<div class="ql"><span class="qi">${l[1].map(sg=>`<span class="ay${mkset.has(sg[0])?" mkd":ntset.has(sg[0])?" nt":""}" data-act="ayah" data-k="${sg[0]}">${sg[1]}</span>`).join("")}</span></div>`).join("");
   pg.innerHTML=`<div class="mq"><div class="mqtop"><span>الجزء ${JUZN[juzOf(p)-1]}</span><span>سورة ${sname}</span></div><div class="mqlines" style="font-family:qpc2p${p}">${lines}</div><div class="mqnum num">${ar(p)}</div></div>`;
   pg.scrollTop=0;fitGlyph(pg);syncGlyphClass();
   if(rFlash&&pg===rSlots()[1]){pg.querySelectorAll('.ay[data-k="'+rFlash+'"]').forEach(x=>x.classList.add("flash"));rFlash=null}}
@@ -1104,7 +1115,7 @@ async function drawPage(p,pg){pg.dataset.p=p;if(p<1||p>604){pg.innerHTML="";retu
   if(pg.dataset.p!=p)return;
   if(ok){drawGlyph(p,pg);return}
   try{await loadQuran();if(pg.dataset.p==p)drawText(p,pg)}catch(e){if(pg.dataset.p==p)pg.innerHTML='<div class="empty">ما قدرت أحمّل المصحف. افتح التطبيق مرة وأنت متصل بالإنترنت.</div>'}}
-function rHeader(){const p=rPage;const rg=$("#r-range");if(rg)rg.value=p;try{localStorage.setItem("mishkah-last",p)}catch(e){}$("#r-title").textContent=pageLabel(p);
+function rHeader(){const p=rPage;{const nb=document.getElementById("r-notes");if(nb){const c=pageNotes(p).length;nb.style.display=c?"":"none";nb.querySelector(".nb").textContent=ar(c)}}const rg=$("#r-range");if(rg)rg.value=p;try{localStorage.setItem("mishkah-last",p)}catch(e){}$("#r-title").textContent=pageLabel(p);
   const st=strength(p);const stl={s3:"متقنة",s2:"جيدة",s1:"متعثرة",s0:"نسيت",su:"ما قُيّمت",snm:"غير محفوظة"}[st];
   $("#r-sub").textContent="الجزء "+ar(juzOf(p))+" · "+stl;$("#r-num").textContent=ar(p);
   const pv=$("#r-prev"),nx=$("#r-next");pv.disabled=p<=1;nx.disabled=p>=604;
@@ -1284,6 +1295,11 @@ function voRoute(text){const norm=VN(text);const has=re=>re.test(norm);const tab
   if(has(/ثبتت|ثبت |صححت|شيل (الخطا|العلامه)|امسح (الخطا|العلامه)|احذف (الخطا|العلامه)/)){const r=voParse(text);const c=r.cands[0];if(!c)return{kind:"answer",stat:"ما حددت الآية",html:voCard("أي خطأ تقصد؟","قل مثلاً: ثبتت سورة غافر آية ٤٠، أو ثبتت صفحة ٤٧١.")};
     const ms=S.mistakes.filter(m=>!m.done&&(c.ay?(m.surah===c.si&&m.ayah===c.ay):m.page===c.page));if(!ms.length)return{kind:"answer",stat:"ما لقيت خطأ نشط",html:voCard("ما في خطأ نشط هناك","سورة "+SURAH[c.si]+(c.ay?" آية "+ar(c.ay):"")+" · ص "+ar(c.page))};
     ms.forEach(m=>m.done=true);save();renderAll();const und=()=>{ms.forEach(m=>m.done=false);save();renderAll();toast("تم التراجع")};undoFn=und;return{kind:"answer",stat:"ثبتت إن شاء الله ✓",html:voCard("شلت العلامة عن "+ar(ms.length)+" خطأ","سورة "+SURAH[c.si]+(c.ay?" آية "+ar(c.ay):"")+" · ص "+ar(c.page)+`<div class="acts" style="margin-top:8px"><button class="sbtn" data-act="undo">تراجع</button></div>`)}}
+  if(has(/^(انتبه|تنبيه|نبهني|ذكرني|ملاحظه|نوته|حط (ملاحظه|تنبيه|نوته)|سجل (ملاحظه|تنبيه|نوته)|اكتب (ملاحظه|تنبيه))/)||has(/ (حط|سجل) (ملاحظه|تنبيه|نوته) /)){
+    let si=voSurah(norm,false);if(si==null){const r=voParse(text);if(r.cands.length)si=r.cands[0].si}
+    if(si==null&&S.setup){const r=[...day().near,...day().newT];si=r.length?surahsOn(r[0])[0]:null}
+    if(si==null)return{kind:"answer",stat:"على أي سورة؟",html:voCard("قل اسم السورة","مثلاً: انتبه في سورة النور، فيها موضعين…")};
+    return{kind:"note",si,ay:findAyahsIn(text,si)}}
   const lv=RLV.find(x=>x[1].test(norm));const mkTalk=has(/اخطات|غلطت|لخبطت|خطا في|تشابه|بدلت/);
   if(lv&&!mkTalk){const sc=voScope(norm);if(sc){if(!sc.pages.length)return{kind:"answer",stat:"مو من محفوظك",html:voCard(sc.label,"هذي الصفحات مو ضمن محفوظك المسجّل، فما أقدر أقيّمها. عدّل حدود المحفوظ من الإعدادات إذا حفظتها.")};return{kind:"rate",L:lv[0],sc}}}
   if(has(/^(افتح|ودني|روح|انتقل|ورني|اعرض)/)){const tabs=[["map",/الخريطه/],["mistakes",/الاخطا/],["pairs",/المتشابه/],["imam",/الامامه/],["today",/اليوم|الرئيسيه/]].find(x=>x[1].test(norm));
@@ -1304,6 +1320,13 @@ function voRoute(text){const norm=VN(text);const has=re=>re.test(norm);const tab
   if(has(/كم خطا|عدد الاخطا|اخطائي/)&&!mkTalk){const ac=S.mistakes.filter(m=>!m.done);const by={};ac.forEach(m=>by[m.type]=(by[m.type]||0)+m.count);return{kind:"answer",stat:ar(ac.length)+" خطأ نشط",html:voCard("أخطاؤك النشطة: "+ar(ac.length),(Object.keys(by).map(k=>k+": "+ar(by[k])).join(" · ")||"ما عندك أخطاء نشطة")+`<div class="acts" style="margin-top:8px"><button class="sbtn" data-act="vogotab" data-v="mistakes">افتح الأخطاء</button></div>`)}}
   if(has(/كم يوم|السلسله|متتالي/))return{kind:"answer",stat:"🔥",html:voCard(ar(streak())+" أيام متتالية","أطول سلسلة لك: "+ar(S.best||streak())+" يوم.")};
   return null}
+function voNoteRender(){const box=$("#vo-res");if(!box)return;clearTimeout(voAutoT);const R=voRes;voStat("تنبيه على سورة "+SURAH[R.si]);
+  box.innerHTML=`<div class="vauto" id="vo-auto"><i></i></div><div class="muted small" style="text-align:center" id="vo-autol">ينحفظ تلقائياً بعد ٤ ثواني… <button class="sbtn" data-act="vostop">إيقاف</button></div>
+  ${noteHTML({id:"",surah:R.si,text:R.text,ayahs:R.ay,date:today()},{edit:false})}
+  <div class="field"><label for="vo-ns">السورة</label><select id="vo-ns">${SURAH.map((n,i)=>`<option value="${i}" ${i===R.si?"selected":""}>${n}</option>`).join("")}</select></div>
+  <div class="acts"><button class="btn gold" style="flex:1" data-act="vonotesave">احفظ التنبيه ✓</button><button class="sbtn" data-act="vonoteedit">عدّل</button></div><button class="sbtn" data-act="vomic" style="align-self:center">أمر ثاني</button>`;
+  $("#vo-ns").addEventListener("change",e=>{clearTimeout(voAutoT);const a=$("#vo-auto");if(a){a.remove();$("#vo-autol").remove()}R.si=+e.target.value;R.ay=findAyahsIn(R.text,R.si);voNoteRender();clearTimeout(voAutoT);const a2=$("#vo-auto");if(a2){a2.remove();$("#vo-autol").remove()}});
+  voAutoT=setTimeout(()=>{if($("#vo-auto"))A.vonotesave()},4000);box.scrollIntoView({behavior:"smooth",block:"nearest"})}
 function voRateCalc(){const R=voRes;R.plan=R.sc.pages.map(p=>{const w=mkWeight(p);return[p,lvlFor(R.L,w),w]})}
 function voRateRender(){const box=$("#vo-res");if(!box)return;clearTimeout(voAutoT);voRateCalc();const R=voRes;const cnt=[0,0,0,0];R.plan.forEach(x=>cnt[x[1]]++);const ex=R.plan.filter(x=>x[1]!==R.L);const skipped=R.sc.all-R.sc.pages.length;
   voStat("جاهز أقيّم "+R.sc.label);
@@ -1324,7 +1347,7 @@ function voSheet(){clearTimeout(voAutoT);voRes=null;
   <div class="eq" id="vo-eq"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="vostat" id="vo-stat">اضغط المايك وتكلم</div>
   <textarea id="vo-text" placeholder="أو اكتب هنا، أو استخدم مايك الكيبورد 🎤"></textarea>
-  <div class="vex" id="vo-ex"><button data-act="voex">حط سورة فصلت كلها متقنة</button><button data-act="voex">لخبطت في وقل للمؤمنات يغضضن من أبصارهن</button><button data-act="voex">كم باقي من ورد اليوم</button><button data-act="voex">افتح سورة يس</button><button data-act="voex">وين أضعف صفحاتي</button><button data-act="voex">اقترح لي لصلاة المغرب</button><button data-act="vohelp">كل الأوامر</button></div>
+  <div class="vex" id="vo-ex"><button data-act="voex">حط سورة فصلت كلها متقنة</button><button data-act="voex">لخبطت في وقل للمؤمنات يغضضن من أبصارهن</button><button data-act="voex">انتبه في سورة النور ويبين الله لكم الآيات وكذلك يبين الله لكم الآيات</button><button data-act="voex">كم باقي من ورد اليوم</button><button data-act="voex">افتح سورة يس</button><button data-act="voex">وين أضعف صفحاتي</button><button data-act="voex">اقترح لي لصلاة المغرب</button><button data-act="vohelp">كل الأوامر</button></div>
   <button class="btn block" data-act="voanalyze">نفّذ</button><div id="vo-res" style="width:100%;display:flex;flex-direction:column;gap:10px"></div></div>`);
   const ta=$("#vo-text");ta.addEventListener("input",()=>{clearTimeout(voDeb);clearTimeout(voAutoT);if(ta.value.trim().length>5)voDeb=setTimeout(voAnalyze,1700)})}
 function voStat(t,cls){const o=$("#vo-orb"),e=$("#vo-eq"),st=$("#vo-stat");if(!o)return;o.classList.toggle("live",cls==="live");o.classList.toggle("think",cls==="think");e.classList.toggle("live",cls==="live");st.textContent=t}
@@ -1340,7 +1363,7 @@ function voListen(){const SR=window.SpeechRecognition||window.webkitSpeechRecogn
 async function voAnalyze(){clearTimeout(voDeb);clearTimeout(voAutoT);const ta=$("#vo-text");if(!ta)return;const text=ta.value.trim();if(text.length<3){voStat("قل أو اكتب وين أخطأت");return}
   voStat("أفهم كلامك…","think");try{await loadQuran()}catch(e){voStat("أحتاج الإنترنت أول مرة عشان أحمّل نص المصحف");return}
   await sleep(S.ui.motion?350:0);if(!$("#vo-res"))return;
-  const rt=voRoute(text);if(rt){if(rt.kind==="exec")return;voRes=rt;voRes.text=text;$("#vo-ex").style.display="none";if(rt.kind==="rate")voRateRender();else{voStat(rt.stat||"تفضل");$("#vo-res").innerHTML=`<div class="vcand best">${rt.html}</div><button class="sbtn" data-act="vomic" style="align-self:center">أمر ثاني</button>`}return}
+  const rt=voRoute(text);if(rt){if(rt.kind==="exec")return;voRes=rt;voRes.text=text;$("#vo-ex").style.display="none";if(rt.kind==="rate")voRateRender();else if(rt.kind==="note")voNoteRender();else{voStat(rt.stat||"تفضل");$("#vo-res").innerHTML=`<div class="vcand best">${rt.html}</div><button class="sbtn" data-act="vomic" style="align-self:center">أمر ثاني</button>`}return}
   const res=voParse(text);voRes=res;voRes.text=text;voRender()}
 function voRender(){const box=$("#vo-res");if(!box||!voRes)return;const R=voRes;$("#vo-ex").style.display="none";
   if(!R.cands.length){voStat("ما قدرت أحدد الآية");box.innerHTML=`<div class="vcand"><div>جرب تذكر <b>اسم السورة ورقم الآية</b>، أو تقرأ <b>ثلاث كلمات أو أكثر</b> من الآية نفسها.</div><div class="acts"><button class="sbtn" data-act="vomic">أعد الكلام</button><button class="sbtn" data-act="vomanual">سجّلها يدوياً</button></div></div>`;return}
@@ -1392,6 +1415,31 @@ function memRender(){const box=$("#mem-body");if(!box)return;let h=`<div class="
     h+=`<div class="juz" style="padding:6px 0"><div class="juzhead"><h3>الجزء ${ar(j)}</h3></div><div class="cells">${cells}</div></div>`}box.innerHTML=h}
 function memChanged(){const L=day();if(!L.custom&&!(L.newDone||[]).length){delete L.newT;delete L.near;delete L.far;day()}save();renderAll()}
 
+/* ---------- surah notes (تنبيهات) ---------- */
+const kOf=id=>{const[si,ay]=qloc(id);return(si+1)*1000+ay};
+function findAyahsIn(text,si){if(!window.QTEXT)return[];if(!QSK)QSK=QTEXT.map(SK);let a=1;for(let i=0;i<si;i++)a+=QACNT[i];const b=a+QACNT[si]-1;
+  const ws=VN(text).split(" ").filter(w=>w&&!/^\d+$/.test(w)).map(SK);const used=new Array(ws.length).fill(false);const out=new Set();
+  for(let n=Math.min(7,ws.length);n>=2;n--)for(let i=0;i+n<=ws.length;i++){if(used.slice(i,i+n).some(Boolean))continue;const k=ws.slice(i,i+n).join("").replace(/(.)\1+/g,"$1");if(k.length<(n<=2?10:8))continue;
+    let hit=false;for(let id=a;id<=b;id++)if(QSK[id-1].includes(k)){out.add(kOf(id));hit=true}if(hit)for(let j=i;j<i+n;j++)used[j]=true}
+  return[...out].sort((x,y)=>x-y).slice(0,10)}
+const notesFor=si=>S.notes.filter(n=>n.surah===si);
+const pageNotes=p=>{const ss=surahsOn(p);return S.notes.filter(n=>ss.includes(n.surah))};
+function noteHTML(n,opts={}){return `<div class="note"><div class="nt-h"><b>📌 سورة ${SURAH[n.surah]}</b><span>${fmtDate(n.date)}</span></div><div class="nt-t">${esc(n.text)}</div>
+  ${n.ayahs&&n.ayahs.length?`<div class="acts">${n.ayahs.map(k=>{const si=Math.floor(k/1000)-1,ay=k%1000;let id=ay;for(let i=0;i<si;i++)id+=QACNT?QACNT[i]:0;const p=window.QPAGE?pageOfAyah(id):SSTART[si];return`<button class="sbtn" data-act="noteread" data-p="${p}" data-k="${k}">آية ${ar(ay)} · ص ${ar(p)}</button>`}).join("")}</div>`:""}
+  ${opts.edit===false?"":`<div class="acts" style="justify-content:flex-end"><button class="sbtn" data-act="noteedit" data-id="${n.id}">تعديل</button><button class="sbtn warn" data-act="notedel" data-id="${n.id}">حذف</button></div>`}</div>`}
+function noteSheet(pre){pre=pre||{};const si=pre.surah??(S.setup?surahsOn(nextNew()[0]||S.settings.from)[0]:0);
+  openSheet(`<h3>${pre.id?"تعديل تنبيه":"تنبيه جديد"}</h3><div class="muted small">اكتب أو استخدم مايك الكيبورد 🎤. إذا ذكرت كلمات من آيات السورة أربطها لك وأميّزها في المصحف.</div><div class="form">
+  <div class="field"><label for="nt-s">السورة</label><select id="nt-s">${SURAH.map((n,i)=>`<option value="${i}" ${i===si?"selected":""}>${ar(i+1)} · ${n}</option>`).join("")}</select></div>
+  <div class="field"><label for="nt-t">التنبيه</label><textarea id="nt-t" style="min-height:110px" placeholder="مثلاً: انتبه، فيها موضعين: ويبين الله لكم الآيات، وكذلك يبين الله لكم الآيات">${esc(pre.text||"")}</textarea></div>
+  <button class="btn gold block" data-act="notesave" data-id="${pre.id||""}">حفظ التنبيه</button></div>`)}
+async function saveNote(si,text,id){try{await loadQuran()}catch(e){}const ay=findAyahsIn(text,si);
+  if(id){const n=S.notes.find(x=>x.id===id);if(n){n.surah=si;n.text=text;n.ayahs=ay}}else S.notes.push({id:uid(),surah:si,text,ayahs:ay,date:today()});save();renderAll();return ay}
+function noteCard(){const g={};S.notes.forEach(n=>(g[n.surah]=g[n.surah]||[]).push(n));const keys=Object.keys(g).map(Number).sort((a,b)=>b-a);
+  return `<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>تنبيهاتي</span><h2>ملاحظات على السور</h2></div>${S.notes.length?`<span class="pill gold num">${ar(S.notes.length)}</span>`:""}</div>
+  <p class="muted small" style="margin:0 0 10px">تنبيه تحطه على سورة يطلع لك وقت ما تراجعها وداخل المصحف. قل للمايك: «انتبه في سورة النور …» أو أضفه من هنا.</p>
+  <button class="btn gold block" data-act="notenew">+ تنبيه جديد</button>
+  ${keys.length?`<div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">${keys.map(k=>g[k].map(n=>noteHTML(n)).join("")).join("")}</div>`:""}</div>`}
+
 /* ---------- confetti ---------- */
 function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const c=$("#fx"),x=c.getContext("2d");const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;
   const cols=["#e5b850","#c4922a","#16946b","#35c49b","#f6dc8a","#ffffff"];const P=Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.55,vx:(Math.random()-.5)*18*devicePixelRatio,vy:-(Math.random()*18+10)*devicePixelRatio,s:(Math.random()*7+5)*devicePixelRatio,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.random()*cols.length|0],star:Math.random()<.4}));
@@ -1403,6 +1451,12 @@ function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce
 const A={
   tab(el){el.classList.remove("tap");void el.offsetWidth;el.classList.add("tap");setTimeout(()=>el.classList.remove("tap"),520);if(navigator.vibrate&&S.ui.haptic)try{navigator.vibrate(10)}catch(x){}view=el.dataset.v;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===view));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));if(view==="imam")renderImam();scrollTo({top:0,behavior:"smooth"})},
   close:closeSheet,
+  notenew(){noteSheet()},
+  noteedit(el){const n=S.notes.find(x=>x.id===el.dataset.id);if(n)noteSheet(n)},
+  notedel(el){if(!el.dataset.armed){el.dataset.armed=1;el.textContent="متأكد؟";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="حذف"}},3000);return}S.notes=S.notes.filter(x=>x.id!==el.dataset.id);save();renderAll();if($("#sheet").classList.contains("open"))closeSheet();toast("انحذف التنبيه")},
+  async notesave(el){const t=$("#nt-t").value.trim();if(!t){toast("اكتب التنبيه");return}const si=+$("#nt-s").value;const ay=await saveNote(si,t,el.dataset.id||null);closeSheet();toast("انحفظ التنبيه"+(ay.length?" وربطته بـ"+ar(ay.length)+" آيات":""));if($("#reader").classList.contains("open")){rHeader();drawAll()}},
+  noteread(el){closeSheet();readerJump(+el.dataset.p,+el.dataset.k)},
+  rnotes(){const pn=pageNotes(rPage);openSheet(`<h3>تنبيهات الصفحة</h3><div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">${pn.map(n=>noteHTML(n)).join("")}</div><button class="btn ghost block" style="margin-top:12px" data-act="notenew">+ تنبيه جديد</button>`)},
   memedit(){memSheet()},
   memtog(el){const p=+el.dataset.p;memToggle(p);memChanged();const st=strength(p);el.className="cell "+st+" num pop";const pill=document.querySelector("#mem-body .pill");if(pill)pill.innerHTML=ar(memCount())+" صفحة محفوظة · الجديد القادم: ص "+ar(nextNew()[0]||0)},
   memsurah(el){const sel=document.querySelector("[data-mem=surah]");if(!sel||sel.value===""){toast("اختر السورة أول");return}const i=+sel.value,on=el.dataset.on==="1";for(let p=SSTART[i];p<=SEND[i];p++){const shared=surahsOn(p).length>1;if(!on&&shared&&p!==SSTART[i]&&p!==SEND[i])continue;if(on||!shared)memToggle(p,on)}memChanged();memRender();toast("سورة "+SURAH[i]+(on?" صارت محفوظة":" صارت غير محفوظة"))},
@@ -1425,9 +1479,11 @@ const A={
   vomic(){clearTimeout(voAutoT);const b=$("#vo-res");if(b&&!voRec){b.innerHTML="";$("#vo-text").value=""}voListen()},
   voanalyze(){voAnalyze()},
   vorate(){voRateApply()},
+  async vonotesave(){clearTimeout(voAutoT);const R=voRes;if(!R||R.kind!=="note")return;await saveNote(R.si,R.text,null);const id=S.notes[S.notes.length-1].id;closeSheet();toastUndo("انحفظ تنبيه سورة "+SURAH[R.si]+(R.ay.length?" · "+ar(R.ay.length)+" آيات مربوطة":""),()=>{S.notes=S.notes.filter(n=>n.id!==id);save();renderAll();toast("تم التراجع")})},
+  vonoteedit(){clearTimeout(voAutoT);const R=voRes;noteSheet({surah:R.si,text:R.text})},
   volvl(el){voRes.L=+el.dataset.r;voRateRender();clearTimeout(voAutoT);const a=$("#vo-auto");if(a){a.remove();$("#vo-autol").remove()}},
   vogotab(el){closeSheet();const b=document.querySelector('nav.tabs [data-v="'+el.dataset.v+'"]');if(b)b.click()},
-  vohelp(){$("#vo-ex").style.display="none";voStat("هذي الأشياء اللي أفهمها");$("#vo-res").innerHTML=`<div class="vcand">${[["سجّل خطأ","أخطأت في سورة غافر آية ٤٠ · لخبطت في (واقرأ كلمات من الآية) · صفحة ٤٧١ خطأ تشكيل"],["قيّم الحفظ","حط سورة فصلت كلها متقنة · الجزء ٣٠ جيد · من صفحة ٤٠٠ إلى ٤١٠ متعثرة · قيّم القريب متقن. الصفحات اللي عليها أخطاء تنزل درجتها تلقائياً"],["شيل علامة خطأ","ثبتت سورة غافر آية ٤٠ · صححت صفحة ٤٧١"],["الحفظ الجديد","حفظت صفحة اليوم"],["افتح","افتح سورة يس · افتح صفحة ٥٠٠ · افتح الجزء ٢٩ · افتح (كلمات من آية) · افتح الخريطة"],["اسأل","كم باقي من ورد اليوم · وين أضعف صفحاتي · متى أختم · كم صفحة حافظ · كم خطأ عندي · كم يوم متتالي"],["الإمامة والاختبار","اقترح لي لصلاة المغرب · اختبرني"],["غيرها","الوضع الداكن · الوضع الفاتح · تراجع"]].map(x=>`<div><b>${x[0]}</b><div class="muted small">${x[1]}</div></div>`).join("")}</div>`},
+  vohelp(){$("#vo-ex").style.display="none";voStat("هذي الأشياء اللي أفهمها");$("#vo-res").innerHTML=`<div class="vcand">${[["سجّل خطأ","أخطأت في سورة غافر آية ٤٠ · لخبطت في (واقرأ كلمات من الآية) · صفحة ٤٧١ خطأ تشكيل"],["قيّم الحفظ","حط سورة فصلت كلها متقنة · الجزء ٣٠ جيد · من صفحة ٤٠٠ إلى ٤١٠ متعثرة · قيّم القريب متقن. الصفحات اللي عليها أخطاء تنزل درجتها تلقائياً"],["شيل علامة خطأ","ثبتت سورة غافر آية ٤٠ · صححت صفحة ٤٧١"],["الحفظ الجديد","حفظت صفحة اليوم"],["افتح","افتح سورة يس · افتح صفحة ٥٠٠ · افتح الجزء ٢٩ · افتح (كلمات من آية) · افتح الخريطة"],["اسأل","كم باقي من ورد اليوم · وين أضعف صفحاتي · متى أختم · كم صفحة حافظ · كم خطأ عندي · كم يوم متتالي"],["تنبيه على سورة","انتبه في سورة النور، فيها موضعين: ويبين الله لكم الآيات، وكذلك يبين الله لكم الآيات · ذكرني في سورة الكهف …"],["الإمامة والاختبار","اقترح لي لصلاة المغرب · اختبرني"],["غيرها","الوضع الداكن · الوضع الفاتح · تراجع"]].map(x=>`<div><b>${x[0]}</b><div class="muted small">${x[1]}</div></div>`).join("")}</div>`},
   voex(el){$("#vo-text").value=el.textContent;voAnalyze()},
   votype(el){clearTimeout(voAutoT);const a=$("#vo-auto");if(a){a.remove();$("#vo-autol").remove()}voRes.type=el.dataset.t;el.parentElement.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===el))},
   vostop(){clearTimeout(voAutoT);const a=$("#vo-auto");if(a){a.remove();$("#vo-autol").remove()}},
