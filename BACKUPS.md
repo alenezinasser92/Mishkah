@@ -36,3 +36,4 @@
 | 1.5.1 | 2026-11-13 | [`87911a9`](https://github.com/alenezinasser92/mishkah/tree/87911a9f38f79c6a67645cb4a98c58536014428f) | Add backup to file and restore from file |
 | 1.5 | 2026-11-13 | [`3a18379`](https://github.com/alenezinasser92/mishkah/tree/3a18379b9fccb6d892d985301eecd756ed783091) | Add standalone hifz and review app |
 | 2.5 | 2026-11-14 | [`8e4a38c`](https://github.com/alenezinasser92/mishkah/tree/8e4a38c498b74a5547f8668c8fb96fc967b11077) | Automatic cloud backup of user data to a private GitHub repo |
+| 2.6 | 2026-11-14 | [`86df585`](https://github.com/alenezinasser92/mishkah/tree/86df585df866147b11d7b96ca58d7038f3d00320) | Daily plan editor: choose the new page and the near and far review pages |
