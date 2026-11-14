@@ -37,3 +37,4 @@
 | 1.5 | 2026-11-13 | [`3a18379`](https://github.com/alenezinasser92/mishkah/tree/3a18379b9fccb6d892d985301eecd756ed783091) | Add standalone hifz and review app |
 | 2.5 | 2026-11-14 | [`8e4a38c`](https://github.com/alenezinasser92/mishkah/tree/8e4a38c498b74a5547f8668c8fb96fc967b11077) | Automatic cloud backup of user data to a private GitHub repo |
 | 2.6 | 2026-11-14 | [`86df585`](https://github.com/alenezinasser92/mishkah/tree/86df585df866147b11d7b96ca58d7038f3d00320) | Daily plan editor: choose the new page and the near and far review pages |
+| 2.7 | 2026-11-14 | [`480620d`](https://github.com/alenezinasser92/mishkah/tree/480620dbf260eefe9575b7456daacabbd843ca51) | Surahs-backward, pages-forward memorization method and memorized-pages editor |
