@@ -39,3 +39,4 @@
 | 2.6 | 2026-11-14 | [`86df585`](https://github.com/alenezinasser92/mishkah/tree/86df585df866147b11d7b96ca58d7038f3d00320) | Daily plan editor: choose the new page and the near and far review pages |
 | 2.7 | 2026-11-14 | [`480620d`](https://github.com/alenezinasser92/mishkah/tree/480620dbf260eefe9575b7456daacabbd843ca51) | Surahs-backward, pages-forward memorization method and memorized-pages editor |
 | 2.8 | 2026-11-14 | [`8efe451`](https://github.com/alenezinasser92/mishkah/tree/8efe451860372ca2193a21096c629eced1478f4b) | Surah notes by voice or typing, linked to ayahs in the mushaf |
+| 3.0 | 2026-11-14 | [`6a9ade4`](https://github.com/alenezinasser92/mishkah/tree/6a9ade421f75fca2a802dcab5a80aedffd67a05f) | Maher tab: challenge games from the memorized portion, rounds, favorites and review list |
