@@ -604,8 +604,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.6";
+const VERSION="2.7";
 const CHANGELOG=[
+ {v:"2.7",d:"2026-11-14",items:["طريقة الحفظ الجديدة: السور من الناس للفاتحة، وداخل كل سورة من أولها لآخرها. صفحة اليوم والقريب يمشون عليها تلقائياً","«حدّد محفوظك»: اضغط الصفحات اللي حافظها بالضبط، أو سورة كاملة بضغطة. موجود في «عدّل ورد اليوم» وفي الإعدادات","معاينة الأيام الجاية في محرر الورد"]},
  {v:"2.6",d:"2026-11-14",items:["ورد اليوم على كيفك: زر «عدّل ورد اليوم» في الصفحة الرئيسية","اختر صفحة الحفظ الجديد اللي تبيها، وتقدر تكمل منها الأيام الجاية","اختر صفحات القريب والبعيد بالضغط على خريطة محفوظك، أو أضف سورة أو جزء أو الأضعف أو اللي فيها أخطاء بضغطة","لو حفظت صفحة بعيدة عن محفوظك تنحسب محفوظة وتدخل المراجعة"]},
  {v:"2.5",d:"2026-11-14",items:["النسخ السحابي التلقائي: بعد ربط مستودع خاص على GitHub، بياناتك تنحفظ تلقائياً بعد كل تعديل، ونسخة مستقلة لكل يوم","استرجاع أي يوم سابق من السحابة، ولو ركّبت التطبيق على جوال جديد يعرض عليك ترجع بياناتك","الشريط فوق يبين آخر حفظ سحابي، وتنبيه إذا توقف"]},
  {v:"2.4",d:"2026-11-14",items:["نسخ احتياطية تلقائية على جهازك: نسخة كل يوم (آخر ١٤ يوم) ونسخة عند كل تحديث للتطبيق، وتسترجع أي وحدة منها من الإعدادات ← البيانات","تذكير في الصفحة الرئيسية إذا صار لك أسبوع بدون نسخة على iCloud، وزر يحفظها بضغطة"]},
@@ -673,27 +674,37 @@ const isRest=s=>{const r=(S.ui&&S.ui.rest)||[];if(!r.length)return false;const[y
 
 /* ---------- state ---------- */
 const KEY="quran-hifz-v1";
-const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md",rfit:true},pages:{},extra:{},mistakes:[],pairs:[],log:{},imam:{src:"mem",len:"auto",strong:false,cont:true,fav:[],hist:[]}});
-function normalize(){const d=DEF();if(!S.extra||typeof S.extra!=="object"||Array.isArray(S.extra))S.extra={};S.imam=Object.assign(d.imam,S.imam||{});if(!Array.isArray(S.imam.fav))S.imam.fav=[];if(!Array.isArray(S.imam.hist))S.imam.hist=[];S.ui=Object.assign(d.ui,S.ui||{});S.settings=Object.assign(d.settings,S.settings||{});if(!Array.isArray(S.ui.rest))S.ui.rest=[]}
+const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md",rfit:true},pages:{},extra:{},gap:{},mistakes:[],pairs:[],log:{},imam:{src:"mem",len:"auto",strong:false,cont:true,fav:[],hist:[]}});
+let dirMigrated=false;
+function normalize(){const d=DEF();if(!S.extra||typeof S.extra!=="object"||Array.isArray(S.extra))S.extra={};if(!S.gap||typeof S.gap!=="object"||Array.isArray(S.gap))S.gap={};
+  if(S.settings&&!S.settings.dirV2){if(S.settings.dir==="back"){S.settings.dir="sfwd";dirMigrated=true;const k=Object.keys(S.log||{}).sort().pop();const L=k&&S.log[k];if(L&&!L.custom&&!(L.newDone||[]).length){delete L.newT;delete L.near;delete L.far}}S.settings.dirV2=1}S.imam=Object.assign(d.imam,S.imam||{});if(!Array.isArray(S.imam.fav))S.imam.fav=[];if(!Array.isArray(S.imam.hist))S.imam.hist=[];S.ui=Object.assign(d.ui,S.ui||{});S.settings=Object.assign(d.settings,S.settings||{});if(!Array.isArray(S.ui.rest))S.ui.rest=[]}
 let S=DEF();
 try{const c=localStorage.getItem(KEY);if(c)S=Object.assign(DEF(),JSON.parse(c))}catch(e){}
 normalize();
 let ref=null, writing=false, pending=false, saveTimer=null, view="today", mapOnly=true, mkFilter="active", quiz=false, hlSurah=null, openMut=null;
 let mapColor=S.ui.mapColor||"surah";
 
-const isMem=p=>(p>=S.settings.from&&p<=S.settings.to)||!!(S.extra&&S.extra[p]);
+const isMem=p=>((p>=S.settings.from&&p<=S.settings.to)&&!(S.gap&&S.gap[p]))||!!(S.extra&&S.extra[p]);
+const rangeMem=(a,b)=>{for(let p=a;p<=b;p++)if(!isMem(p))return false;return true};
+const ORDER=(()=>{const seen=new Set(),o=[];for(let i=113;i>=0;i--)for(let p=SSTART[i];p<=SEND[i];p++)if(!seen.has(p)){seen.add(p);o.push(p)}return o})();
 const extraPages=()=>Object.keys(S.extra||{}).map(Number).filter(p=>p<S.settings.from||p>S.settings.to).sort((a,b)=>a-b);
-const memPages=()=>{const r=[];for(let p=S.settings.from;p<=S.settings.to;p++)r.push(p);return[...extraPages().filter(p=>p<S.settings.from),...r,...extraPages().filter(p=>p>S.settings.to)]};
+const memPages=()=>{const r=[];for(let p=S.settings.from;p<=S.settings.to;p++)if(!(S.gap&&S.gap[p]))r.push(p);return[...extraPages().filter(p=>p<S.settings.from),...r,...extraPages().filter(p=>p>S.settings.to)]};
 function absorb(){let ch=true;while(ch){ch=false;if(S.extra[S.settings.from-1]){S.settings.from--;ch=true}if(S.extra[S.settings.to+1]){S.settings.to++;ch=true}}Object.keys(S.extra).forEach(k=>{if(+k>=S.settings.from&&+k<=S.settings.to)delete S.extra[k]})}
-const memCount=()=>S.settings.to-S.settings.from+1+extraPages().length;
-function nearPages(){const{from,to,near,dir}=S.settings;const r=[];if(dir==="back"){for(let p=from;p<=Math.min(to,from+near-1);p++)r.push(p)}else{for(let p=to;p>=Math.max(from,to-near+1);p--)r.push(p)}return r}
-function nextNewFrom(start){const{dir,perDay}=S.settings;const r=[];const d=dir==="back"?-1:1;for(let p=start;p>=1&&p<=604&&r.length<perDay;p+=d)if(!isMem(p))r.push(p);return r}
-function nextNew(){const{from,to,dir}=S.settings;return nextNewFrom(S.newCursor>=1&&S.newCursor<=604?S.newCursor:(dir==="back"?from-1:to+1))}
+const memCount=()=>memPages().length;
+function nearPages(){const{from,to,near,dir}=S.settings;const r=[];
+  if(dir==="sfwd"){const f=nextNew()[0];const k=f!=null?ORDER.indexOf(f):ORDER.length;for(let j=k-1;j>=0&&r.length<near;j--)if(isMem(ORDER[j]))r.push(ORDER[j]);return r}if(dir==="back"){for(let p=from;p<=Math.min(to,from+near-1);p++)r.push(p)}else{for(let p=to;p>=Math.max(from,to-near+1);p--)r.push(p)}return r}
+function seqFrom(start,n){const d=S.settings.dir;const r=[];
+  if(d==="sfwd"){let k=start!=null?ORDER.indexOf(start):0;if(k<0)k=0;for(;k<ORDER.length&&r.length<n;k++)if(!isMem(ORDER[k]))r.push(ORDER[k]);return r}
+  const st=d==="back"?-1:1;for(let p=start;p>=1&&p<=604&&r.length<n;p+=st)if(!isMem(p))r.push(p);return r}
+function nextOf(p){const d=S.settings.dir;if(d==="sfwd"){const k=ORDER.indexOf(p);return k>=0&&k<ORDER.length-1?ORDER[k+1]:null}return d==="back"?p-1:p+1}
+function nextNewFrom(start){return seqFrom(start,S.settings.perDay)}
+function autoStart(){const{from,to,dir}=S.settings;return dir==="sfwd"?ORDER[0]:dir==="back"?from-1:to+1}
+function nextNew(){return nextNewFrom(S.newCursor>=1&&S.newCursor<=604?S.newCursor:autoStart())}
 function computeFar(n,ex){const nr=new Set([...nearPages(),...(ex||[])]);const c=memPages().filter(p=>!nr.has(p));
   c.sort((a,b)=>{const A=S.pages[a]||{},B=S.pages[b]||{};const da=A.due||"0000",db=B.due||"0000";if(da!==db)return da<db?-1:1;return (A.r??2)-(B.r??2)||a-b});
   return c.slice(0,n??S.settings.far)}
 function seed(){const nr=new Set(nearPages());const t=today();let i=0;const f=Math.max(1,S.settings.far);
-  for(let p=S.settings.from;p<=S.settings.to;p++){if(S.pages[p])continue;if(nr.has(p)){S.pages[p]={iv:1,due:t,n:0};continue}
+  for(const p of memPages()){if(S.pages[p])continue;if(nr.has(p)){S.pages[p]={iv:1,due:t,n:0};continue}
     S.pages[p]={iv:7,due:addDays(t,Math.floor(i/f)),n:0};i++}}
 function day(){const t=today();if(!S.log[t])S.log[t]={rev:{},mk:0,newDone:[],steps:{}};const L=S.log[t];
   if(S.setup){if(!L.near)L.near=nearPages();if(!L.far)L.far=computeFar();if(!L.newT)L.newT=nextNew()}
@@ -838,7 +849,7 @@ function renderHero(){const n=S.setup?memCount():0;const pct=n/604;
   $("#ringval").style.strokeDashoffset=String(326.7*(1-pct));$("#pct").textContent=ar(Math.round(pct*100))+"٪";
   $("#hsPages").textContent=S.setup?ar(n):"—";$("#hsJuz").textContent=S.setup?ar(Math.round(n/20.13*10)/10):"—";
   $("#hsStreak").textContent=ar(streak());
-  const rem=S.settings.dir==="back"?S.settings.from-1:604-S.settings.to;
+  const rem=604-memCount();
   $("#hsKhatm").textContent=S.setup?(rem<=0?"تمّ الختم 🌙":fmtDate(addDays(today(),Math.ceil(Math.ceil(rem/Math.max(1,S.settings.perDay))*7/Math.max(1,7-(S.ui.rest||[]).length))),{month:"short",year:"numeric"})):"—";
   const d=new Date();let h="";if(S.ui.hijri)try{const hd=new Date(d.getTime()+(S.ui.hijriAdj||0)*864e5);h=hd.toLocaleDateString("ar-SA-u-ca-islamic-umalqura"+(S.ui.numerals==="en"?"-nu-latn":""),{day:"numeric",month:"long",year:"numeric"})}catch(e){}
   $("#dateline").textContent=d.toLocaleDateString(LOC(),{weekday:"long",day:"numeric",month:"long"})+(h?" · "+h:"")}
@@ -858,7 +869,7 @@ function renderToday(){const el=$("#v-today");if(!S.setup){el.innerHTML=setupCar
   const L=day();const newT=L.newT,near=L.near,far=L.far;
   const doneNew=newT.filter(p=>L.newDone.includes(p)).length,doneNear=near.filter(p=>L.rev[p]!=null).length,doneFar=far.filter(p=>L.rev[p]!=null).length;
   const tot=newT.length+near.length+far.length,done=doneNew+doneNear+doneFar;
-  const nrS=new Set(near);let over=0;for(let p=S.settings.from;p<=S.settings.to;p++){const rc=S.pages[p];if(!nrS.has(p)&&!far.includes(p)&&rc&&rc.due&&rc.due<=today())over++}const pct=tot?done/tot:0;
+  const nrS=new Set(near);let over=0;for(const p of memPages()){const rc=S.pages[p];if(!nrS.has(p)&&!far.includes(p)&&rc&&rc.due&&rc.due<=today())over++}const pct=tot?done/tot:0;
   const ea=exportAge(),cst=CLOUD.st();const cloudOk=CLOUD.cfg&&!cst.choose&&cst.at&&(Date.now()-new Date(cst.at).getTime())<3*864e5;
   let h=CLOUD.cfg&&cst.err&&cst.err!=="offline"?`<div class="done-banner" style="background:var(--rose-soft);color:var(--rose);justify-content:space-between;flex-wrap:wrap"><span>⚠️ النسخ السحابي متوقف: ${esc(cloudErr(cst.err))}</span><button class="sbtn" data-act="settings">الإعدادات</button></div>`:"";
   h+=(!cloudOk&&(ea===null||ea>=7))?`<div class="done-banner" style="background:var(--gold-soft);color:var(--ink);justify-content:space-between;flex-wrap:wrap"><span><i class="star8"></i> ${ea===null?"ما حفظت نسخة احتياطية على iCloud للحين":"صار لك "+ar(ea)+" أيام بدون نسخة على iCloud"}</span><span class="acts"><button class="sbtn" data-act="filesave">احفظ الحين</button>${CLOUD.cfg?"":`<button class="sbtn" data-act="cloudsetup">خلها تلقائية</button>`}</span></div>`:"";
@@ -941,7 +952,7 @@ function renderPairs(){const el=$("#v-pairs");let h=`<div class="card"><div clas
   if(!S.pairs.length)h+=`<div class="card"><div class="empty"><div class="star"></div><div>ما أضفت متشابهات للحين.<br>إذا سجلت خطأ نوعه "متشابه" يعرض عليك تضيفه هنا مباشرة.</div></div></div>`;
   else h+=`<div class="${quiz?"quiz":""}" style="display:flex;flex-direction:column;gap:12px">`+S.pairs.slice().reverse().map(x=>`<div class="pair"><div class="halves"><div class="h"><span class="loc">${esc(x.aLoc)}</span><div class="txt" data-act="reveal">${esc(x.aTxt)||"<span class='muted small'>—</span>"}</div></div><div class="h"><span class="loc">${esc(x.bLoc)}</span><div class="txt" data-act="reveal">${esc(x.bTxt)||"<span class='muted small'>—</span>"}</div></div></div>
     ${x.tip?`<div class="tip"><b>الضابط</b><span>${esc(x.tip)}</span></div>`:""}<div class="foot"><button class="sbtn" data-act="pairedit" data-id="${x.id}">تعديل</button>&nbsp;<button class="sbtn warn" data-act="pairdel" data-id="${x.id}">حذف</button></div></div>`).join("")+`</div>`;
-  if(hasMut&&S.setup&&S.ui.showMut!==false){const rows=[];for(let i=0;i<114;i++)if(SEND[i]>=S.settings.from&&SSTART[i]<=S.settings.to&&MUTBY[i].length)rows.push(i);
+  if(hasMut&&S.setup&&S.ui.showMut!==false){const rows=[];for(let i=0;i<114;i++)if(MUTBY[i].length&&(()=>{for(let p=SSTART[i];p<=SEND[i];p++)if(isMem(p))return true;return false})())rows.push(i);
     h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--accent)"></i>متشابهات جاهزة</span><h2>سور محفوظك ومتشابهاتها</h2></div></div>
     <p class="muted small" style="margin:0 0 10px">اضغط السورة فتطلع لك مواضعها اللي تتشابه مع سور ثانية أو مع نفسها. اضغط أي موضع فتشوف الآيات جنب بعض، وتقدر تضيفه لمتشابهاتك وتكتب ضابطه.</p>`+
     rows.map(i=>{let r=`<button class="srow ${openMut===i?"on":""}" data-act="mutsurah" data-s="${i}"><b>${SURAH[i]}</b><span class="pill num">${ar(MUTBY[i].length)} موضع</span></button>`;
@@ -1004,12 +1015,13 @@ function settingsSheet(){const s=S.settings,u=S.ui;const DAYS=["الأحد","ا�
     <div class="two"><div class="field"><label for="st-from">أول صفحة محفوظة</label><input id="st-from" type="number" min="1" max="604" value="${s.from}"><span class="hint">${esc(pageLabel(s.from))}</span></div>
     <div class="field"><label for="st-to">آخر صفحة محفوظة</label><input id="st-to" type="number" min="1" max="604" value="${s.to}"></div></div>
     <div class="two"><div class="field"><label for="st-per">الحفظ اليومي (صفحات)</label><input id="st-per" type="number" min="1" max="5" value="${s.perDay}"></div>
-    <div class="field"><label for="st-dir">اتجاه الحفظ</label><select id="st-dir"><option value="back" ${s.dir==="back"?"selected":""}>للخلف (من الناس إلى الفاتحة)</option><option value="fwd" ${s.dir==="fwd"?"selected":""}>للأمام</option></select></div></div>
+    <div class="field"><label for="st-dir">اتجاه الحفظ</label><select id="st-dir"><option value="sfwd" ${s.dir==="sfwd"?"selected":""}>السور من الناس للفاتحة، وداخل السورة من أولها</option><option value="back" ${s.dir==="back"?"selected":""}>صفحة صفحة للخلف</option><option value="fwd" ${s.dir==="fwd"?"selected":""}>للأمام</option></select></div></div>
     <div class="two"><div class="field"><label for="st-near">صفحات القريب</label><input id="st-near" type="number" min="3" max="40" value="${s.near}"><span class="hint">آخر ما حفظت، كل يوم</span></div>
     <div class="field"><label for="st-far">صفحات البعيد يومياً</label><input id="st-far" type="number" min="2" max="60" value="${s.far}"><span class="hint">١٠ = نصف جزء</span></div></div>
     <div class="field"><label for="st-speed">سرعة تباعد المراجعة</label><select id="st-speed"><option value="slow" ${s.speed==="slow"?"selected":""}>بطيئة: الصفحات ترجع أكثر (للحفظ الجديد والضعيف)</option><option value="normal" ${s.speed==="normal"||!s.speed?"selected":""}>عادية</option><option value="fast" ${s.speed==="fast"?"selected":""}>سريعة: المتقنة تغيب أطول</option></select></div>
     <span class="hint muted small">تتطبق على ورد بكرة. ورد اليوم يبقى كما هو.</span>
     <button class="btn block" data-act="setsave">حفظ الخطة</button>
+    <button class="btn ghost block" data-act="memedit">حدّد محفوظك صفحة صفحة</button>
   </div></details>
   <details class="sec"><summary>اليوم والتقويم</summary><div class="form">
     <div class="field" style="padding:8px 0"><label for="ui-daystart">متى يبدأ يومك؟</label><select id="ui-daystart" data-ui="dayStart">${[0,1,2,3,4,5,6].map(h=>`<option value="${h}" ${(u.dayStart||0)===h?"selected":""}>${h===0?"منتصف الليل":"الساعة "+ar(h)+" فجراً"}</option>`).join("")}</select><span class="hint">إذا راجعت بعد منتصف الليل وقبل هذا الوقت، تنحسب على اليوم اللي قبله</span></div>
@@ -1166,21 +1178,21 @@ function pageOfAyah(id){let lo=1,hi=604;while(lo<hi){const mid=(lo+hi+1)>>1;if(Q
 function rukuInfo(r){const a=QRUKU[r],b=QRUKU[r+1]-1;const[si,ay]=qloc(a);const ay2=qloc(b)[1];return{r,a,b,si,ay,ay2,p1:pageOfAyah(a),p2:pageOfAyah(b),wc:RWC[r]}}
 function rukuLabel(i){return "سورة "+SURAH[i.si]+(i.ay===1&&i.b+1===(QRUKU[i.r+1])&&qloc(i.b+1>6236?6236:i.b+1)[1]===1||(i.ay===1&&i.b===6236)?" كاملة":" · الآيات "+ar(i.ay)+"–"+ar(i.ay2))}
 function imOk(i,len,ignoreRecent){const[lo,hi]=LEN[len];if(i.wc<lo||i.wc>hi)return false;
-  if(S.imam.src==="mem"){if(!S.setup||i.p1<S.settings.from||i.p2>S.settings.to)return false;
+  if(S.imam.src==="mem"){if(!S.setup||!rangeMem(i.p1,i.p2))return false;
     if(S.imam.strong)for(let p=i.p1;p<=i.p2;p++){const st=strength(p);if(st!=="s3"&&st!=="s2")return false}}
   if(!ignoreRecent){const lim=addDays(today(),-14);if(S.imam.hist.some(h=>h.d>=lim&&h.r.includes(i.r)))return false}return true}
 function imLen(){return S.imam.len==="auto"?PRAY.find(x=>x[0]===imPrayer)[2]:S.imam.len}
 function imCands(len){let c=[];for(let r=1;r<=556;r++){const i=rukuInfo(r);if(imOk(i,len,false))c.push(r)}
   if(!c.length)for(let r=1;r<=556;r++){if(imOk(rukuInfo(r),len,true))c.push(r)}return c}
 function imSecond(r1,len){const i1=rukuInfo(r1);const hi=Math.max(LEN[len][1],i1.wc);
-  const fits=r=>{if(r>556)return false;const i=rukuInfo(r);if(i.wc>hi*1.05)return false;if(S.imam.src==="mem"&&(!S.setup||i.p1<S.settings.from||i.p2>S.settings.to))return false;return true};
+  const fits=r=>{if(r>556)return false;const i=rukuInfo(r);if(i.wc>hi*1.05)return false;if(S.imam.src==="mem"&&(!S.setup||!rangeMem(i.p1,i.p2)))return false;return true};
   if(S.imam.cont&&fits(r1+1))return r1+1;
   const c=imCands(len).filter(r=>r>r1&&RWC[r]<=i1.wc*1.1);if(c.length)return c[Math.random()*c.length|0];
   const c2=imCands(len).filter(r=>r>r1);return c2.length?c2[Math.random()*c2.length|0]:(fits(r1+1)?r1+1:null)}
 function imRoll(){const len=imLen();const c=imCands(len);if(!c.length){imPick={none:true};return}
   const r1=c[Math.random()*c.length|0];imPick={r1,r2:imSecond(r1,len)}}
 function imMins(wc){const m=Math.max(.5,Math.round(wc/75*2)/2);return m<=.5?"نص دقيقة":m===1?"دقيقة":m===1.5?"دقيقة ونص":ar(m)+" دقايق"}
-function rakCard(r,n){if(!r)return "";const i=rukuInfo(r);const st=i.p1>=S.settings.from&&i.p2<=S.settings.to&&S.setup?strength(i.p1):"snm";
+function rakCard(r,n){if(!r)return "";const i=rukuInfo(r);const st=S.setup&&rangeMem(i.p1,i.p2)?strength(i.p1):"snm";
   const stl={s3:["متقنة","green"],s2:["جيدة","green"],s1:["متعثرة","rose"],s0:["نسيت","rose"],su:["محفوظة، ما قُيّمت",""],snm:["غير محفوظة","rose"]}[st];
   let t="";for(let id=i.a;id<=i.b;id++)t+=esc(QTEXT[id-1])+' <span class="an">﴿'+ar(qloc(id)[1])+'﴾</span> ';
   const fav=S.imam.fav.includes(r);
@@ -1235,7 +1247,7 @@ function voParse(text){const norm=VN(text);const out={norm,type:"نسيان",sur
   const words=norm.split(" ").filter(w=>!/^\d+$/.test(w));const ws=words.map(SK);const found=new Map();
   for(let n=Math.min(9,ws.length);n>=2&&!found.size;n--){for(let i=0;i+n<=ws.length;i++){const k=ws.slice(i,i+n).join("").replace(/(.)\1+/g,"$1");if(k.length<(n<=2?9:7))continue;
     for(let id=0;id<6236;id++){if(QSK[id].includes(k)){const[si,ay]=qloc(id+1);if(out.surah!=null&&si!==out.surah)continue;if(!found.has(id)||found.get(id).len<k.length)found.set(id,mk(si,ay,"mid",k.length))}}}}
-  let c=[...found.values()];const mem=x=>S.setup&&x.page>=S.settings.from&&x.page<=S.settings.to?1:0;
+  let c=[...found.values()];const mem=x=>S.setup&&isMem(x.page)?1:0;
   c.sort((a,b)=>mem(b)-mem(a)||b.len-a.len||a.id-b.id);
   if(c.length===1&&c[0].len>=12)c[0].conf="high";else if(c.length>1&&mem(c[0])&&!mem(c[1])&&c[0].len>=12)c[0].conf="high";
   out.cands=c.slice(0,3);
@@ -1256,7 +1268,7 @@ function voScope(norm){let m;const mem=a=>a.filter(isMem);
   if(j>=1&&j<=30){const[a,b]=juzRange(j);const r=[];for(let p=a;p<=b;p++)r.push(p);return{label:"الجزء "+JUZN[j-1],pages:mem(r),all:r.length}}
   if(S.setup){const L=day();if(/ورد اليوم|مراجعه اليوم/.test(norm))return{label:"مراجعة اليوم",pages:[...L.near,...L.far],all:L.near.length+L.far.length};
     if(/القريب/.test(norm))return{label:"القريب",pages:[...L.near],all:L.near.length};if(/البعيد/.test(norm))return{label:"البعيد",pages:[...L.far],all:L.far.length};
-    if(/كل (المحفوظ|محفوظي|حفظي)/.test(norm)){const r=[];for(let p=S.settings.from;p<=S.settings.to;p++)r.push(p);return{label:"كل محفوظك",pages:r,all:r.length}}}
+    if(/كل (المحفوظ|محفوظي|حفظي)/.test(norm)){const r=[];for(const p of memPages())r.push(p);return{label:"كل محفوظك",pages:r,all:r.length}}}
   const si=voSurah(norm,true);if(si!=null){const r=[];for(let p=SSTART[si];p<=SEND[si];p++)r.push(p);return{label:"سورة "+SURAH[si],pages:mem(r),all:r.length,si}}
   return null}
 const mkWeight=p=>S.mistakes.filter(m=>!m.done&&m.page===p).reduce((a,m)=>a+m.count,0);
@@ -1285,9 +1297,9 @@ function voRoute(text){const norm=VN(text);const has=re=>re.test(norm);const tab
     return{kind:"answer",stat:"ما عرفت وين أفتح",html:voCard("وين تبي أروح؟","قل: افتح سورة يس، افتح صفحة ٥٠٠، افتح الجزء ٢٩، أو افتح واقرأ كلمات من الآية.")}}
   if(has(/كم باقي|وش باقي|شنو باقي|ايش باقي|وردي|وش علي|شنو علي/)){const L=day();const n=L.newT.filter(p=>!L.newDone.includes(p)),a=L.near.filter(p=>L.rev[p]==null),b=L.far.filter(p=>L.rev[p]==null);const tot=n.length+a.length+b.length;
     return{kind:"answer",stat:tot?"باقي لك "+ar(tot)+" صفحة":"خلصت وردك ✓",html:voCard(tot?"الباقي من ورد اليوم":"ما شاء الله، خلصت ورد اليوم",`<div>الجديد: ${n.length?"صفحة "+n.map(ar).join("، ")+" ("+esc(pageLabel(n[0]))+")":"تم ✓"}</div><div>القريب: ${a.length?ar(a.length)+" صفحات":"تم ✓"}</div><div>البعيد: ${b.length?ar(b.length)+" صفحات":"تم ✓"}</div>${tot?`<div class="chips" style="margin-top:8px">${[...n,...a,...b].slice(0,9).map(p=>`<button class="chip" data-act="read" data-p="${p}"><b class="num">${ar(p)}</b><span>${esc(pageLabel(p))}</span></button>`).join("")}</div>`:""}`)}}
-  if(has(/اضعف|الضعيف|ضعيفه|اسوا/)){const r=[];for(let p=S.settings.from;p<=S.settings.to;p++){const st=strength(p),w=mkWeight(p);const sc=(st==="s0"?6:st==="s1"?4:0)+w;if(sc>0)r.push([p,sc,w,st])}r.sort((a,b)=>b[1]-a[1]);
+  if(has(/اضعف|الضعيف|ضعيفه|اسوا/)){const r=[];for(const p of memPages()){const st=strength(p),w=mkWeight(p);const sc=(st==="s0"?6:st==="s1"?4:0)+w;if(sc>0)r.push([p,sc,w,st])}r.sort((a,b)=>b[1]-a[1]);
     return{kind:"answer",stat:r.length?"هذي أضعف صفحاتك":"ما عندك صفحات ضعيفة",html:voCard(r.length?"أضعف "+ar(Math.min(9,r.length))+" صفحات":"ما شاء الله",r.length?`<div class="chips">${r.slice(0,9).map(x=>`<button class="chip rated r${x[3]==="s0"?0:1}" data-act="read" data-p="${x[0]}"><b class="num">${ar(x[0])}</b><span>${x[2]?ar(x[2])+" أخطاء":esc(pageLabel(x[0]))}</span></button>`).join("")}</div><div class="muted small" style="margin-top:6px">اضغط أي صفحة تفتح في المصحف.</div>`:"ما في صفحة مقيّمة ضعيفة ولا عليها أخطاء نشطة.")}}
-  if(has(/متي اختم|الختم|متي اخلص/)){const rem=S.settings.dir==="back"?S.settings.from-1:604-S.settings.to;return{kind:"answer",stat:"بإذن الله",html:voCard("الختم المتوقع: "+esc($("#hsKhatm").textContent),"باقي "+ar(rem)+" صفحة، على "+ar(S.settings.perDay)+" صفحة باليوم.")}}
+  if(has(/متي اختم|الختم|متي اخلص/)){const rem=604-memCount();return{kind:"answer",stat:"بإذن الله",html:voCard("الختم المتوقع: "+esc($("#hsKhatm").textContent),"باقي "+ar(rem)+" صفحة، على "+ar(S.settings.perDay)+" صفحة باليوم.")}}
   if(has(/كم (صفحه |جزء )?(حافظ|حفظت|محفوظ)|كم حفظي/)){const n=memCount();return{kind:"answer",stat:"ما شاء الله",html:voCard(ar(n)+" صفحة",ar(Math.round(n/20.13*10)/10)+" جزء · "+ar(Math.round(n/604*100))+"٪ من المصحف")}}
   if(has(/كم خطا|عدد الاخطا|اخطائي/)&&!mkTalk){const ac=S.mistakes.filter(m=>!m.done);const by={};ac.forEach(m=>by[m.type]=(by[m.type]||0)+m.count);return{kind:"answer",stat:ar(ac.length)+" خطأ نشط",html:voCard("أخطاؤك النشطة: "+ar(ac.length),(Object.keys(by).map(k=>k+": "+ar(by[k])).join(" · ")||"ما عندك أخطاء نشطة")+`<div class="acts" style="margin-top:8px"><button class="sbtn" data-act="vogotab" data-v="mistakes">افتح الأخطاء</button></div>`)}}
   if(has(/كم يوم|السلسله|متتالي/))return{kind:"answer",stat:"🔥",html:voCard(ar(streak())+" أيام متتالية","أطول سلسلة لك: "+ar(S.best||streak())+" يوم.")};
@@ -1352,8 +1364,9 @@ function planRender(){const box=$("#pl-body");if(!box)return;const L=day();const
   if(m==="new"){const p=L.newT[0]||nextNew()[0]||1;const done=L.newDone.includes(p);
     h+=`<div class="plstep" style="--pc:${pc}"><button data-act="plstep" data-d="1" aria-label="الصفحة التالية">+</button><input id="pl-new" type="number" inputmode="numeric" min="1" max="604" value="${p}" data-pl="new" aria-label="رقم صفحة الحفظ"><button data-act="plstep" data-d="-1" aria-label="الصفحة السابقة">−</button></div>
     <div style="text-align:center"><b style="font-family:var(--display);font-size:1.3rem">${esc(pageLabel(p))}</b><div class="muted small">الجزء ${ar(juzOf(p))}${isMem(p)?" · <span style='color:var(--rose)'>هذي الصفحة محفوظة عندك من قبل</span>":""}${done?" · تم حفظها اليوم":""}</div></div>
-    <div class="row"><div><span class="l">كمّل من هنا الأيام الجاية</span><span class="hint">بكرة تكون صفحة ${ar(S.settings.dir==="back"?p-1:p+1)}، وهكذا. إذا طفيته يكون التغيير لليوم بس</span></div><label class="switch"><input type="checkbox" data-pl="keep" ${L.newOnce?"":"checked"}><i></i></label></div>
-    <div class="acts"><button class="sbtn" data-act="read" data-p="${p}">اقرأها في المصحف</button><button class="sbtn" data-act="plauto">رجّع الترتيب التلقائي</button></div>
+    <div class="row"><div><span class="l">كمّل من هنا الأيام الجاية</span><span class="hint">بكرة تكون صفحة ${ar(seqFrom(nextOf(p),1)[0]||p)}، وهكذا. إذا طفيته يكون التغيير لليوم بس</span></div><label class="switch"><input type="checkbox" data-pl="keep" ${L.newOnce?"":"checked"}><i></i></label></div>
+    <div><div class="small muted" style="margin-bottom:6px">الأيام الجاية بإذن الله</div><div class="plq">${[p,...seqFrom(nextOf(p),6)].map((x,i)=>`<span class="pill ${i?"":"gold"} num">${i?ar(i)+"د · ":"اليوم · "}${ar(x)}</span>`).join("")}</div><div class="small muted" style="margin-top:4px">${esc(pageLabel(p))}${seqFrom(nextOf(p),6).length?" ← "+esc(pageLabel(seqFrom(nextOf(p),6).slice(-1)[0])):""}</div></div>
+    <div class="acts"><button class="sbtn" data-act="read" data-p="${p}">اقرأها في المصحف</button><button class="sbtn" data-act="plauto">رجّع الترتيب التلقائي</button><button class="sbtn" data-act="memedit">حدّد محفوظك</button></div>
     <p class="muted small" style="margin:0">لو حفظت صفحة بعيدة عن محفوظك، تنحسب محفوظة لحالها وتدخل المراجعة، ولما يوصلها محفوظك تندمج معه.</p>`}
   else{const other=m==="near"?"far":"near";const sel=L[m];const oc=PLC[other][0];const mp=memPages();
     const surs=[];for(let i=0;i<114;i++)if(mp.some(p=>p>=SSTART[i]&&p<=SEND[i]))surs.push(i);const juzs=[...new Set(mp.map(juzOf))];
@@ -1367,6 +1380,18 @@ function planRender(){const box=$("#pl-body");if(!box)return;const L=day();const
 function planAdd(ps){const L=day();const m=plMode,other=m==="near"?"far":"near";let n=0;ps.forEach(p=>{if(!isMem(p)||L[m].includes(p))return;L[m].push(p);L[other]=L[other].filter(x=>x!==p);n++});L.custom=true;save();planRender();renderToday();return n}
 function planSetNew(p){p=Math.min(604,Math.max(1,Math.round(+p)||1));const L=day();L.newT=nextNewFrom(p);if(!L.newT.length)L.newT=[p];L.custom=true;if(L.newOnce)delete S.newCursor;else S.newCursor=L.newT[0];save();planRender();renderToday();renderMap()}
 
+/* ---------- memorized pages editor ---------- */
+function memToggle(p,on){const was=isMem(p);if(on==null)on=!was;if(on===was)return;
+  if(on){if(S.gap[p])delete S.gap[p];else if(p===S.settings.from-1)S.settings.from=p;else if(p===S.settings.to+1)S.settings.to=p;else S.extra[p]=1;absorb();if(!S.pages[p])S.pages[p]={iv:3,due:today(),n:0}}
+  else{if(S.extra[p])delete S.extra[p];else S.gap[p]=1}}
+function memSheet(){openSheet(`<h3>حدّد محفوظك</h3><div class="muted small">اضغط أي صفحة تخليها محفوظة أو غير محفوظة. المحفوظ ملوّن بقوته، وغير المحفوظ باهت. التغيير يتطبق على ورد بكرة.</div>
+  <div class="plq" style="margin-top:10px"><select data-mem="surah" aria-label="سورة"><option value="">سورة كاملة…</option>${SURAH.map((n,i)=>`<option value="${i}">${ar(i+1)} · ${n}</option>`).join("")}</select><button class="sbtn" data-act="memsurah" data-on="1">محفوظة ✓</button><button class="sbtn warn" data-act="memsurah" data-on="0">غير محفوظة</button></div>
+  <div id="mem-body" style="margin-top:8px"></div>`);$("#sheet").classList.add("tall");memRender()}
+function memRender(){const box=$("#mem-body");if(!box)return;let h=`<div class="pill gold num" style="margin-bottom:6px">${ar(memCount())} صفحة محفوظة · الجديد القادم: ص ${ar(nextNew()[0]||0)}</div>`;
+  for(let j=30;j>=1;j--){const[a,b]=juzRange(j);let cells="";for(let p=a;p<=b;p++){const s=strength(p);cells+=`<button class="cell ${s} num" data-act="memtog" data-p="${p}">${ar(p)}</button>`}
+    h+=`<div class="juz" style="padding:6px 0"><div class="juzhead"><h3>الجزء ${ar(j)}</h3></div><div class="cells">${cells}</div></div>`}box.innerHTML=h}
+function memChanged(){const L=day();if(!L.custom&&!(L.newDone||[]).length){delete L.newT;delete L.near;delete L.far;day()}save();renderAll()}
+
 /* ---------- confetti ---------- */
 function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const c=$("#fx"),x=c.getContext("2d");const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;
   const cols=["#e5b850","#c4922a","#16946b","#35c49b","#f6dc8a","#ffffff"];const P=Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.55,vx:(Math.random()-.5)*18*devicePixelRatio,vy:-(Math.random()*18+10)*devicePixelRatio,s:(Math.random()*7+5)*devicePixelRatio,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.random()*cols.length|0],star:Math.random()<.4}));
@@ -1378,6 +1403,9 @@ function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce
 const A={
   tab(el){el.classList.remove("tap");void el.offsetWidth;el.classList.add("tap");setTimeout(()=>el.classList.remove("tap"),520);if(navigator.vibrate&&S.ui.haptic)try{navigator.vibrate(10)}catch(x){}view=el.dataset.v;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===view));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));if(view==="imam")renderImam();scrollTo({top:0,behavior:"smooth"})},
   close:closeSheet,
+  memedit(){memSheet()},
+  memtog(el){const p=+el.dataset.p;memToggle(p);memChanged();const st=strength(p);el.className="cell "+st+" num pop";const pill=document.querySelector("#mem-body .pill");if(pill)pill.innerHTML=ar(memCount())+" صفحة محفوظة · الجديد القادم: ص "+ar(nextNew()[0]||0)},
+  memsurah(el){const sel=document.querySelector("[data-mem=surah]");if(!sel||sel.value===""){toast("اختر السورة أول");return}const i=+sel.value,on=el.dataset.on==="1";for(let p=SSTART[i];p<=SEND[i];p++){const shared=surahsOn(p).length>1;if(!on&&shared&&p!==SSTART[i]&&p!==SEND[i])continue;if(on||!shared)memToggle(p,on)}memChanged();memRender();toast("سورة "+SURAH[i]+(on?" صارت محفوظة":" صارت غير محفوظة"))},
   plan(el){planSheet(el.dataset.m)},
   plmode(el){plMode=el.dataset.v;planRender()},
   pltoggle(el){const p=+el.dataset.p;const L=day();const m=plMode;if(m==="new")return;if(L[m].includes(p)){L[m]=L[m].filter(x=>x!==p);L.custom=true;save();planRender();renderToday()}else planAdd([p])},
@@ -1435,10 +1463,10 @@ const A={
   step(el){const p=el.dataset.p,i=+el.dataset.i;const L=day();const st=L.steps[p]=L.steps[p]||[0,0,0,0];if(st[i]<STEPS[i].n){st[i]++;save();renderToday();
     const b=document.querySelector(`.step[data-p="${p}"][data-i="${i}"]`);b&&b.classList.add("pop");if(STEPS.every((s,k)=>st[k]>=s.n))toast("كل الخطوات تمت. ثبّتها بالضغط على أتممت")}},
   stepm(el){const p=el.dataset.p,i=+el.dataset.i;const L=day();const st=L.steps[p]=L.steps[p]||[0,0,0,0];if(st[i]>0){st[i]--;save();renderToday()}},
-  donenew(el){const p=+el.dataset.p;const L=day();if(L.newDone.includes(p))return;const pS={...S.settings},pR=S.pages[p]?{...S.pages[p]}:null,pE={...S.extra},pC=S.newCursor;L.newDone.push(p);
-    if(p===S.settings.from-1)S.settings.from=p;else if(p===S.settings.to+1)S.settings.to=p;else if(!isMem(p))S.extra[p]=1;absorb();
-    if(S.newCursor!=null&&!L.newOnce){S.newCursor=S.settings.dir==="back"?p-1:p+1;if(S.newCursor===(S.settings.dir==="back"?S.settings.from-1:S.settings.to+1)||S.newCursor<1||S.newCursor>604)delete S.newCursor}
-    S.pages[p]={r:2,iv:1,due:addDays(today(),1),last:today(),n:1};save();renderAll();confetti();toastUndo("بارك الله فيك! صفحة "+ar(p)+" صارت محفوظة",()=>{const L=day();S.settings=pS;S.extra=pE;if(pC==null)delete S.newCursor;else S.newCursor=pC;if(pR)S.pages[p]=pR;else delete S.pages[p];L.newDone=L.newDone.filter(x=>x!==p);save();renderAll();toast("تم التراجع")})},
+  donenew(el){const p=+el.dataset.p;const L=day();if(L.newDone.includes(p))return;const pS={...S.settings},pR=S.pages[p]?{...S.pages[p]}:null,pE={...S.extra},pG={...(S.gap||{})},pC=S.newCursor;L.newDone.push(p);
+    if(S.gap&&S.gap[p])delete S.gap[p];else if(p===S.settings.from-1)S.settings.from=p;else if(p===S.settings.to+1)S.settings.to=p;else if(!isMem(p))S.extra[p]=1;absorb();
+    if(S.newCursor!=null&&!L.newOnce){const nx=nextOf(p);delete S.newCursor;const auto=nextNew()[0];if(nx!=null&&nx>=1&&nx<=604){const want=seqFrom(nx,1)[0];if(want!==auto)S.newCursor=nx}}
+    S.pages[p]={r:2,iv:1,due:addDays(today(),1),last:today(),n:1};save();renderAll();confetti();toastUndo("بارك الله فيك! صفحة "+ar(p)+" صارت محفوظة",()=>{const L=day();S.settings=pS;S.extra=pE;S.gap=pG;if(pC==null)delete S.newCursor;else S.newCursor=pC;if(pR)S.pages[p]=pR;else delete S.pages[p];L.newDone=L.newDone.filter(x=>x!==p);save();renderAll();toast("تم التراجع")})},
   page(el){pageSheet(el.dataset.p)},
   rate(el){setTimeout(()=>{if($("#reader").classList.contains("open"))rHeader()},0);const p=+el.dataset.p,r=+el.dataset.r;if(day().rev[p]===r){unrate(p);closeSheet();renderAll();toast("انشال التقييم. صفحة "+ar(p)+" رجعت بدون تقييم");return}
     const u=snap([p]);ratePage(p,r);closeSheet();renderAll();toastUndo(r>=2?"ممتاز، ترجع لك بعد "+ar(S.pages[p].iv)+" أيام":r===1?"راح ترجع لك بعد يومين":"ترجع لك بكرة. لا تشيل هم",u);
@@ -1464,7 +1492,7 @@ const A={
     openSheet(`<h3>سورة ${SURAH[i]}</h3><div class="muted small num">${ar(n)} صفحة محفوظة · ص ${ar(SSTART[i])}${SEND[i]>SSTART[i]?"–"+ar(SEND[i]):""}</div><div style="margin-top:14px;font-weight:600">كيف كان تسميع السورة كاملة؟</div><div class="rates">${[3,2,1,0].map(r=>`<button class="rate r${r}" data-act="ratesurah" data-s="${i}" data-r="${r}">${RATE[r].l}<small>${RATE[r].d}</small></button>`).join("")}</div><p class="muted small">التقييم ينطبق على كل صفحات السورة المحفوظة، ومنها الصفحة المشتركة مع السورة المجاورة. إذا في صفحة معينة أضعف من الباقي قيّمها لحالها بعدين.</p>`)},
   ratesurah(el){const i=+el.dataset.s,r=+el.dataset.r;const ps=[];for(let p=SSTART[i];p<=SEND[i];p++)if(isMem(p))ps.push(p);const u=snap(ps);ps.forEach(p=>ratePage(p,r,true));save();closeSheet();renderAll();toastUndo("تقيّمت سورة "+SURAH[i],u)},
   morefar(){const L=day();const more=computeFar(5,L.far);if(!more.length){toast("ما بقى صفحات. راجعت كل محفوظك اليوم!");return}L.far.push(...more);save();renderToday();toast("أضفت "+ar(more.length)+" صفحات للبعيد")},
-  test(){if(!S.setup)return;const c=[];for(let p=S.settings.from;p<=S.settings.to;p++){const w=4-((S.pages[p]||{}).r??2);for(let k=0;k<w;k++)c.push(p)}
+  test(){if(!S.setup)return;const c=[];for(const p of memPages()){const w=4-((S.pages[p]||{}).r??2);for(let k=0;k<w;k++)c.push(p)}
     const p=c[Math.random()*c.length|0];const W=["من أول الصفحة","من منتصف الصفحة","من آخر ثلاثة أسطر وكمّل للصفحة اللي بعدها"];const w=W[Math.random()*W.length|0];
     openSheet(`<h3>اختبار مفاجئ 🎲</h3><div class="newpage" style="margin-top:12px"><div class="pagebadge"><span>صفحة</span><b class="num">${ar(p)}</b></div><div><div style="font-family:var(--display);font-size:1.3rem;font-weight:700">${esc(pageLabel(p))}</div><div class="muted small">الجزء ${ar(juzOf(p))}</div></div></div>
     <div class="done-banner" style="background:var(--gold-soft);color:var(--ink)">سمّع ${w} غيباً، بعدين افتح المصحف وتأكد وقيّم نفسك.</div>
@@ -1539,6 +1567,7 @@ document.addEventListener("keydown",e=>{const ro=$("#reader").classList.contains
   else if((e.key==="Enter"||e.key===" ")&&e.target.classList&&e.target.classList.contains("pagebadge")){e.preventDefault();e.target.click()}});
 
 renderAll();
+if(dirMigrated){save();setTimeout(()=>toast("ضبطت طريقة حفظك: السور من الناس للفاتحة، وداخل السورة من أولها"),900)}
 autoSnapshots().catch(()=>{});
 cloudUI();{const st=CLOUD.st();if(CLOUD.cfg&&(!st.at||st.day!==today()||Date.now()-new Date(st.at).getTime()>6*36e5))CLOUD.schedule(2500)}
 addEventListener("online",()=>CLOUD.schedule(2000));
