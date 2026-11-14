@@ -484,6 +484,24 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none !i
 .ay.flash{animation:ayflash 2.6s ease-out}
 @keyframes ayflash{0%,35%{background:rgba(196,146,42,.55)}100%{background:transparent}}
 .rhead .t{border:none;background:transparent;color:inherit;font:inherit;padding:0;cursor:pointer}
+.plseg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.plseg button{border:2px solid var(--line);background:var(--surface2);border-radius:14px;padding:8px 4px;font-weight:700;font-size:.9rem;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .12s,border-color .2s,background .2s}
+.plseg button small{font-weight:400;font-size:.68rem;color:var(--muted)}
+.plseg button.on{border-color:var(--pc);background:color-mix(in srgb,var(--pc) 14%,var(--surface))}
+.plseg button:active{transform:scale(.95)}
+.plsel{display:flex;flex-wrap:wrap;gap:6px;min-height:38px;padding:8px;border:1.5px dashed var(--pc);border-radius:14px;background:color-mix(in srgb,var(--pc) 6%,transparent)}
+.plchip{border:none;background:var(--pc);color:#fff;border-radius:999px;padding:4px 10px 4px 8px;font-size:.82rem;font-weight:700;display:inline-flex;align-items:center;gap:5px;animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
+.plchip i{font-style:normal;opacity:.75;font-size:.7rem}
+.plq{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.plq>*{flex:none}
+.plq select{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:5px 8px;font-size:.8rem;max-width:130px}
+.cell.pick{outline:3px solid var(--pc);outline-offset:1px;transform:scale(1.06);z-index:1}
+.cell.pick::after{content:"✓";position:absolute;top:-6px;inset-inline-start:-4px;width:15px;height:15px;border-radius:50%;background:var(--pc);color:#fff;font-size:.6rem;display:grid;place-items:center}
+.cell.other{box-shadow:inset 0 0 0 2px var(--oc)}
+.plstep{display:flex;align-items:center;justify-content:center;gap:14px}
+.plstep button{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);font-size:1.5rem;transition:transform .12s}
+.plstep button:active{transform:scale(.9)}
+.plstep input{width:110px;text-align:center;font-family:var(--display);font-size:2.4rem;font-weight:700;border:none;border-bottom:3px solid var(--accent);background:transparent;padding:0;color:var(--ink)}
 .tundo{margin-inline-start:10px;border:none;background:var(--gold);color:#241a05;border-radius:8px;padding:3px 12px;font-weight:700}
 .rate.cur{outline:3px solid var(--ink);outline-offset:2px}
 .toast:not(.show){transform:translate(-50%,calc(-100% - 60px));visibility:hidden;transition:transform .35s, visibility 0s .35s}
@@ -586,8 +604,9 @@ const SSTART=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,
 const SEND=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,585,586,587,589,589,590,591,592,592,594,594,595,596,596,596,597,597,598,599,599,600,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JSTART=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const TYPES=["نسيان","تبديل كلمة","متشابه","تشكيل","ترتيب الآيات","ربط الصفحات"];
-const VERSION="2.5";
+const VERSION="2.6";
 const CHANGELOG=[
+ {v:"2.6",d:"2026-11-14",items:["ورد اليوم على كيفك: زر «عدّل ورد اليوم» في الصفحة الرئيسية","اختر صفحة الحفظ الجديد اللي تبيها، وتقدر تكمل منها الأيام الجاية","اختر صفحات القريب والبعيد بالضغط على خريطة محفوظك، أو أضف سورة أو جزء أو الأضعف أو اللي فيها أخطاء بضغطة","لو حفظت صفحة بعيدة عن محفوظك تنحسب محفوظة وتدخل المراجعة"]},
  {v:"2.5",d:"2026-11-14",items:["النسخ السحابي التلقائي: بعد ربط مستودع خاص على GitHub، بياناتك تنحفظ تلقائياً بعد كل تعديل، ونسخة مستقلة لكل يوم","استرجاع أي يوم سابق من السحابة، ولو ركّبت التطبيق على جوال جديد يعرض عليك ترجع بياناتك","الشريط فوق يبين آخر حفظ سحابي، وتنبيه إذا توقف"]},
  {v:"2.4",d:"2026-11-14",items:["نسخ احتياطية تلقائية على جهازك: نسخة كل يوم (آخر ١٤ يوم) ونسخة عند كل تحديث للتطبيق، وتسترجع أي وحدة منها من الإعدادات ← البيانات","تذكير في الصفحة الرئيسية إذا صار لك أسبوع بدون نسخة على iCloud، وزر يحفظها بضغطة"]},
  {v:"2.3",d:"2026-11-14",items:["المساعد الصوتي صار يسوي أشياء كثيرة مو بس الأخطاء","قيّم بالكلام: «حط سورة فصلت كلها متقنة»، والصفحات اللي عليها أخطاء نشطة تنزل درجتها تلقائياً حسب عدد الأخطاء","افتح أي سورة أو صفحة أو جزء أو آية بالكلام","اسأله: كم باقي من ورد اليوم، وين أضعف صفحاتي، متى أختم، كم صفحة حافظ","ثبّت خطأ، سجّل حفظ صفحة اليوم، اطلب اقتراح للإمامة أو اختبار، وغيّر الوضع الداكن","زر «كل الأوامر» يعرض كل اللي يفهمه"]},
@@ -654,19 +673,23 @@ const isRest=s=>{const r=(S.ui&&S.ui.rest)||[];if(!r.length)return false;const[y
 
 /* ---------- state ---------- */
 const KEY="quran-hifz-v1";
-const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md",rfit:true},pages:{},mistakes:[],pairs:[],log:{},imam:{src:"mem",len:"auto",strong:false,cont:true,fav:[],hist:[]}});
-function normalize(){const d=DEF();S.imam=Object.assign(d.imam,S.imam||{});if(!Array.isArray(S.imam.fav))S.imam.fav=[];if(!Array.isArray(S.imam.hist))S.imam.hist=[];S.ui=Object.assign(d.ui,S.ui||{});S.settings=Object.assign(d.settings,S.settings||{});if(!Array.isArray(S.ui.rest))S.ui.rest=[]}
+const DEF=()=>({v:1,setup:false,settings:{from:354,to:604,dir:"back",near:10,far:10,perDay:1,speed:"normal"},ui:{theme:"auto",palette:"emerald",ufont:"plex",qfont:"amiri",size:"md",qsize:"md",numerals:"ar",motion:true,hijri:true,hijriAdj:0,dayStart:0,rest:[],mapColor:"surah",showMut:true,haptic:false,rsize:"md",rfit:true},pages:{},extra:{},mistakes:[],pairs:[],log:{},imam:{src:"mem",len:"auto",strong:false,cont:true,fav:[],hist:[]}});
+function normalize(){const d=DEF();if(!S.extra||typeof S.extra!=="object"||Array.isArray(S.extra))S.extra={};S.imam=Object.assign(d.imam,S.imam||{});if(!Array.isArray(S.imam.fav))S.imam.fav=[];if(!Array.isArray(S.imam.hist))S.imam.hist=[];S.ui=Object.assign(d.ui,S.ui||{});S.settings=Object.assign(d.settings,S.settings||{});if(!Array.isArray(S.ui.rest))S.ui.rest=[]}
 let S=DEF();
 try{const c=localStorage.getItem(KEY);if(c)S=Object.assign(DEF(),JSON.parse(c))}catch(e){}
 normalize();
 let ref=null, writing=false, pending=false, saveTimer=null, view="today", mapOnly=true, mkFilter="active", quiz=false, hlSurah=null, openMut=null;
 let mapColor=S.ui.mapColor||"surah";
 
-const isMem=p=>p>=S.settings.from&&p<=S.settings.to;
-const memCount=()=>S.settings.to-S.settings.from+1;
+const isMem=p=>(p>=S.settings.from&&p<=S.settings.to)||!!(S.extra&&S.extra[p]);
+const extraPages=()=>Object.keys(S.extra||{}).map(Number).filter(p=>p<S.settings.from||p>S.settings.to).sort((a,b)=>a-b);
+const memPages=()=>{const r=[];for(let p=S.settings.from;p<=S.settings.to;p++)r.push(p);return[...extraPages().filter(p=>p<S.settings.from),...r,...extraPages().filter(p=>p>S.settings.to)]};
+function absorb(){let ch=true;while(ch){ch=false;if(S.extra[S.settings.from-1]){S.settings.from--;ch=true}if(S.extra[S.settings.to+1]){S.settings.to++;ch=true}}Object.keys(S.extra).forEach(k=>{if(+k>=S.settings.from&&+k<=S.settings.to)delete S.extra[k]})}
+const memCount=()=>S.settings.to-S.settings.from+1+extraPages().length;
 function nearPages(){const{from,to,near,dir}=S.settings;const r=[];if(dir==="back"){for(let p=from;p<=Math.min(to,from+near-1);p++)r.push(p)}else{for(let p=to;p>=Math.max(from,to-near+1);p--)r.push(p)}return r}
-function nextNew(){const{from,to,dir,perDay}=S.settings;const r=[];for(let i=1;i<=perDay;i++){const p=dir==="back"?from-i:to+i;if(p>=1&&p<=604)r.push(p)}return r}
-function computeFar(n,ex){const nr=new Set([...nearPages(),...(ex||[])]);const c=[];for(let p=S.settings.from;p<=S.settings.to;p++)if(!nr.has(p))c.push(p);
+function nextNewFrom(start){const{dir,perDay}=S.settings;const r=[];const d=dir==="back"?-1:1;for(let p=start;p>=1&&p<=604&&r.length<perDay;p+=d)if(!isMem(p))r.push(p);return r}
+function nextNew(){const{from,to,dir}=S.settings;return nextNewFrom(S.newCursor>=1&&S.newCursor<=604?S.newCursor:(dir==="back"?from-1:to+1))}
+function computeFar(n,ex){const nr=new Set([...nearPages(),...(ex||[])]);const c=memPages().filter(p=>!nr.has(p));
   c.sort((a,b)=>{const A=S.pages[a]||{},B=S.pages[b]||{};const da=A.due||"0000",db=B.due||"0000";if(da!==db)return da<db?-1:1;return (A.r??2)-(B.r??2)||a-b});
   return c.slice(0,n??S.settings.far)}
 function seed(){const nr=new Set(nearPages());const t=today();let i=0;const f=Math.max(1,S.settings.far);
@@ -840,6 +863,7 @@ function renderToday(){const el=$("#v-today");if(!S.setup){el.innerHTML=setupCar
   let h=CLOUD.cfg&&cst.err&&cst.err!=="offline"?`<div class="done-banner" style="background:var(--rose-soft);color:var(--rose);justify-content:space-between;flex-wrap:wrap"><span>⚠️ النسخ السحابي متوقف: ${esc(cloudErr(cst.err))}</span><button class="sbtn" data-act="settings">الإعدادات</button></div>`:"";
   h+=(!cloudOk&&(ea===null||ea>=7))?`<div class="done-banner" style="background:var(--gold-soft);color:var(--ink);justify-content:space-between;flex-wrap:wrap"><span><i class="star8"></i> ${ea===null?"ما حفظت نسخة احتياطية على iCloud للحين":"صار لك "+ar(ea)+" أيام بدون نسخة على iCloud"}</span><span class="acts"><button class="sbtn" data-act="filesave">احفظ الحين</button>${CLOUD.cfg?"":`<button class="sbtn" data-act="cloudsetup">خلها تلقائية</button>`}</span></div>`:"";
   h+=`<div class="card"><div class="cardhead"><div><span class="kicker"><i class="dot" style="background:var(--gold)"></i>ورد اليوم</span><h2>${pct>=1?"اكتمل وردك اليوم، ما شاء الله":done?"استمر، أنت في الطريق":"يلا نبدأ"}</h2></div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${isRest(today())?'<span class="pill">يوم راحة 🌿</span>':""}<span class="pill gold num">${ar(done)} / ${ar(tot)}</span></div></div>
+  <button class="sbtn" style="align-self:flex-start;margin:-4px 0 10px" data-act="plan" data-m="new">✎ عدّل ورد اليوم${L.custom?" · معدّل":""}</button>
   <div class="dayprog"><div class="bar"><i style="width:${pct*100}%"></i></div>
   <div class="trio"><div><b class="num">${ar(doneNew)}/${ar(newT.length)}</b><span>الجديد</span></div><div><b class="num">${ar(doneNear)}/${ar(near.length)}</b><span>القريب</span></div><div><b class="num">${ar(doneFar)}/${ar(far.length)}</b><span>البعيد</span></div></div></div></div>`;
 
@@ -1320,6 +1344,29 @@ function voSave(i){clearTimeout(voAutoT);const c=voRes&&voRes.cands[i];if(!c)ret
   if(S.ui.haptic&&navigator.vibrate)try{navigator.vibrate([20,40,20])}catch(e){}
   const mid=S.mistakes[S.mistakes.length-1].id;toastUndo("انسجل: "+SURAH[c.si]+(c.ay?" آية "+ar(c.ay):"")+" · "+voRes.type,()=>{if(ex){ex.count=Math.max(1,ex.count-1)}else S.mistakes=S.mistakes.filter(m=>m.id!==mid);save();renderAll();toast("تم التراجع")})}
 
+/* ---------- today's plan editor ---------- */
+let plMode="new";const PLC={new:["var(--accent)","الجديد"],near:["var(--s2)","القريب"],far:["var(--gold)","البعيد"]};
+function planSheet(m){if(m)plMode=m;openSheet(`<h3>ورد اليوم على كيفك</h3><div class="muted small">اختر القسم، بعدين اضغط الصفحات اللي تبيها. التعديل لليوم بس، وبكرة يرجع الاقتراح التلقائي.</div><div id="pl-body" style="display:flex;flex-direction:column;gap:12px;margin-top:12px"></div>`);$("#sheet").classList.add("tall");planRender()}
+function planRender(){const box=$("#pl-body");if(!box)return;const L=day();const m=plMode;const pc=PLC[m][0];
+  let h=`<div class="plseg">${Object.keys(PLC).map(k=>`<button class="${k===m?"on":""}" style="--pc:${PLC[k][0]}" data-act="plmode" data-v="${k}">${PLC[k][1]}<small class="num">${k==="new"?(L.newT.length?"ص "+L.newT.map(ar).join("، "):"—"):ar(L[k].length)+" صفحة"}</small></button>`).join("")}</div>`;
+  if(m==="new"){const p=L.newT[0]||nextNew()[0]||1;const done=L.newDone.includes(p);
+    h+=`<div class="plstep" style="--pc:${pc}"><button data-act="plstep" data-d="1" aria-label="الصفحة التالية">+</button><input id="pl-new" type="number" inputmode="numeric" min="1" max="604" value="${p}" data-pl="new" aria-label="رقم صفحة الحفظ"><button data-act="plstep" data-d="-1" aria-label="الصفحة السابقة">−</button></div>
+    <div style="text-align:center"><b style="font-family:var(--display);font-size:1.3rem">${esc(pageLabel(p))}</b><div class="muted small">الجزء ${ar(juzOf(p))}${isMem(p)?" · <span style='color:var(--rose)'>هذي الصفحة محفوظة عندك من قبل</span>":""}${done?" · تم حفظها اليوم":""}</div></div>
+    <div class="row"><div><span class="l">كمّل من هنا الأيام الجاية</span><span class="hint">بكرة تكون صفحة ${ar(S.settings.dir==="back"?p-1:p+1)}، وهكذا. إذا طفيته يكون التغيير لليوم بس</span></div><label class="switch"><input type="checkbox" data-pl="keep" ${L.newOnce?"":"checked"}><i></i></label></div>
+    <div class="acts"><button class="sbtn" data-act="read" data-p="${p}">اقرأها في المصحف</button><button class="sbtn" data-act="plauto">رجّع الترتيب التلقائي</button></div>
+    <p class="muted small" style="margin:0">لو حفظت صفحة بعيدة عن محفوظك، تنحسب محفوظة لحالها وتدخل المراجعة، ولما يوصلها محفوظك تندمج معه.</p>`}
+  else{const other=m==="near"?"far":"near";const sel=L[m];const oc=PLC[other][0];const mp=memPages();
+    const surs=[];for(let i=0;i<114;i++)if(mp.some(p=>p>=SSTART[i]&&p<=SEND[i]))surs.push(i);const juzs=[...new Set(mp.map(juzOf))];
+    h+=`<div class="plsel" style="--pc:${pc}">${sel.length?sel.map(p=>`<button class="plchip" data-act="pltoggle" data-p="${p}"><span class="num">${ar(p)}</span><i>✕</i></button>`).join(""):'<span class="muted small">فاضي. اضغط صفحات من تحت أو استخدم الأزرار السريعة</span>'}</div>
+    <div class="plq"><select data-pl="surah" aria-label="أضف سورة"><option value="">+ سورة</option>${surs.map(i=>`<option value="${i}">${SURAH[i]}</option>`).join("")}</select><select data-pl="juz" aria-label="أضف جزء"><option value="">+ جزء</option>${juzs.map(j=>`<option value="${j}">الجزء ${ar(j)}</option>`).join("")}</select>
+    <button class="sbtn" data-act="pladd" data-k="weak">+ الأضعف ٥</button><button class="sbtn" data-act="pladd" data-k="due">+ اللي حان موعدها</button><button class="sbtn" data-act="pladd" data-k="mk">+ اللي فيها أخطاء</button><button class="sbtn" data-act="plauto">تلقائي</button><button class="sbtn warn" data-act="plclear">تفريغ</button></div>
+    <div class="legend"><span><i style="background:${pc}"></i>في ${PLC[m][1]}</span><span><i style="box-shadow:inset 0 0 0 2px ${oc};background:transparent"></i>في ${PLC[other][1]}</span><span class="muted">اللون = قوة الصفحة</span></div>`;
+    let cur=0,cells="";const flush=()=>{if(cells){h+=`<div class="juz" style="padding:6px 0"><div class="juzhead"><h3>الجزء ${ar(cur)}</h3></div><div class="cells" style="--pc:${pc};--oc:${oc}">${cells}</div></div>`;cells=""}};
+    mp.forEach(p=>{const j=juzOf(p);if(j!==cur){flush();cur=j}cells+=`<button class="cell ${strength(p)} ${sel.includes(p)?"pick":""} ${L[other].includes(p)?"other":""} num" data-act="pltoggle" data-p="${p}">${ar(p)}</button>`});flush()}
+  box.innerHTML=h}
+function planAdd(ps){const L=day();const m=plMode,other=m==="near"?"far":"near";let n=0;ps.forEach(p=>{if(!isMem(p)||L[m].includes(p))return;L[m].push(p);L[other]=L[other].filter(x=>x!==p);n++});L.custom=true;save();planRender();renderToday();return n}
+function planSetNew(p){p=Math.min(604,Math.max(1,Math.round(+p)||1));const L=day();L.newT=nextNewFrom(p);if(!L.newT.length)L.newT=[p];L.custom=true;if(L.newOnce)delete S.newCursor;else S.newCursor=L.newT[0];save();planRender();renderToday();renderMap()}
+
 /* ---------- confetti ---------- */
 function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const c=$("#fx"),x=c.getContext("2d");const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;
   const cols=["#e5b850","#c4922a","#16946b","#35c49b","#f6dc8a","#ffffff"];const P=Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.55,vx:(Math.random()-.5)*18*devicePixelRatio,vy:-(Math.random()*18+10)*devicePixelRatio,s:(Math.random()*7+5)*devicePixelRatio,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.random()*cols.length|0],star:Math.random()<.4}));
@@ -1331,6 +1378,17 @@ function confetti(){if(!S.ui.motion||matchMedia("(prefers-reduced-motion: reduce
 const A={
   tab(el){el.classList.remove("tap");void el.offsetWidth;el.classList.add("tap");setTimeout(()=>el.classList.remove("tap"),520);if(navigator.vibrate&&S.ui.haptic)try{navigator.vibrate(10)}catch(x){}view=el.dataset.v;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===view));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));if(view==="imam")renderImam();scrollTo({top:0,behavior:"smooth"})},
   close:closeSheet,
+  plan(el){planSheet(el.dataset.m)},
+  plmode(el){plMode=el.dataset.v;planRender()},
+  pltoggle(el){const p=+el.dataset.p;const L=day();const m=plMode;if(m==="new")return;if(L[m].includes(p)){L[m]=L[m].filter(x=>x!==p);L.custom=true;save();planRender();renderToday()}else planAdd([p])},
+  pladd(el){const L=day();const inl=new Set([...L.near,...L.far]);const mp=memPages().filter(p=>!inl.has(p));let ps=[];const k=el.dataset.k;
+    if(k==="weak")ps=mp.map(p=>[p,({s0:6,s1:4,su:1}[strength(p)]||0)+mkWeight(p)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]);
+    else if(k==="due")ps=mp.filter(p=>S.pages[p]&&S.pages[p].due&&S.pages[p].due<=today()).slice(0,10);
+    else if(k==="mk")ps=mp.filter(p=>mkWeight(p)>0);
+    const n=planAdd(ps);toast(n?"أضفت "+ar(n)+" صفحة":"ما في صفحات بهالوصف خارج وردك")},
+  plclear(){const L=day();L[plMode]=[];L.custom=true;save();planRender();renderToday()},
+  plauto(){const L=day();if(plMode==="new"){delete S.newCursor;delete L.newOnce;L.newT=nextNew()}else if(plMode==="near"){L.near=nearPages();L.far=L.far.filter(p=>!L.near.includes(p))}else{L.far=computeFar(S.settings.far,L.near)}save();planRender();renderToday();renderMap();toast("رجعت للاقتراح التلقائي")},
+  plstep(el){const d=+el.dataset.d;const dir=S.settings.dir==="back"?-1:1;let p=(+$("#pl-new").value||1)+d;while(p>=1&&p<=604&&isMem(p))p+=d;planSetNew(p)},
   ridx(){idxSheet()},
   ixmode(el){ixMode=el.dataset.v;el.parentElement.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===el));const l=$("#ix-list");l.style.animation="none";void l.offsetWidth;l.style.animation="";ixRender()},
   ixgo(el){const p=+el.dataset.p,k=el.dataset.k;closeSheet();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();readerJump(p,k)},
@@ -1377,9 +1435,10 @@ const A={
   step(el){const p=el.dataset.p,i=+el.dataset.i;const L=day();const st=L.steps[p]=L.steps[p]||[0,0,0,0];if(st[i]<STEPS[i].n){st[i]++;save();renderToday();
     const b=document.querySelector(`.step[data-p="${p}"][data-i="${i}"]`);b&&b.classList.add("pop");if(STEPS.every((s,k)=>st[k]>=s.n))toast("كل الخطوات تمت. ثبّتها بالضغط على أتممت")}},
   stepm(el){const p=el.dataset.p,i=+el.dataset.i;const L=day();const st=L.steps[p]=L.steps[p]||[0,0,0,0];if(st[i]>0){st[i]--;save();renderToday()}},
-  donenew(el){const p=+el.dataset.p;const L=day();if(L.newDone.includes(p))return;const pS={...S.settings},pR=S.pages[p]?{...S.pages[p]}:null;L.newDone.push(p);
-    if(S.settings.dir==="back"){if(p<S.settings.from)S.settings.from=p}else{if(p>S.settings.to)S.settings.to=p}
-    S.pages[p]={r:2,iv:1,due:addDays(today(),1),last:today(),n:1};save();renderAll();confetti();toastUndo("بارك الله فيك! صفحة "+ar(p)+" صارت محفوظة",()=>{const L=day();S.settings=pS;if(pR)S.pages[p]=pR;else delete S.pages[p];L.newDone=L.newDone.filter(x=>x!==p);save();renderAll();toast("تم التراجع")})},
+  donenew(el){const p=+el.dataset.p;const L=day();if(L.newDone.includes(p))return;const pS={...S.settings},pR=S.pages[p]?{...S.pages[p]}:null,pE={...S.extra},pC=S.newCursor;L.newDone.push(p);
+    if(p===S.settings.from-1)S.settings.from=p;else if(p===S.settings.to+1)S.settings.to=p;else if(!isMem(p))S.extra[p]=1;absorb();
+    if(S.newCursor!=null&&!L.newOnce){S.newCursor=S.settings.dir==="back"?p-1:p+1;if(S.newCursor===(S.settings.dir==="back"?S.settings.from-1:S.settings.to+1)||S.newCursor<1||S.newCursor>604)delete S.newCursor}
+    S.pages[p]={r:2,iv:1,due:addDays(today(),1),last:today(),n:1};save();renderAll();confetti();toastUndo("بارك الله فيك! صفحة "+ar(p)+" صارت محفوظة",()=>{const L=day();S.settings=pS;S.extra=pE;if(pC==null)delete S.newCursor;else S.newCursor=pC;if(pR)S.pages[p]=pR;else delete S.pages[p];L.newDone=L.newDone.filter(x=>x!==p);save();renderAll();toast("تم التراجع")})},
   page(el){pageSheet(el.dataset.p)},
   rate(el){setTimeout(()=>{if($("#reader").classList.contains("open"))rHeader()},0);const p=+el.dataset.p,r=+el.dataset.r;if(day().rev[p]===r){unrate(p);closeSheet();renderAll();toast("انشال التقييم. صفحة "+ar(p)+" رجعت بدون تقييم");return}
     const u=snap([p]);ratePage(p,r);closeSheet();renderAll();toastUndo(r>=2?"ممتاز، ترجع لك بعد "+ar(S.pages[p].iv)+" أيام":r===1?"راح ترجع لك بعد يومين":"ترجع لك بكرة. لا تشيل هم",u);
@@ -1464,7 +1523,7 @@ const A={
   reset(el){if(el.dataset.armed){const u=S.ui;S=DEF();S.ui=u;save();closeSheet();renderAll();toast("انمسحت البيانات")}else{el.dataset.armed=1;el.textContent="اضغط مرة ثانية للتأكيد";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="مسح كل البيانات"}},3500)}}
 };
 document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if(!el)return;if(S.ui.haptic&&navigator.vibrate)try{navigator.vibrate(8)}catch(x){}const f=A[el.dataset.act];if(f){f(el,e)}});
-document.addEventListener("change",e=>{const el=e.target;const ik=el.dataset&&el.dataset.im;if(ik){S.imam[ik]=el.checked;save();imRoll();renderImam();return}const k=el.dataset&&el.dataset.ui;if(!k)return;let v=el.type==="checkbox"?el.checked:el.value;if(k==="dayStart")v=+v;S.ui[k]=v;applyUI();save();renderAll()});
+document.addEventListener("change",e=>{const el=e.target;const pk=el.dataset&&el.dataset.pl;if(pk){const L=day();if(pk==="new")planSetNew(el.value);else if(pk==="keep"){if(el.checked){delete L.newOnce;S.newCursor=L.newT[0]}else{L.newOnce=true;delete S.newCursor}save();planRender()}else if(el.value!==""){const v=+el.value;const ps=pk==="surah"?memPages().filter(p=>p>=SSTART[v]&&p<=SEND[v]):memPages().filter(p=>juzOf(p)===v);const n=planAdd(ps);toast("أضفت "+ar(n)+" صفحة")}return}const ik=el.dataset&&el.dataset.im;if(ik){S.imam[ik]=el.checked;save();imRoll();renderImam();return}const k=el.dataset&&el.dataset.ui;if(!k)return;let v=el.type==="checkbox"?el.checked:el.value;if(k==="dayStart")v=+v;S.ui[k]=v;applyUI();save();renderAll()});
 document.addEventListener("input",e=>{if(e.target.id==="su-from"||e.target.id==="su-to"){const v=+e.target.value;const l=$("#"+e.target.id+"-l");if(l&&v>=1&&v<=604)l.textContent=pageLabel(v)+" · الجزء "+ar(juzOf(v))}});
 {const sh=$("#sheet");let gy=null,gd=0;
   sh.addEventListener("pointerdown",e=>{if(!e.target.closest(".grab"))return;gy=e.clientY;gd=0;sh.style.transition="none";try{sh.setPointerCapture(e.pointerId)}catch(x){}});
